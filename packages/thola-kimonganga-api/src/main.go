@@ -118,12 +118,12 @@ func AdminOnly(next http.Handler) http.Handler {
 		}
 		adminSessionQuery := `SELECT * FROM sessions WHERE session_key = $1 AND (SELECT role FROM accounts WHERE account_id = accounts.account_id LIMIT 1) = 'admin' LIMIT 1`
 		err := database.Db.QueryRow(adminSessionQuery, sessionKey).Scan(&session.ID, &session.SessionKey, &session.AccountId, &session.StartTime, &session.EndTime, &session.IpAddress, &session.UserAgent)
-		if err != nil && err.Error() == "sql: no rows in result set" {
+		if err != nil && err.Error() == database.ErrNoRows {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte(`{"message": "UnAuthorized Access", "status": 400}`))
 			return
 		}
-		if err != nil && err.Error() != "sql: no rows in result set" {
+		if err != nil && err.Error() == database.ErrNoRows {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(`{"message": "Internal Server Error", "status": 500}`))
 			return

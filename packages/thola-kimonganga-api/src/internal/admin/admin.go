@@ -60,14 +60,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	adminQuery := `SELECT * FROM accounts WHERE email = $1`
 	err = database.Db.Get(&account, adminQuery, credentials.Email)
-	if err != nil && err.Error() == "sql: no rows in result set" {
+	if err != nil && err.Error() == database.ErrNoRows{
 		jsonRes := database.ApiError{Message: "Admin account does not exist", Status: http.StatusBadRequest}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(jsonResBytes)
 		return
 	}
-	if err != nil && err.Error() != "sql: no rows in result set" {
+	if err != nil && err.Error() == database.ErrNoRows {
 		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -138,7 +138,7 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 
 	err = confirmationcodes.GetConfirmationCodeEntry(confirmationcodes.CreateConfirmationCodeProps{Email: props.AdminEmail, Code: props.ConfirmationCode}, &confirmationDetails)
 
-	if err != nil && err.Error() != `sql: no rows in result set` {
+	if err != nil && err.Error() != database.ErrNoRows {
 		jsonRes := database.ApiError{Message: "Wrong Confirmation Code", Status: http.StatusBadRequest}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusBadRequest)

@@ -102,7 +102,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonResBytes)
 		return
 	}
-	if err != nil && err.Error() != `sql: no rows in result set` {
+	if err != nil && err.Error() != database.ErrNoRows {
 		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusBadRequest}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusBadRequest)
@@ -189,7 +189,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	// confirmationDetailsQuery := `SELECT code, email, expiry_date FROM email_confirmation_codes WHERE code = $1 AND email = $2`
 	// err = database.Db.QueryRow(confirmationDetailsQuery, account.ConfirmationCode, account.Email).Scan(&confirmationDetails.Code, &confirmationDetails.Email, &confirmationDetails.ExpiryDate)
 	err = confirmationcodes.GetConfirmationCodeEntry(confirmationcodes.CreateConfirmationCodeProps{Code: account.ConfirmationCode, Email: account.Email}, &confirmationDetails)
-	if err != nil && err.Error() != `sql: no rows in result set` {
+	if err != nil && err.Error() != database.ErrNoRows {
 		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusBadRequest}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusBadRequest)
