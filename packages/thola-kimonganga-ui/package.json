@@ -39,8 +39,5 @@
 		"vitest": "^1.2.0",
 		"wrangler": "^3.56.0"
 	},
-	"type": "module",
-	"engines": {
-		"node": "^18.17.0 || >=20.0.0"
-	}
+	"type": "module"
 }
