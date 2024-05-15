@@ -1,4 +1,4 @@
-import { U as UNINITIALIZED, H as HYDRATION_START, a as HYDRATION_END, P as PassiveDelegatedEvents, r as render, p as push$1, s as setContext, b as pop$1 } from "./index2.js";
+import { U as UNINITIALIZED, H as HYDRATION_START, a as HYDRATION_END, P as PassiveDelegatedEvents, r as render, p as push$1, s as setContext, b as pop$1 } from "./index.js";
 let base = "";
 let assets = base;
 const initial = { base, assets };
@@ -1278,8 +1278,7 @@ function Root($$payload, $$props) {
     components = [],
     form,
     data_0 = null,
-    data_1 = null,
-    data_2 = null
+    data_1 = null
   } = $$props;
   {
     setContext("__svelte__", stores);
@@ -1294,24 +1293,8 @@ function Root($$payload, $$props) {
       data: data_0,
       children: ($$payload2, $$slotProps) => {
         $$payload2.out += `<!--[-->`;
-        if (constructors[2]) {
-          $$payload2.out += `<!--[-->`;
-          constructors[1]?.($$payload2, {
-            data: data_1,
-            children: ($$payload3, $$slotProps2) => {
-              $$payload3.out += `<!--[-->`;
-              constructors[2]?.($$payload3, { data: data_2, form });
-              $$payload3.out += `<!--]-->`;
-            }
-          });
-          $$payload2.out += `<!--]-->`;
-          $$payload2.out += "<!--]-->";
-        } else {
-          $$payload2.out += `<!--[-->`;
-          constructors[1]?.($$payload2, { data: data_1, form });
-          $$payload2.out += `<!--]-->`;
-          $$payload2.out += "<!--]!-->";
-        }
+        constructors[1]?.($$payload2, { data: data_1, form });
+        $$payload2.out += `<!--]-->`;
       }
     });
     $$payload.out += `<!--]-->`;
@@ -1419,12 +1402,10 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "zaptau"
+  version_hash: "95q9e9"
 };
 async function get_hooks() {
-  return {
-    ...await import("./hooks.server.js")
-  };
+  return {};
 }
 export {
   assets as a,
