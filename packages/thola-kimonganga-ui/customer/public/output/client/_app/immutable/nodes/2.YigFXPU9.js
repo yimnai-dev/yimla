@@ -1,0 +1,1 @@
+import{a,t as o}from"../chunks/disclose-version.4lT70rZg.js";var p=o('<h1>Welcome to Thola Customer</h1> <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>',1);function m(t){var e=p();a(t,e)}export{m as component};
