@@ -43,6 +43,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-node": "^5.0.1",
 		"@tanstack/svelte-query": "^5.36.0",
 		"clsx": "^2.1.1",
 		"tailwind-merge": "^2.3.0",
