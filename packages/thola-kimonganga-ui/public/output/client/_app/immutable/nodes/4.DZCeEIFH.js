@@ -1,0 +1,1 @@
+import{a as p,t as e,s as r,f as i}from"../chunks/disclose-version.D1Q7yHq9.js";import{p as m,a as h}from"../chunks/runtime.CD23Ggyk.js";import{s as f}from"../chunks/snippet.QWw1WpOM.js";var l=e("<h1>Thola Kimonganga Pharmacy Layout</h1> <!>",1);function g(t,a){m(a,!0);var o=l(),s=i(o),n=r(r(s,!0));f(()=>a.children,n),p(t,o),h()}export{g as component};

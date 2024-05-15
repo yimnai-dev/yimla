@@ -1,0 +1,1 @@
+import{a as n,t as p,s as t,f as i}from"../chunks/disclose-version.D1Q7yHq9.js";import{p as m,a as f}from"../chunks/runtime.CD23Ggyk.js";import{s as h}from"../chunks/snippet.QWw1WpOM.js";var u=p("<h1>Thola Kimonganga Customer UI Layout</h1> <!>",1);function g(r,a){m(a,!0);var o=u(),s=i(o),e=t(t(s,!0));h(()=>a.children,e),n(r,o),f()}export{g as component};
