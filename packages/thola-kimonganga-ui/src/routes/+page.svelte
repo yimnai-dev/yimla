@@ -2,15 +2,14 @@
 	import { page } from '$app/stores';
 	import { dev } from '$app/environment';
 
-	let subdomain = $derived.by(() => {
-		const host = $page.url.host;
-		const [subdomain] = host.split('.');
+	const app = $derived.by(() => {
 		if (dev) {
 			return 'thola-client';
 		}
+		const [subdomain] = $page.url.host;
 		return subdomain;
 	});
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the {subdomain}</p>
+<h1>Welcome to Thola Kimonganga App</h1>
+<p>You are currently looking at the {app} UI</p>

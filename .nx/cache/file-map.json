@@ -1,0 +1,464 @@
+{
+  "version": "6.0",
+  "nxVersion": "18.2.4",
+  "deps": {},
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": "packages/thola-kimonganga-api/src/docs/swagger.json",
+        "hash": "47401970665251408"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/root.js",
+        "hash": "4455798084200778353"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/version.json",
+        "hash": "5850533575928835105"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/postcss.config.js",
+        "hash": "47271795433280961"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/accounts/accounts.go",
+        "hash": "452974046790052232"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/5.js",
+        "hash": "7150257069368066238"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/matchers.js",
+        "hash": "989232576159920408"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/chunks/runtime.DwUChn-q.js",
+        "hash": "14237674696386394334"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/8.js",
+        "hash": "12841994530641550695"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/0.js",
+        "hash": "10169996487457834075"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/manifest.js",
+        "hash": "9131272898316254478"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/.eslintrc.cjs",
+        "hash": "15647399974590712086"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/types/src/routes/$types.d.ts",
+        "hash": "15645520204837925501"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/cmd/database/init-db.go",
+        "hash": "5319024929732111144"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/index.js",
+        "hash": "14358632015938640628"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/app.html",
+        "hash": "18441766884450945979"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/README.md",
+        "hash": "11542502170952645301"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/main.go",
+        "hash": "730425733003334768"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/1.js",
+        "hash": "10220850067464780078"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/lib/utils.ts",
+        "hash": "7704900894164284284"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/confirmation-codes/confirmation_codes.go",
+        "hash": "8252594889660464756"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/0.js",
+        "hash": "10169996487457834075"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/go.mod",
+        "hash": "6280343117271029122"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/.prettierrc",
+        "hash": "17236925603239183"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/app.js",
+        "hash": "10096122566814823335"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/internal.js",
+        "hash": "9830922486451159360"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/chunks/disclose-version.BV7kU63y.js",
+        "hash": "14209878572467365735"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/4.js",
+        "hash": "13834405052059572770"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/6.js",
+        "hash": "12430053636124215060"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/pnpm-lock.yaml",
+        "hash": "5203192832564783624"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/package.json",
+        "hash": "7399538842751831489"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/manifest-full.js",
+        "hash": "2349941922151561584"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/_app/immutable/assets/_layout.CeAG9lh6.css",
+        "hash": "14184553800855912606"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/chunks/index.js",
+        "hash": "7813854842158956299"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/nodes/0.BIGysWuf.js",
+        "hash": "8569570847116925119"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/lib/index.ts",
+        "hash": "4692936798736377880"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/chunks/internal.js",
+        "hash": "10357840049182398208"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/6.js",
+        "hash": "12430053636124215060"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/4.js",
+        "hash": "13834405052059572770"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/subscriptionPackages/subscription_package.go",
+        "hash": "5296966353760085743"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/ambient.d.ts",
+        "hash": "1906755080334081209"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/manifest-full.js",
+        "hash": "2349941922151561584"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/app.js",
+        "hash": "10096122566814823335"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/email/email.go",
+        "hash": "3577705044856247801"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/routes/+page.svelte",
+        "hash": "7840866014509711986"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/2.js",
+        "hash": "7150257069368066238"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "16877376182141465221"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/svelte.config.js",
+        "hash": "14088333273607118706"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/admin/admin.go",
+        "hash": "17457937917614847522"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/chunks/exports.js",
+        "hash": "11266797643486974588"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/.npmrc",
+        "hash": "16306061729883149313"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/nodes/1.js",
+        "hash": "4835557757458400119"
+      },
+      {
+        "file": "pnpm-lock.yaml",
+        "hash": "4627626004759475259"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/static/favicon.png",
+        "hash": "11504680974745960892"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/go.sum",
+        "hash": "4751261965108711040"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/3.js",
+        "hash": "1177842399287737996"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/types/route_meta_data.json",
+        "hash": "8233916950946731090"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/7.js",
+        "hash": "15484611497549497904"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/index.test.ts",
+        "hash": "4899821940437047382"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/nodes/2.js",
+        "hash": "6563738573020744648"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "3833545590435012078"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/tailwind.config.ts",
+        "hash": "15596848429575861388"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/1.js",
+        "hash": "10220850067464780078"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/manifest.js",
+        "hash": "2349941922151561584"
+      },
+      {
+        "file": ".npmrc",
+        "hash": "1880664178033616490"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/assets/_layout.CeAG9lh6.css",
+        "hash": "14184553800855912606"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/chunks/stores.COOHG5B_.js",
+        "hash": "14736970878264072303"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/5.js",
+        "hash": "7150257069368066238"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/nodes/1.CescmMZG.js",
+        "hash": "9744372275758409050"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/chunks/stores.js",
+        "hash": "2750126528551093818"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/matchers.js",
+        "hash": "989232576159920408"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/playwright.config.ts",
+        "hash": "2563297502597556445"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/app.css",
+        "hash": "12974548571034457680"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/cmd/database/schema.sql",
+        "hash": "14927257693004852306"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/chunks/stores.js",
+        "hash": "2750126528551093818"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/8.js",
+        "hash": "12841994530641550695"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/.vite/manifest.json",
+        "hash": "6291792242328776564"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/tests/test.ts",
+        "hash": "16596097029166692734"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/entries/pages/_page.svelte.js",
+        "hash": "18326621394609489977"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/nodes/0.js",
+        "hash": "5388129931300332607"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/components.json",
+        "hash": "6072342405666517224"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/non-ambient.d.ts",
+        "hash": "13078435341031729322"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/entry/app.CL0u5k70.js",
+        "hash": "4999762008277372584"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/.prettierignore",
+        "hash": "14944193782101443844"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client/nodes/2.js",
+        "hash": "7150257069368066238"
+      },
+      {
+        "file": "README.md",
+        "hash": "3013369557958080195"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/docs/swagger.yaml",
+        "hash": "14820573807493309251"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/.eslintignore",
+        "hash": "12866345277008372755"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/assets/0.CeAG9lh6.css",
+        "hash": "14184553800855912606"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/.vite/manifest.json",
+        "hash": "16951493119901504110"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/chunks/internal.js",
+        "hash": "10357840049182398208"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/users/users.go",
+        "hash": "612462260616093646"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/server/index.js",
+        "hash": "14358632015938640628"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/3.js",
+        "hash": "1177842399287737996"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/internal.js",
+        "hash": "9830922486451159360"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/chunks/entry.DMvdtUM-.js",
+        "hash": "16893449152019998293"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/root.svelte",
+        "hash": "2547678911861984071"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/client-optimized/nodes/7.js",
+        "hash": "15484611497549497904"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/.air.toml",
+        "hash": "7967283376407506130"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/.gitignore",
+        "hash": "9815671046980959070"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/nodes/2.CdYpLtiB.js",
+        "hash": "8888243006607422134"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/tsconfig.json",
+        "hash": "8434465097579051258"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/generated/server/internal.js",
+        "hash": "7922895968536275141"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/routes/+layout.svelte",
+        "hash": "1019685420241199776"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/output/client/_app/immutable/entry/start.DIUEjezU.js",
+        "hash": "13354506147072534567"
+      },
+      {
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/docs/docs.go",
+        "hash": "18134994890990518533"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/src/app.d.ts",
+        "hash": "17522384083550949823"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/tsconfig.json",
+        "hash": "14595746776993318885"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/api-keys/api_credentials.go",
+        "hash": "13168832561975871239"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/vite.config.ts",
+        "hash": "6755486746913286723"
+      },
+      {
+        "file": "packages/thola-kimonganga-api/src/internal/sessions/session.go",
+        "hash": "415459892263613551"
+      },
+      {
+        "file": "packages/thola-kimonganga-ui/public/adapter-node/chunks/index.js",
+        "hash": "7813854842158956299"
+      }
+    ],
+    "projectFileMap": {}
+  }
+}
