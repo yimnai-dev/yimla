@@ -1,4 +1,4 @@
-import { d as store_get, u as unsubscribe_stores, b as pop, p as push } from "../../chunks/index.js";
+import { c as store_get, u as unsubscribe_stores, b as pop, p as push } from "../../chunks/index.js";
 import { e as escape_html, p as page } from "../../chunks/stores.js";
 function Error($$payload, $$props) {
   push();

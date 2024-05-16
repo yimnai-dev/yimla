@@ -113,13 +113,6 @@ function unsubscribe_stores(store_values) {
     store_values[store_name][1]();
   }
 }
-function slot(payload, slot_fn, slot_props, fallback_fn) {
-  if (slot_fn === void 0)
-    ;
-  else {
-    slot_fn(payload, slot_props);
-  }
-}
 var noop, HYDRATION_START, HYDRATION_END, UNINITIALIZED, PassiveDelegatedEvents, current_component, BLOCK_OPEN, BLOCK_CLOSE, on_destroy;
 var init_chunks = __esm({
   ".svelte-kit/output/server/chunks/index.js"() {
@@ -133,6 +126,57 @@ var init_chunks = __esm({
     BLOCK_OPEN = `<!--${HYDRATION_START}-->`;
     BLOCK_CLOSE = `<!--${HYDRATION_END}-->`;
     on_destroy = [];
+  }
+});
+
+// .svelte-kit/output/server/chunks/hooks.server.js
+var hooks_server_exports = {};
+__export(hooks_server_exports, {
+  handle: () => handle
+});
+function sequence(...handlers) {
+  const length = handlers.length;
+  if (!length)
+    return ({ event, resolve: resolve2 }) => resolve2(event);
+  return ({ event, resolve: resolve2 }) => {
+    return apply_handle(0, event, {});
+    function apply_handle(i, event2, parent_options) {
+      const handle2 = handlers[i];
+      return handle2({
+        event: event2,
+        resolve: (event3, options2) => {
+          const transformPageChunk = async ({ html, done }) => {
+            if (options2?.transformPageChunk) {
+              html = await options2.transformPageChunk({ html, done }) ?? "";
+            }
+            if (parent_options?.transformPageChunk) {
+              html = await parent_options.transformPageChunk({ html, done }) ?? "";
+            }
+            return html;
+          };
+          const filterSerializedResponseHeaders = parent_options?.filterSerializedResponseHeaders ?? options2?.filterSerializedResponseHeaders;
+          const preload = parent_options?.preload ?? options2?.preload;
+          return i < length - 1 ? apply_handle(i + 1, event3, {
+            transformPageChunk,
+            filterSerializedResponseHeaders,
+            preload
+          }) : resolve2(event3, { transformPageChunk, filterSerializedResponseHeaders, preload });
+        }
+      });
+    }
+  };
+}
+var handleApp, handle;
+var init_hooks_server = __esm({
+  ".svelte-kit/output/server/chunks/hooks.server.js"() {
+    handleApp = async ({ event, resolve: resolve2 }) => {
+      const [subdomain] = event.url.host.split(".");
+      if (subdomain === "thola-client" || subdomain === "thola-org" || subdomain === "thola-pharmacy") {
+        event.locals.tholaApp = subdomain;
+      }
+      return await resolve2(event);
+    };
+    handle = sequence(handleApp);
   }
 });
 
@@ -325,28 +369,1759 @@ var init_exports = __esm({
   }
 });
 
-// .svelte-kit/output/server/entries/fallbacks/layout.svelte.js
+// .svelte-kit/output/server/entries/pages/_layout.ts.js
+var layout_ts_exports = {};
+__export(layout_ts_exports, {
+  load: () => load
+});
+function noop2() {
+  return void 0;
+}
+function functionalUpdate(updater, input) {
+  return typeof updater === "function" ? updater(input) : updater;
+}
+function isValidTimeout(value) {
+  return typeof value === "number" && value >= 0 && value !== Infinity;
+}
+function timeUntilStale(updatedAt, staleTime) {
+  return Math.max(updatedAt + (staleTime || 0) - Date.now(), 0);
+}
+function matchQuery(filters, query) {
+  const {
+    type = "all",
+    exact,
+    fetchStatus,
+    predicate,
+    queryKey,
+    stale
+  } = filters;
+  if (queryKey) {
+    if (exact) {
+      if (query.queryHash !== hashQueryKeyByOptions(queryKey, query.options)) {
+        return false;
+      }
+    } else if (!partialMatchKey(query.queryKey, queryKey)) {
+      return false;
+    }
+  }
+  if (type !== "all") {
+    const isActive = query.isActive();
+    if (type === "active" && !isActive) {
+      return false;
+    }
+    if (type === "inactive" && isActive) {
+      return false;
+    }
+  }
+  if (typeof stale === "boolean" && query.isStale() !== stale) {
+    return false;
+  }
+  if (fetchStatus && fetchStatus !== query.state.fetchStatus) {
+    return false;
+  }
+  if (predicate && !predicate(query)) {
+    return false;
+  }
+  return true;
+}
+function matchMutation(filters, mutation) {
+  const { exact, status, predicate, mutationKey } = filters;
+  if (mutationKey) {
+    if (!mutation.options.mutationKey) {
+      return false;
+    }
+    if (exact) {
+      if (hashKey(mutation.options.mutationKey) !== hashKey(mutationKey)) {
+        return false;
+      }
+    } else if (!partialMatchKey(mutation.options.mutationKey, mutationKey)) {
+      return false;
+    }
+  }
+  if (status && mutation.state.status !== status) {
+    return false;
+  }
+  if (predicate && !predicate(mutation)) {
+    return false;
+  }
+  return true;
+}
+function hashQueryKeyByOptions(queryKey, options2) {
+  const hashFn = options2?.queryKeyHashFn || hashKey;
+  return hashFn(queryKey);
+}
+function hashKey(queryKey) {
+  return JSON.stringify(
+    queryKey,
+    (_, val) => isPlainObject(val) ? Object.keys(val).sort().reduce((result, key2) => {
+      result[key2] = val[key2];
+      return result;
+    }, {}) : val
+  );
+}
+function partialMatchKey(a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (typeof a !== typeof b) {
+    return false;
+  }
+  if (a && b && typeof a === "object" && typeof b === "object") {
+    return !Object.keys(b).some((key2) => !partialMatchKey(a[key2], b[key2]));
+  }
+  return false;
+}
+function replaceEqualDeep(a, b) {
+  if (a === b) {
+    return a;
+  }
+  const array2 = isPlainArray(a) && isPlainArray(b);
+  if (array2 || isPlainObject(a) && isPlainObject(b)) {
+    const aItems = array2 ? a : Object.keys(a);
+    const aSize = aItems.length;
+    const bItems = array2 ? b : Object.keys(b);
+    const bSize = bItems.length;
+    const copy = array2 ? [] : {};
+    let equalItems = 0;
+    for (let i = 0; i < bSize; i++) {
+      const key2 = array2 ? i : bItems[i];
+      if ((!array2 && aItems.includes(key2) || array2) && a[key2] === void 0 && b[key2] === void 0) {
+        copy[key2] = void 0;
+        equalItems++;
+      } else {
+        copy[key2] = replaceEqualDeep(a[key2], b[key2]);
+        if (copy[key2] === a[key2] && a[key2] !== void 0) {
+          equalItems++;
+        }
+      }
+    }
+    return aSize === bSize && equalItems === aSize ? a : copy;
+  }
+  return b;
+}
+function isPlainArray(value) {
+  return Array.isArray(value) && value.length === Object.keys(value).length;
+}
+function isPlainObject(o2) {
+  if (!hasObjectPrototype(o2)) {
+    return false;
+  }
+  const ctor = o2.constructor;
+  if (ctor === void 0) {
+    return true;
+  }
+  const prot = ctor.prototype;
+  if (!hasObjectPrototype(prot)) {
+    return false;
+  }
+  if (!prot.hasOwnProperty("isPrototypeOf")) {
+    return false;
+  }
+  if (Object.getPrototypeOf(o2) !== Object.prototype) {
+    return false;
+  }
+  return true;
+}
+function hasObjectPrototype(o2) {
+  return Object.prototype.toString.call(o2) === "[object Object]";
+}
+function sleep(ms) {
+  return new Promise((resolve2) => {
+    setTimeout(resolve2, ms);
+  });
+}
+function replaceData(prevData, data, options2) {
+  if (typeof options2.structuralSharing === "function") {
+    return options2.structuralSharing(prevData, data);
+  } else if (options2.structuralSharing !== false) {
+    return replaceEqualDeep(prevData, data);
+  }
+  return data;
+}
+function addToEnd(items, item, max = 0) {
+  const newItems = [...items, item];
+  return max && newItems.length > max ? newItems.slice(1) : newItems;
+}
+function addToStart(items, item, max = 0) {
+  const newItems = [item, ...items];
+  return max && newItems.length > max ? newItems.slice(0, -1) : newItems;
+}
+function defaultRetryDelay(failureCount) {
+  return Math.min(1e3 * 2 ** failureCount, 3e4);
+}
+function canFetch(networkMode) {
+  return (networkMode ?? "online") === "online" ? onlineManager.isOnline() : true;
+}
+function isCancelledError(value) {
+  return value instanceof CancelledError;
+}
+function createRetryer(config) {
+  let isRetryCancelled = false;
+  let failureCount = 0;
+  let isResolved = false;
+  let continueFn;
+  let promiseResolve;
+  let promiseReject;
+  const promise = new Promise((outerResolve, outerReject) => {
+    promiseResolve = outerResolve;
+    promiseReject = outerReject;
+  });
+  const cancel = (cancelOptions) => {
+    if (!isResolved) {
+      reject(new CancelledError(cancelOptions));
+      config.abort?.();
+    }
+  };
+  const cancelRetry = () => {
+    isRetryCancelled = true;
+  };
+  const continueRetry = () => {
+    isRetryCancelled = false;
+  };
+  const canContinue = () => focusManager.isFocused() && (config.networkMode === "always" || onlineManager.isOnline()) && config.canRun();
+  const canStart = () => canFetch(config.networkMode) && config.canRun();
+  const resolve2 = (value) => {
+    if (!isResolved) {
+      isResolved = true;
+      config.onSuccess?.(value);
+      continueFn?.();
+      promiseResolve(value);
+    }
+  };
+  const reject = (value) => {
+    if (!isResolved) {
+      isResolved = true;
+      config.onError?.(value);
+      continueFn?.();
+      promiseReject(value);
+    }
+  };
+  const pause = () => {
+    return new Promise((continueResolve) => {
+      continueFn = (value) => {
+        if (isResolved || canContinue()) {
+          continueResolve(value);
+        }
+      };
+      config.onPause?.();
+    }).then(() => {
+      continueFn = void 0;
+      if (!isResolved) {
+        config.onContinue?.();
+      }
+    });
+  };
+  const run = () => {
+    if (isResolved) {
+      return;
+    }
+    let promiseOrValue;
+    try {
+      promiseOrValue = config.fn();
+    } catch (error) {
+      promiseOrValue = Promise.reject(error);
+    }
+    Promise.resolve(promiseOrValue).then(resolve2).catch((error) => {
+      if (isResolved) {
+        return;
+      }
+      const retry = config.retry ?? (isServer ? 0 : 3);
+      const retryDelay = config.retryDelay ?? defaultRetryDelay;
+      const delay = typeof retryDelay === "function" ? retryDelay(failureCount, error) : retryDelay;
+      const shouldRetry = retry === true || typeof retry === "number" && failureCount < retry || typeof retry === "function" && retry(failureCount, error);
+      if (isRetryCancelled || !shouldRetry) {
+        reject(error);
+        return;
+      }
+      failureCount++;
+      config.onFail?.(failureCount, error);
+      sleep(delay).then(() => {
+        return canContinue() ? void 0 : pause();
+      }).then(() => {
+        if (isRetryCancelled) {
+          reject(error);
+        } else {
+          run();
+        }
+      });
+    });
+  };
+  return {
+    promise,
+    cancel,
+    continue: () => {
+      continueFn?.();
+      return promise;
+    },
+    cancelRetry,
+    continueRetry,
+    canStart,
+    start: () => {
+      if (canStart()) {
+        run();
+      } else {
+        pause().then(run);
+      }
+      return promise;
+    }
+  };
+}
+function createNotifyManager() {
+  let queue = [];
+  let transactions = 0;
+  let notifyFn = (callback) => {
+    callback();
+  };
+  let batchNotifyFn = (callback) => {
+    callback();
+  };
+  let scheduleFn = (cb) => setTimeout(cb, 0);
+  const setScheduler = (fn) => {
+    scheduleFn = fn;
+  };
+  const batch = (callback) => {
+    let result;
+    transactions++;
+    try {
+      result = callback();
+    } finally {
+      transactions--;
+      if (!transactions) {
+        flush();
+      }
+    }
+    return result;
+  };
+  const schedule = (callback) => {
+    if (transactions) {
+      queue.push(callback);
+    } else {
+      scheduleFn(() => {
+        notifyFn(callback);
+      });
+    }
+  };
+  const batchCalls = (callback) => {
+    return (...args) => {
+      schedule(() => {
+        callback(...args);
+      });
+    };
+  };
+  const flush = () => {
+    const originalQueue = queue;
+    queue = [];
+    if (originalQueue.length) {
+      scheduleFn(() => {
+        batchNotifyFn(() => {
+          originalQueue.forEach((callback) => {
+            notifyFn(callback);
+          });
+        });
+      });
+    }
+  };
+  const setNotifyFunction = (fn) => {
+    notifyFn = fn;
+  };
+  const setBatchNotifyFunction = (fn) => {
+    batchNotifyFn = fn;
+  };
+  return {
+    batch,
+    batchCalls,
+    schedule,
+    setNotifyFunction,
+    setBatchNotifyFunction,
+    setScheduler
+  };
+}
+function fetchState(data, options2) {
+  return {
+    fetchFailureCount: 0,
+    fetchFailureReason: null,
+    fetchStatus: canFetch(options2.networkMode) ? "fetching" : "paused",
+    ...data === void 0 && {
+      error: null,
+      status: "pending"
+    }
+  };
+}
+function getDefaultState$1(options2) {
+  const data = typeof options2.initialData === "function" ? options2.initialData() : options2.initialData;
+  const hasData = data !== void 0;
+  const initialDataUpdatedAt = hasData ? typeof options2.initialDataUpdatedAt === "function" ? options2.initialDataUpdatedAt() : options2.initialDataUpdatedAt : 0;
+  return {
+    data,
+    dataUpdateCount: 0,
+    dataUpdatedAt: hasData ? initialDataUpdatedAt ?? Date.now() : 0,
+    error: null,
+    errorUpdateCount: 0,
+    errorUpdatedAt: 0,
+    fetchFailureCount: 0,
+    fetchFailureReason: null,
+    fetchMeta: null,
+    isInvalidated: false,
+    status: hasData ? "success" : "pending",
+    fetchStatus: "idle"
+  };
+}
+function getDefaultState() {
+  return {
+    context: void 0,
+    data: void 0,
+    error: null,
+    failureCount: 0,
+    failureReason: null,
+    isPaused: false,
+    status: "idle",
+    variables: void 0,
+    submittedAt: 0
+  };
+}
+function scopeFor(mutation) {
+  return mutation.options.scope?.id ?? String(mutation.mutationId);
+}
+function infiniteQueryBehavior(pages) {
+  return {
+    onFetch: (context, query) => {
+      const fetchFn = async () => {
+        const options2 = context.options;
+        const direction = context.fetchOptions?.meta?.fetchMore?.direction;
+        const oldPages = context.state.data?.pages || [];
+        const oldPageParams = context.state.data?.pageParams || [];
+        const empty2 = { pages: [], pageParams: [] };
+        let cancelled = false;
+        const addSignalProperty = (object) => {
+          Object.defineProperty(object, "signal", {
+            enumerable: true,
+            get: () => {
+              if (context.signal.aborted) {
+                cancelled = true;
+              } else {
+                context.signal.addEventListener("abort", () => {
+                  cancelled = true;
+                });
+              }
+              return context.signal;
+            }
+          });
+        };
+        const queryFn = context.options.queryFn && context.options.queryFn !== skipToken ? context.options.queryFn : () => {
+          if (true) {
+            if (context.options.queryFn === skipToken) {
+              console.error(
+                `Attempted to invoke queryFn when set to skipToken. This is likely a configuration error. Query hash: '${context.options.queryHash}'`
+              );
+            }
+          }
+          return Promise.reject(
+            new Error(`Missing queryFn: '${context.options.queryHash}'`)
+          );
+        };
+        const fetchPage = async (data, param, previous) => {
+          if (cancelled) {
+            return Promise.reject();
+          }
+          if (param == null && data.pages.length) {
+            return Promise.resolve(data);
+          }
+          const queryFnContext = {
+            queryKey: context.queryKey,
+            pageParam: param,
+            direction: previous ? "backward" : "forward",
+            meta: context.options.meta
+          };
+          addSignalProperty(queryFnContext);
+          const page2 = await queryFn(
+            queryFnContext
+          );
+          const { maxPages } = context.options;
+          const addTo = previous ? addToStart : addToEnd;
+          return {
+            pages: addTo(data.pages, page2, maxPages),
+            pageParams: addTo(data.pageParams, param, maxPages)
+          };
+        };
+        let result;
+        if (direction && oldPages.length) {
+          const previous = direction === "backward";
+          const pageParamFn = previous ? getPreviousPageParam : getNextPageParam;
+          const oldData = {
+            pages: oldPages,
+            pageParams: oldPageParams
+          };
+          const param = pageParamFn(options2, oldData);
+          result = await fetchPage(oldData, param, previous);
+        } else {
+          result = await fetchPage(
+            empty2,
+            oldPageParams[0] ?? options2.initialPageParam
+          );
+          const remainingPages = pages ?? oldPages.length;
+          for (let i = 1; i < remainingPages; i++) {
+            const param = getNextPageParam(options2, result);
+            result = await fetchPage(result, param);
+          }
+        }
+        return result;
+      };
+      if (context.options.persister) {
+        context.fetchFn = () => {
+          return context.options.persister?.(
+            fetchFn,
+            {
+              queryKey: context.queryKey,
+              meta: context.options.meta,
+              signal: context.signal
+            },
+            query
+          );
+        };
+      } else {
+        context.fetchFn = fetchFn;
+      }
+    }
+  };
+}
+function getNextPageParam(options2, { pages, pageParams }) {
+  const lastIndex = pages.length - 1;
+  return options2.getNextPageParam(
+    pages[lastIndex],
+    pages,
+    pageParams[lastIndex],
+    pageParams
+  );
+}
+function getPreviousPageParam(options2, { pages, pageParams }) {
+  return options2.getPreviousPageParam?.(
+    pages[0],
+    pages,
+    pageParams[0],
+    pageParams
+  );
+}
+var Subscribable, isServer, skipToken, FocusManager, focusManager, OnlineManager, onlineManager, CancelledError, notifyManager, Removable, Query, QueryCache, Mutation, MutationCache, QueryClient, load;
+var init_layout_ts = __esm({
+  ".svelte-kit/output/server/entries/pages/_layout.ts.js"() {
+    Subscribable = class {
+      constructor() {
+        this.listeners = /* @__PURE__ */ new Set();
+        this.subscribe = this.subscribe.bind(this);
+      }
+      subscribe(listener) {
+        this.listeners.add(listener);
+        this.onSubscribe();
+        return () => {
+          this.listeners.delete(listener);
+          this.onUnsubscribe();
+        };
+      }
+      hasListeners() {
+        return this.listeners.size > 0;
+      }
+      onSubscribe() {
+      }
+      onUnsubscribe() {
+      }
+    };
+    isServer = typeof window === "undefined" || "Deno" in globalThis;
+    skipToken = Symbol();
+    FocusManager = class extends Subscribable {
+      #focused;
+      #cleanup;
+      #setup;
+      constructor() {
+        super();
+        this.#setup = (onFocus) => {
+          if (!isServer && window.addEventListener) {
+            const listener = () => onFocus();
+            window.addEventListener("visibilitychange", listener, false);
+            return () => {
+              window.removeEventListener("visibilitychange", listener);
+            };
+          }
+          return;
+        };
+      }
+      onSubscribe() {
+        if (!this.#cleanup) {
+          this.setEventListener(this.#setup);
+        }
+      }
+      onUnsubscribe() {
+        if (!this.hasListeners()) {
+          this.#cleanup?.();
+          this.#cleanup = void 0;
+        }
+      }
+      setEventListener(setup) {
+        this.#setup = setup;
+        this.#cleanup?.();
+        this.#cleanup = setup((focused) => {
+          if (typeof focused === "boolean") {
+            this.setFocused(focused);
+          } else {
+            this.onFocus();
+          }
+        });
+      }
+      setFocused(focused) {
+        const changed = this.#focused !== focused;
+        if (changed) {
+          this.#focused = focused;
+          this.onFocus();
+        }
+      }
+      onFocus() {
+        const isFocused = this.isFocused();
+        this.listeners.forEach((listener) => {
+          listener(isFocused);
+        });
+      }
+      isFocused() {
+        if (typeof this.#focused === "boolean") {
+          return this.#focused;
+        }
+        return globalThis.document?.visibilityState !== "hidden";
+      }
+    };
+    focusManager = new FocusManager();
+    OnlineManager = class extends Subscribable {
+      #online = true;
+      #cleanup;
+      #setup;
+      constructor() {
+        super();
+        this.#setup = (onOnline) => {
+          if (!isServer && window.addEventListener) {
+            const onlineListener = () => onOnline(true);
+            const offlineListener = () => onOnline(false);
+            window.addEventListener("online", onlineListener, false);
+            window.addEventListener("offline", offlineListener, false);
+            return () => {
+              window.removeEventListener("online", onlineListener);
+              window.removeEventListener("offline", offlineListener);
+            };
+          }
+          return;
+        };
+      }
+      onSubscribe() {
+        if (!this.#cleanup) {
+          this.setEventListener(this.#setup);
+        }
+      }
+      onUnsubscribe() {
+        if (!this.hasListeners()) {
+          this.#cleanup?.();
+          this.#cleanup = void 0;
+        }
+      }
+      setEventListener(setup) {
+        this.#setup = setup;
+        this.#cleanup?.();
+        this.#cleanup = setup(this.setOnline.bind(this));
+      }
+      setOnline(online) {
+        const changed = this.#online !== online;
+        if (changed) {
+          this.#online = online;
+          this.listeners.forEach((listener) => {
+            listener(online);
+          });
+        }
+      }
+      isOnline() {
+        return this.#online;
+      }
+    };
+    onlineManager = new OnlineManager();
+    CancelledError = class {
+      constructor(options2) {
+        this.revert = options2?.revert;
+        this.silent = options2?.silent;
+      }
+    };
+    notifyManager = createNotifyManager();
+    Removable = class {
+      #gcTimeout;
+      destroy() {
+        this.clearGcTimeout();
+      }
+      scheduleGc() {
+        this.clearGcTimeout();
+        if (isValidTimeout(this.gcTime)) {
+          this.#gcTimeout = setTimeout(() => {
+            this.optionalRemove();
+          }, this.gcTime);
+        }
+      }
+      updateGcTime(newGcTime) {
+        this.gcTime = Math.max(
+          this.gcTime || 0,
+          newGcTime ?? (isServer ? Infinity : 5 * 60 * 1e3)
+        );
+      }
+      clearGcTimeout() {
+        if (this.#gcTimeout) {
+          clearTimeout(this.#gcTimeout);
+          this.#gcTimeout = void 0;
+        }
+      }
+    };
+    Query = class extends Removable {
+      #initialState;
+      #revertState;
+      #cache;
+      #retryer;
+      #defaultOptions;
+      #abortSignalConsumed;
+      constructor(config) {
+        super();
+        this.#abortSignalConsumed = false;
+        this.#defaultOptions = config.defaultOptions;
+        this.setOptions(config.options);
+        this.observers = [];
+        this.#cache = config.cache;
+        this.queryKey = config.queryKey;
+        this.queryHash = config.queryHash;
+        this.#initialState = config.state || getDefaultState$1(this.options);
+        this.state = this.#initialState;
+        this.scheduleGc();
+      }
+      get meta() {
+        return this.options.meta;
+      }
+      setOptions(options2) {
+        this.options = { ...this.#defaultOptions, ...options2 };
+        this.updateGcTime(this.options.gcTime);
+      }
+      optionalRemove() {
+        if (!this.observers.length && this.state.fetchStatus === "idle") {
+          this.#cache.remove(this);
+        }
+      }
+      setData(newData, options2) {
+        const data = replaceData(this.state.data, newData, this.options);
+        this.#dispatch({
+          data,
+          type: "success",
+          dataUpdatedAt: options2?.updatedAt,
+          manual: options2?.manual
+        });
+        return data;
+      }
+      setState(state, setStateOptions) {
+        this.#dispatch({ type: "setState", state, setStateOptions });
+      }
+      cancel(options2) {
+        const promise = this.#retryer?.promise;
+        this.#retryer?.cancel(options2);
+        return promise ? promise.then(noop2).catch(noop2) : Promise.resolve();
+      }
+      destroy() {
+        super.destroy();
+        this.cancel({ silent: true });
+      }
+      reset() {
+        this.destroy();
+        this.setState(this.#initialState);
+      }
+      isActive() {
+        return this.observers.some((observer) => observer.options.enabled !== false);
+      }
+      isDisabled() {
+        return this.getObserversCount() > 0 && !this.isActive();
+      }
+      isStale() {
+        if (this.state.isInvalidated) {
+          return true;
+        }
+        if (this.getObserversCount() > 0) {
+          return this.observers.some(
+            (observer) => observer.getCurrentResult().isStale
+          );
+        }
+        return this.state.data === void 0;
+      }
+      isStaleByTime(staleTime = 0) {
+        return this.state.isInvalidated || this.state.data === void 0 || !timeUntilStale(this.state.dataUpdatedAt, staleTime);
+      }
+      onFocus() {
+        const observer = this.observers.find((x) => x.shouldFetchOnWindowFocus());
+        observer?.refetch({ cancelRefetch: false });
+        this.#retryer?.continue();
+      }
+      onOnline() {
+        const observer = this.observers.find((x) => x.shouldFetchOnReconnect());
+        observer?.refetch({ cancelRefetch: false });
+        this.#retryer?.continue();
+      }
+      addObserver(observer) {
+        if (!this.observers.includes(observer)) {
+          this.observers.push(observer);
+          this.clearGcTimeout();
+          this.#cache.notify({ type: "observerAdded", query: this, observer });
+        }
+      }
+      removeObserver(observer) {
+        if (this.observers.includes(observer)) {
+          this.observers = this.observers.filter((x) => x !== observer);
+          if (!this.observers.length) {
+            if (this.#retryer) {
+              if (this.#abortSignalConsumed) {
+                this.#retryer.cancel({ revert: true });
+              } else {
+                this.#retryer.cancelRetry();
+              }
+            }
+            this.scheduleGc();
+          }
+          this.#cache.notify({ type: "observerRemoved", query: this, observer });
+        }
+      }
+      getObserversCount() {
+        return this.observers.length;
+      }
+      invalidate() {
+        if (!this.state.isInvalidated) {
+          this.#dispatch({ type: "invalidate" });
+        }
+      }
+      fetch(options2, fetchOptions) {
+        if (this.state.fetchStatus !== "idle") {
+          if (this.state.data !== void 0 && fetchOptions?.cancelRefetch) {
+            this.cancel({ silent: true });
+          } else if (this.#retryer) {
+            this.#retryer.continueRetry();
+            return this.#retryer.promise;
+          }
+        }
+        if (options2) {
+          this.setOptions(options2);
+        }
+        if (!this.options.queryFn) {
+          const observer = this.observers.find((x) => x.options.queryFn);
+          if (observer) {
+            this.setOptions(observer.options);
+          }
+        }
+        if (true) {
+          if (!Array.isArray(this.options.queryKey)) {
+            console.error(
+              `As of v4, queryKey needs to be an Array. If you are using a string like 'repoData', please change it to an Array, e.g. ['repoData']`
+            );
+          }
+        }
+        const abortController = new AbortController();
+        const queryFnContext = {
+          queryKey: this.queryKey,
+          meta: this.meta
+        };
+        const addSignalProperty = (object) => {
+          Object.defineProperty(object, "signal", {
+            enumerable: true,
+            get: () => {
+              this.#abortSignalConsumed = true;
+              return abortController.signal;
+            }
+          });
+        };
+        addSignalProperty(queryFnContext);
+        const fetchFn = () => {
+          if (true) {
+            if (this.options.queryFn === skipToken) {
+              console.error(
+                `Attempted to invoke queryFn when set to skipToken. This is likely a configuration error. Query hash: '${this.options.queryHash}'`
+              );
+            }
+          }
+          if (!this.options.queryFn || this.options.queryFn === skipToken) {
+            return Promise.reject(
+              new Error(`Missing queryFn: '${this.options.queryHash}'`)
+            );
+          }
+          this.#abortSignalConsumed = false;
+          if (this.options.persister) {
+            return this.options.persister(
+              this.options.queryFn,
+              queryFnContext,
+              this
+            );
+          }
+          return this.options.queryFn(
+            queryFnContext
+          );
+        };
+        const context = {
+          fetchOptions,
+          options: this.options,
+          queryKey: this.queryKey,
+          state: this.state,
+          fetchFn
+        };
+        addSignalProperty(context);
+        this.options.behavior?.onFetch(
+          context,
+          this
+        );
+        this.#revertState = this.state;
+        if (this.state.fetchStatus === "idle" || this.state.fetchMeta !== context.fetchOptions?.meta) {
+          this.#dispatch({ type: "fetch", meta: context.fetchOptions?.meta });
+        }
+        const onError = (error) => {
+          if (!(isCancelledError(error) && error.silent)) {
+            this.#dispatch({
+              type: "error",
+              error
+            });
+          }
+          if (!isCancelledError(error)) {
+            this.#cache.config.onError?.(
+              error,
+              this
+            );
+            this.#cache.config.onSettled?.(
+              this.state.data,
+              error,
+              this
+            );
+          }
+          if (!this.isFetchingOptimistic) {
+            this.scheduleGc();
+          }
+          this.isFetchingOptimistic = false;
+        };
+        this.#retryer = createRetryer({
+          fn: context.fetchFn,
+          abort: abortController.abort.bind(abortController),
+          onSuccess: (data) => {
+            if (data === void 0) {
+              if (true) {
+                console.error(
+                  `Query data cannot be undefined. Please make sure to return a value other than undefined from your query function. Affected query key: ${this.queryHash}`
+                );
+              }
+              onError(new Error(`${this.queryHash} data is undefined`));
+              return;
+            }
+            this.setData(data);
+            this.#cache.config.onSuccess?.(data, this);
+            this.#cache.config.onSettled?.(
+              data,
+              this.state.error,
+              this
+            );
+            if (!this.isFetchingOptimistic) {
+              this.scheduleGc();
+            }
+            this.isFetchingOptimistic = false;
+          },
+          onError,
+          onFail: (failureCount, error) => {
+            this.#dispatch({ type: "failed", failureCount, error });
+          },
+          onPause: () => {
+            this.#dispatch({ type: "pause" });
+          },
+          onContinue: () => {
+            this.#dispatch({ type: "continue" });
+          },
+          retry: context.options.retry,
+          retryDelay: context.options.retryDelay,
+          networkMode: context.options.networkMode,
+          canRun: () => true
+        });
+        return this.#retryer.start();
+      }
+      #dispatch(action) {
+        const reducer = (state) => {
+          switch (action.type) {
+            case "failed":
+              return {
+                ...state,
+                fetchFailureCount: action.failureCount,
+                fetchFailureReason: action.error
+              };
+            case "pause":
+              return {
+                ...state,
+                fetchStatus: "paused"
+              };
+            case "continue":
+              return {
+                ...state,
+                fetchStatus: "fetching"
+              };
+            case "fetch":
+              return {
+                ...state,
+                ...fetchState(state.data, this.options),
+                fetchMeta: action.meta ?? null
+              };
+            case "success":
+              return {
+                ...state,
+                data: action.data,
+                dataUpdateCount: state.dataUpdateCount + 1,
+                dataUpdatedAt: action.dataUpdatedAt ?? Date.now(),
+                error: null,
+                isInvalidated: false,
+                status: "success",
+                ...!action.manual && {
+                  fetchStatus: "idle",
+                  fetchFailureCount: 0,
+                  fetchFailureReason: null
+                }
+              };
+            case "error":
+              const error = action.error;
+              if (isCancelledError(error) && error.revert && this.#revertState) {
+                return { ...this.#revertState, fetchStatus: "idle" };
+              }
+              return {
+                ...state,
+                error,
+                errorUpdateCount: state.errorUpdateCount + 1,
+                errorUpdatedAt: Date.now(),
+                fetchFailureCount: state.fetchFailureCount + 1,
+                fetchFailureReason: error,
+                fetchStatus: "idle",
+                status: "error"
+              };
+            case "invalidate":
+              return {
+                ...state,
+                isInvalidated: true
+              };
+            case "setState":
+              return {
+                ...state,
+                ...action.state
+              };
+          }
+        };
+        this.state = reducer(this.state);
+        notifyManager.batch(() => {
+          this.observers.forEach((observer) => {
+            observer.onQueryUpdate();
+          });
+          this.#cache.notify({ query: this, type: "updated", action });
+        });
+      }
+    };
+    QueryCache = class extends Subscribable {
+      constructor(config = {}) {
+        super();
+        this.config = config;
+        this.#queries = /* @__PURE__ */ new Map();
+      }
+      #queries;
+      build(client, options2, state) {
+        const queryKey = options2.queryKey;
+        const queryHash = options2.queryHash ?? hashQueryKeyByOptions(queryKey, options2);
+        let query = this.get(queryHash);
+        if (!query) {
+          query = new Query({
+            cache: this,
+            queryKey,
+            queryHash,
+            options: client.defaultQueryOptions(options2),
+            state,
+            defaultOptions: client.getQueryDefaults(queryKey)
+          });
+          this.add(query);
+        }
+        return query;
+      }
+      add(query) {
+        if (!this.#queries.has(query.queryHash)) {
+          this.#queries.set(query.queryHash, query);
+          this.notify({
+            type: "added",
+            query
+          });
+        }
+      }
+      remove(query) {
+        const queryInMap = this.#queries.get(query.queryHash);
+        if (queryInMap) {
+          query.destroy();
+          if (queryInMap === query) {
+            this.#queries.delete(query.queryHash);
+          }
+          this.notify({ type: "removed", query });
+        }
+      }
+      clear() {
+        notifyManager.batch(() => {
+          this.getAll().forEach((query) => {
+            this.remove(query);
+          });
+        });
+      }
+      get(queryHash) {
+        return this.#queries.get(queryHash);
+      }
+      getAll() {
+        return [...this.#queries.values()];
+      }
+      find(filters) {
+        const defaultedFilters = { exact: true, ...filters };
+        return this.getAll().find(
+          (query) => matchQuery(defaultedFilters, query)
+        );
+      }
+      findAll(filters = {}) {
+        const queries = this.getAll();
+        return Object.keys(filters).length > 0 ? queries.filter((query) => matchQuery(filters, query)) : queries;
+      }
+      notify(event) {
+        notifyManager.batch(() => {
+          this.listeners.forEach((listener) => {
+            listener(event);
+          });
+        });
+      }
+      onFocus() {
+        notifyManager.batch(() => {
+          this.getAll().forEach((query) => {
+            query.onFocus();
+          });
+        });
+      }
+      onOnline() {
+        notifyManager.batch(() => {
+          this.getAll().forEach((query) => {
+            query.onOnline();
+          });
+        });
+      }
+    };
+    Mutation = class extends Removable {
+      #observers;
+      #mutationCache;
+      #retryer;
+      constructor(config) {
+        super();
+        this.mutationId = config.mutationId;
+        this.#mutationCache = config.mutationCache;
+        this.#observers = [];
+        this.state = config.state || getDefaultState();
+        this.setOptions(config.options);
+        this.scheduleGc();
+      }
+      setOptions(options2) {
+        this.options = options2;
+        this.updateGcTime(this.options.gcTime);
+      }
+      get meta() {
+        return this.options.meta;
+      }
+      addObserver(observer) {
+        if (!this.#observers.includes(observer)) {
+          this.#observers.push(observer);
+          this.clearGcTimeout();
+          this.#mutationCache.notify({
+            type: "observerAdded",
+            mutation: this,
+            observer
+          });
+        }
+      }
+      removeObserver(observer) {
+        this.#observers = this.#observers.filter((x) => x !== observer);
+        this.scheduleGc();
+        this.#mutationCache.notify({
+          type: "observerRemoved",
+          mutation: this,
+          observer
+        });
+      }
+      optionalRemove() {
+        if (!this.#observers.length) {
+          if (this.state.status === "pending") {
+            this.scheduleGc();
+          } else {
+            this.#mutationCache.remove(this);
+          }
+        }
+      }
+      continue() {
+        return this.#retryer?.continue() ?? // continuing a mutation assumes that variables are set, mutation must have been dehydrated before
+        this.execute(this.state.variables);
+      }
+      async execute(variables) {
+        this.#retryer = createRetryer({
+          fn: () => {
+            if (!this.options.mutationFn) {
+              return Promise.reject(new Error("No mutationFn found"));
+            }
+            return this.options.mutationFn(variables);
+          },
+          onFail: (failureCount, error) => {
+            this.#dispatch({ type: "failed", failureCount, error });
+          },
+          onPause: () => {
+            this.#dispatch({ type: "pause" });
+          },
+          onContinue: () => {
+            this.#dispatch({ type: "continue" });
+          },
+          retry: this.options.retry ?? 0,
+          retryDelay: this.options.retryDelay,
+          networkMode: this.options.networkMode,
+          canRun: () => this.#mutationCache.canRun(this)
+        });
+        const restored = this.state.status === "pending";
+        const isPaused = !this.#retryer.canStart();
+        try {
+          if (!restored) {
+            this.#dispatch({ type: "pending", variables, isPaused });
+            await this.#mutationCache.config.onMutate?.(
+              variables,
+              this
+            );
+            const context = await this.options.onMutate?.(variables);
+            if (context !== this.state.context) {
+              this.#dispatch({
+                type: "pending",
+                context,
+                variables,
+                isPaused
+              });
+            }
+          }
+          const data = await this.#retryer.start();
+          await this.#mutationCache.config.onSuccess?.(
+            data,
+            variables,
+            this.state.context,
+            this
+          );
+          await this.options.onSuccess?.(data, variables, this.state.context);
+          await this.#mutationCache.config.onSettled?.(
+            data,
+            null,
+            this.state.variables,
+            this.state.context,
+            this
+          );
+          await this.options.onSettled?.(data, null, variables, this.state.context);
+          this.#dispatch({ type: "success", data });
+          return data;
+        } catch (error) {
+          try {
+            await this.#mutationCache.config.onError?.(
+              error,
+              variables,
+              this.state.context,
+              this
+            );
+            await this.options.onError?.(
+              error,
+              variables,
+              this.state.context
+            );
+            await this.#mutationCache.config.onSettled?.(
+              void 0,
+              error,
+              this.state.variables,
+              this.state.context,
+              this
+            );
+            await this.options.onSettled?.(
+              void 0,
+              error,
+              variables,
+              this.state.context
+            );
+            throw error;
+          } finally {
+            this.#dispatch({ type: "error", error });
+          }
+        } finally {
+          this.#mutationCache.runNext(this);
+        }
+      }
+      #dispatch(action) {
+        const reducer = (state) => {
+          switch (action.type) {
+            case "failed":
+              return {
+                ...state,
+                failureCount: action.failureCount,
+                failureReason: action.error
+              };
+            case "pause":
+              return {
+                ...state,
+                isPaused: true
+              };
+            case "continue":
+              return {
+                ...state,
+                isPaused: false
+              };
+            case "pending":
+              return {
+                ...state,
+                context: action.context,
+                data: void 0,
+                failureCount: 0,
+                failureReason: null,
+                error: null,
+                isPaused: action.isPaused,
+                status: "pending",
+                variables: action.variables,
+                submittedAt: Date.now()
+              };
+            case "success":
+              return {
+                ...state,
+                data: action.data,
+                failureCount: 0,
+                failureReason: null,
+                error: null,
+                status: "success",
+                isPaused: false
+              };
+            case "error":
+              return {
+                ...state,
+                data: void 0,
+                error: action.error,
+                failureCount: state.failureCount + 1,
+                failureReason: action.error,
+                isPaused: false,
+                status: "error"
+              };
+          }
+        };
+        this.state = reducer(this.state);
+        notifyManager.batch(() => {
+          this.#observers.forEach((observer) => {
+            observer.onMutationUpdate(action);
+          });
+          this.#mutationCache.notify({
+            mutation: this,
+            type: "updated",
+            action
+          });
+        });
+      }
+    };
+    MutationCache = class extends Subscribable {
+      constructor(config = {}) {
+        super();
+        this.config = config;
+        this.#mutations = /* @__PURE__ */ new Map();
+        this.#mutationId = Date.now();
+      }
+      #mutations;
+      #mutationId;
+      build(client, options2, state) {
+        const mutation = new Mutation({
+          mutationCache: this,
+          mutationId: ++this.#mutationId,
+          options: client.defaultMutationOptions(options2),
+          state
+        });
+        this.add(mutation);
+        return mutation;
+      }
+      add(mutation) {
+        const scope = scopeFor(mutation);
+        const mutations = this.#mutations.get(scope) ?? [];
+        mutations.push(mutation);
+        this.#mutations.set(scope, mutations);
+        this.notify({ type: "added", mutation });
+      }
+      remove(mutation) {
+        const scope = scopeFor(mutation);
+        if (this.#mutations.has(scope)) {
+          const mutations = this.#mutations.get(scope)?.filter((x) => x !== mutation);
+          if (mutations) {
+            if (mutations.length === 0) {
+              this.#mutations.delete(scope);
+            } else {
+              this.#mutations.set(scope, mutations);
+            }
+          }
+        }
+        this.notify({ type: "removed", mutation });
+      }
+      canRun(mutation) {
+        const firstPendingMutation = this.#mutations.get(scopeFor(mutation))?.find((m) => m.state.status === "pending");
+        return !firstPendingMutation || firstPendingMutation === mutation;
+      }
+      runNext(mutation) {
+        const foundMutation = this.#mutations.get(scopeFor(mutation))?.find((m) => m !== mutation && m.state.isPaused);
+        return foundMutation?.continue() ?? Promise.resolve();
+      }
+      clear() {
+        notifyManager.batch(() => {
+          this.getAll().forEach((mutation) => {
+            this.remove(mutation);
+          });
+        });
+      }
+      getAll() {
+        return [...this.#mutations.values()].flat();
+      }
+      find(filters) {
+        const defaultedFilters = { exact: true, ...filters };
+        return this.getAll().find(
+          (mutation) => matchMutation(defaultedFilters, mutation)
+        );
+      }
+      findAll(filters = {}) {
+        return this.getAll().filter((mutation) => matchMutation(filters, mutation));
+      }
+      notify(event) {
+        notifyManager.batch(() => {
+          this.listeners.forEach((listener) => {
+            listener(event);
+          });
+        });
+      }
+      resumePausedMutations() {
+        const pausedMutations = this.getAll().filter((x) => x.state.isPaused);
+        return notifyManager.batch(
+          () => Promise.all(
+            pausedMutations.map((mutation) => mutation.continue().catch(noop2))
+          )
+        );
+      }
+    };
+    QueryClient = class {
+      #queryCache;
+      #mutationCache;
+      #defaultOptions;
+      #queryDefaults;
+      #mutationDefaults;
+      #mountCount;
+      #unsubscribeFocus;
+      #unsubscribeOnline;
+      constructor(config = {}) {
+        this.#queryCache = config.queryCache || new QueryCache();
+        this.#mutationCache = config.mutationCache || new MutationCache();
+        this.#defaultOptions = config.defaultOptions || {};
+        this.#queryDefaults = /* @__PURE__ */ new Map();
+        this.#mutationDefaults = /* @__PURE__ */ new Map();
+        this.#mountCount = 0;
+      }
+      mount() {
+        this.#mountCount++;
+        if (this.#mountCount !== 1)
+          return;
+        this.#unsubscribeFocus = focusManager.subscribe(async (focused) => {
+          if (focused) {
+            await this.resumePausedMutations();
+            this.#queryCache.onFocus();
+          }
+        });
+        this.#unsubscribeOnline = onlineManager.subscribe(async (online) => {
+          if (online) {
+            await this.resumePausedMutations();
+            this.#queryCache.onOnline();
+          }
+        });
+      }
+      unmount() {
+        this.#mountCount--;
+        if (this.#mountCount !== 0)
+          return;
+        this.#unsubscribeFocus?.();
+        this.#unsubscribeFocus = void 0;
+        this.#unsubscribeOnline?.();
+        this.#unsubscribeOnline = void 0;
+      }
+      isFetching(filters) {
+        return this.#queryCache.findAll({ ...filters, fetchStatus: "fetching" }).length;
+      }
+      isMutating(filters) {
+        return this.#mutationCache.findAll({ ...filters, status: "pending" }).length;
+      }
+      getQueryData(queryKey) {
+        const options2 = this.defaultQueryOptions({ queryKey });
+        return this.#queryCache.get(options2.queryHash)?.state.data;
+      }
+      ensureQueryData(options2) {
+        const cachedData = this.getQueryData(options2.queryKey);
+        if (cachedData === void 0)
+          return this.fetchQuery(options2);
+        else {
+          const defaultedOptions = this.defaultQueryOptions(options2);
+          const query = this.#queryCache.build(this, defaultedOptions);
+          if (options2.revalidateIfStale && query.isStaleByTime(defaultedOptions.staleTime)) {
+            void this.prefetchQuery(defaultedOptions);
+          }
+          return Promise.resolve(cachedData);
+        }
+      }
+      getQueriesData(filters) {
+        return this.#queryCache.findAll(filters).map(({ queryKey, state }) => {
+          const data = state.data;
+          return [queryKey, data];
+        });
+      }
+      setQueryData(queryKey, updater, options2) {
+        const defaultedOptions = this.defaultQueryOptions({ queryKey });
+        const query = this.#queryCache.get(
+          defaultedOptions.queryHash
+        );
+        const prevData = query?.state.data;
+        const data = functionalUpdate(updater, prevData);
+        if (data === void 0) {
+          return void 0;
+        }
+        return this.#queryCache.build(this, defaultedOptions).setData(data, { ...options2, manual: true });
+      }
+      setQueriesData(filters, updater, options2) {
+        return notifyManager.batch(
+          () => this.#queryCache.findAll(filters).map(({ queryKey }) => [
+            queryKey,
+            this.setQueryData(queryKey, updater, options2)
+          ])
+        );
+      }
+      getQueryState(queryKey) {
+        const options2 = this.defaultQueryOptions({ queryKey });
+        return this.#queryCache.get(options2.queryHash)?.state;
+      }
+      removeQueries(filters) {
+        const queryCache = this.#queryCache;
+        notifyManager.batch(() => {
+          queryCache.findAll(filters).forEach((query) => {
+            queryCache.remove(query);
+          });
+        });
+      }
+      resetQueries(filters, options2) {
+        const queryCache = this.#queryCache;
+        const refetchFilters = {
+          type: "active",
+          ...filters
+        };
+        return notifyManager.batch(() => {
+          queryCache.findAll(filters).forEach((query) => {
+            query.reset();
+          });
+          return this.refetchQueries(refetchFilters, options2);
+        });
+      }
+      cancelQueries(filters = {}, cancelOptions = {}) {
+        const defaultedCancelOptions = { revert: true, ...cancelOptions };
+        const promises = notifyManager.batch(
+          () => this.#queryCache.findAll(filters).map((query) => query.cancel(defaultedCancelOptions))
+        );
+        return Promise.all(promises).then(noop2).catch(noop2);
+      }
+      invalidateQueries(filters = {}, options2 = {}) {
+        return notifyManager.batch(() => {
+          this.#queryCache.findAll(filters).forEach((query) => {
+            query.invalidate();
+          });
+          if (filters.refetchType === "none") {
+            return Promise.resolve();
+          }
+          const refetchFilters = {
+            ...filters,
+            type: filters.refetchType ?? filters.type ?? "active"
+          };
+          return this.refetchQueries(refetchFilters, options2);
+        });
+      }
+      refetchQueries(filters = {}, options2) {
+        const fetchOptions = {
+          ...options2,
+          cancelRefetch: options2?.cancelRefetch ?? true
+        };
+        const promises = notifyManager.batch(
+          () => this.#queryCache.findAll(filters).filter((query) => !query.isDisabled()).map((query) => {
+            let promise = query.fetch(void 0, fetchOptions);
+            if (!fetchOptions.throwOnError) {
+              promise = promise.catch(noop2);
+            }
+            return query.state.fetchStatus === "paused" ? Promise.resolve() : promise;
+          })
+        );
+        return Promise.all(promises).then(noop2);
+      }
+      fetchQuery(options2) {
+        const defaultedOptions = this.defaultQueryOptions(options2);
+        if (defaultedOptions.retry === void 0) {
+          defaultedOptions.retry = false;
+        }
+        const query = this.#queryCache.build(this, defaultedOptions);
+        return query.isStaleByTime(defaultedOptions.staleTime) ? query.fetch(defaultedOptions) : Promise.resolve(query.state.data);
+      }
+      prefetchQuery(options2) {
+        return this.fetchQuery(options2).then(noop2).catch(noop2);
+      }
+      fetchInfiniteQuery(options2) {
+        options2.behavior = infiniteQueryBehavior(options2.pages);
+        return this.fetchQuery(options2);
+      }
+      prefetchInfiniteQuery(options2) {
+        return this.fetchInfiniteQuery(options2).then(noop2).catch(noop2);
+      }
+      resumePausedMutations() {
+        if (onlineManager.isOnline()) {
+          return this.#mutationCache.resumePausedMutations();
+        }
+        return Promise.resolve();
+      }
+      getQueryCache() {
+        return this.#queryCache;
+      }
+      getMutationCache() {
+        return this.#mutationCache;
+      }
+      getDefaultOptions() {
+        return this.#defaultOptions;
+      }
+      setDefaultOptions(options2) {
+        this.#defaultOptions = options2;
+      }
+      setQueryDefaults(queryKey, options2) {
+        this.#queryDefaults.set(hashKey(queryKey), {
+          queryKey,
+          defaultOptions: options2
+        });
+      }
+      getQueryDefaults(queryKey) {
+        const defaults = [...this.#queryDefaults.values()];
+        let result = {};
+        defaults.forEach((queryDefault) => {
+          if (partialMatchKey(queryKey, queryDefault.queryKey)) {
+            result = { ...result, ...queryDefault.defaultOptions };
+          }
+        });
+        return result;
+      }
+      setMutationDefaults(mutationKey, options2) {
+        this.#mutationDefaults.set(hashKey(mutationKey), {
+          mutationKey,
+          defaultOptions: options2
+        });
+      }
+      getMutationDefaults(mutationKey) {
+        const defaults = [...this.#mutationDefaults.values()];
+        let result = {};
+        defaults.forEach((queryDefault) => {
+          if (partialMatchKey(mutationKey, queryDefault.mutationKey)) {
+            result = { ...result, ...queryDefault.defaultOptions };
+          }
+        });
+        return result;
+      }
+      defaultQueryOptions(options2) {
+        if (options2._defaulted) {
+          return options2;
+        }
+        const defaultedOptions = {
+          ...this.#defaultOptions.queries,
+          ...this.getQueryDefaults(options2.queryKey),
+          ...options2,
+          _defaulted: true
+        };
+        if (!defaultedOptions.queryHash) {
+          defaultedOptions.queryHash = hashQueryKeyByOptions(
+            defaultedOptions.queryKey,
+            defaultedOptions
+          );
+        }
+        if (defaultedOptions.refetchOnReconnect === void 0) {
+          defaultedOptions.refetchOnReconnect = defaultedOptions.networkMode !== "always";
+        }
+        if (defaultedOptions.throwOnError === void 0) {
+          defaultedOptions.throwOnError = !!defaultedOptions.suspense;
+        }
+        if (!defaultedOptions.networkMode && defaultedOptions.persister) {
+          defaultedOptions.networkMode = "offlineFirst";
+        }
+        if (defaultedOptions.enabled !== true && defaultedOptions.queryFn === skipToken) {
+          defaultedOptions.enabled = false;
+        }
+        return defaultedOptions;
+      }
+      defaultMutationOptions(options2) {
+        if (options2?._defaulted) {
+          return options2;
+        }
+        return {
+          ...this.#defaultOptions.mutations,
+          ...options2?.mutationKey && this.getMutationDefaults(options2.mutationKey),
+          ...options2,
+          _defaulted: true
+        };
+      }
+      clear() {
+        this.#queryCache.clear();
+        this.#mutationCache.clear();
+      }
+    };
+    load = ({ data }) => {
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+            refetchOnReconnect: true,
+            retry: (failureCount, error) => {
+              if (error instanceof TypeError) {
+                return false;
+              } else {
+                return failureCount < 3;
+              }
+            },
+            staleTime: 1e3 * 60 * 60
+          }
+        }
+      });
+      return {
+        ...data,
+        queryClient
+      };
+    };
+  }
+});
+
+// .svelte-kit/output/server/entries/pages/_layout.server.ts.js
+var layout_server_ts_exports = {};
+__export(layout_server_ts_exports, {
+  load: () => load2
+});
+var load2;
+var init_layout_server_ts = __esm({
+  ".svelte-kit/output/server/entries/pages/_layout.server.ts.js"() {
+    load2 = async ({ locals }) => {
+      const tholaApp = locals.tholaApp;
+      return {
+        tholaApp
+      };
+    };
+  }
+});
+
+// .svelte-kit/output/server/entries/pages/_layout.svelte.js
 var layout_svelte_exports = {};
 __export(layout_svelte_exports, {
-  default: () => Layout
+  default: () => _layout
 });
-function default_slot($$props) {
-  var children = $$props.$$slots?.default;
-  if (children === true) {
-    return $$props.children;
-  } else {
-    return children;
-  }
-}
-function Layout($$payload, $$props) {
+function _layout($$payload, $$props) {
   push();
+  let { children } = $$props;
   $$payload.out += `<!--[-->`;
-  slot($$payload, default_slot($$props), {});
+  children($$payload);
   $$payload.out += `<!--]-->`;
   pop();
 }
 var init_layout_svelte = __esm({
-  ".svelte-kit/output/server/entries/fallbacks/layout.svelte.js"() {
+  ".svelte-kit/output/server/entries/pages/_layout.svelte.js"() {
     init_chunks();
   }
 });
@@ -358,15 +2133,23 @@ __export(__exports, {
   fonts: () => fonts,
   imports: () => imports,
   index: () => index,
-  stylesheets: () => stylesheets
+  server: () => layout_server_ts_exports,
+  server_id: () => server_id,
+  stylesheets: () => stylesheets,
+  universal: () => layout_ts_exports,
+  universal_id: () => universal_id
 });
-var index, component_cache, component, imports, stylesheets, fonts;
+var index, component_cache, component, universal_id, server_id, imports, stylesheets, fonts;
 var init__ = __esm({
   ".svelte-kit/output/server/nodes/0.js"() {
+    init_layout_ts();
+    init_layout_server_ts();
     index = 0;
     component = async () => component_cache ??= (await Promise.resolve().then(() => (init_layout_svelte(), layout_svelte_exports))).default;
-    imports = ["_app/immutable/nodes/0.BzvUyIPW.js", "_app/immutable/chunks/disclose-version.BV7kU63y.js", "_app/immutable/chunks/runtime.DwUChn-q.js"];
-    stylesheets = [];
+    universal_id = "src/routes/+layout.ts";
+    server_id = "src/routes/+layout.server.ts";
+    imports = ["_app/immutable/nodes/0.Cl9iPVe4.js", "_app/immutable/chunks/disclose-version.DUFzwedZ.js", "_app/immutable/chunks/runtime.wKpDxbyn.js"];
+    stylesheets = ["_app/immutable/assets/0.CeAG9lh6.css"];
     fonts = [];
   }
 });
@@ -460,7 +2243,7 @@ var init__2 = __esm({
   ".svelte-kit/output/server/nodes/1.js"() {
     index2 = 1;
     component2 = async () => component_cache2 ??= (await Promise.resolve().then(() => (init_error_svelte(), error_svelte_exports))).default;
-    imports2 = ["_app/immutable/nodes/1.BOP6fmql.js", "_app/immutable/chunks/disclose-version.BV7kU63y.js", "_app/immutable/chunks/runtime.DwUChn-q.js", "_app/immutable/chunks/stores.C2ukkQ3v.js", "_app/immutable/chunks/entry.Dex6HvpP.js"];
+    imports2 = ["_app/immutable/nodes/1.BuNM4HiL.js", "_app/immutable/chunks/disclose-version.DUFzwedZ.js", "_app/immutable/chunks/runtime.wKpDxbyn.js", "_app/immutable/chunks/render.C0LxGJ6e.js", "_app/immutable/chunks/stores.DswckbV_.js", "_app/immutable/chunks/entry.BIvqhjbk.js"];
     stylesheets2 = [];
     fonts2 = [];
   }
@@ -474,12 +2257,8 @@ __export(page_svelte_exports, {
 function _page($$payload, $$props) {
   push();
   var $$store_subs;
-  let app = (() => {
-    const [subdomain] = store_get($$store_subs ??= {}, "$page", page).url.host.split(".");
-    return subdomain;
-  })();
-  $$payload.out += `<h1>Welcome to SvelteKit</h1> <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation for
-	tholaKimonganga: ${escape_html(app)}</p>`;
+  $$payload.out += `<h1>Thola Kimonganga Landing Page</h1> <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation for
+	tholaKimonganga: ${escape_html(store_get($$store_subs ??= {}, "$page", page).data.tholaApp)}</p>`;
   if ($$store_subs)
     unsubscribe_stores($$store_subs);
   pop();
@@ -505,7 +2284,7 @@ var init__3 = __esm({
   ".svelte-kit/output/server/nodes/2.js"() {
     index3 = 2;
     component3 = async () => component_cache3 ??= (await Promise.resolve().then(() => (init_page_svelte(), page_svelte_exports))).default;
-    imports3 = ["_app/immutable/nodes/2.D572DyHD.js", "_app/immutable/chunks/disclose-version.BV7kU63y.js", "_app/immutable/chunks/runtime.DwUChn-q.js", "_app/immutable/chunks/stores.C2ukkQ3v.js", "_app/immutable/chunks/entry.Dex6HvpP.js"];
+    imports3 = ["_app/immutable/nodes/2.DDUo-ka2.js", "_app/immutable/chunks/disclose-version.DUFzwedZ.js", "_app/immutable/chunks/runtime.wKpDxbyn.js", "_app/immutable/chunks/render.C0LxGJ6e.js", "_app/immutable/chunks/stores.DswckbV_.js", "_app/immutable/chunks/entry.BIvqhjbk.js"];
     stylesheets3 = [];
     fonts3 = [];
   }
@@ -1902,10 +3681,12 @@ var options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "13csyjj"
+  version_hash: "1bbpakc"
 };
 async function get_hooks() {
-  return {};
+  return {
+    ...await Promise.resolve().then(() => (init_hooks_server(), hooks_server_exports))
+  };
 }
 
 // .svelte-kit/output/server/index.js
@@ -5675,7 +7456,7 @@ var manifest = (() => {
     assets: /* @__PURE__ */ new Set(["favicon.png"]),
     mimeTypes: { ".png": "image/png" },
     _: {
-      client: { "start": "_app/immutable/entry/start.DMpAVnmF.js", "app": "_app/immutable/entry/app.BWgtBYMX.js", "imports": ["_app/immutable/entry/start.DMpAVnmF.js", "_app/immutable/chunks/entry.Dex6HvpP.js", "_app/immutable/chunks/runtime.DwUChn-q.js", "_app/immutable/entry/app.BWgtBYMX.js", "_app/immutable/chunks/runtime.DwUChn-q.js", "_app/immutable/chunks/disclose-version.BV7kU63y.js"], "stylesheets": [], "fonts": [], "uses_env_dynamic_public": false },
+      client: { "start": "_app/immutable/entry/start.D_mcwv1Q.js", "app": "_app/immutable/entry/app.BuFCFk9b.js", "imports": ["_app/immutable/entry/start.D_mcwv1Q.js", "_app/immutable/chunks/entry.BIvqhjbk.js", "_app/immutable/chunks/runtime.wKpDxbyn.js", "_app/immutable/entry/app.BuFCFk9b.js", "_app/immutable/chunks/runtime.wKpDxbyn.js", "_app/immutable/chunks/render.C0LxGJ6e.js", "_app/immutable/chunks/disclose-version.DUFzwedZ.js"], "stylesheets": [], "fonts": [], "uses_env_dynamic_public": false },
       nodes: [
         __memo(() => Promise.resolve().then(() => (init__(), __exports))),
         __memo(() => Promise.resolve().then(() => (init__2(), __exports2))),

@@ -112,21 +112,13 @@ function unsubscribe_stores(store_values) {
     store_values[store_name][1]();
   }
 }
-function slot(payload, slot_fn, slot_props, fallback_fn) {
-  if (slot_fn === void 0)
-    ;
-  else {
-    slot_fn(payload, slot_props);
-  }
-}
 export {
   HYDRATION_START as H,
   PassiveDelegatedEvents as P,
   UNINITIALIZED as U,
   HYDRATION_END as a,
   pop as b,
-  slot as c,
-  store_get as d,
+  store_get as c,
   getContext as g,
   noop as n,
   push as p,

@@ -21,6 +21,9 @@
     "name": "internal",
     "imports": [
       "_index.js"
+    ],
+    "dynamicImports": [
+      "src/hooks.server.ts"
     ]
   },
   "_stores.js": {
@@ -41,15 +44,6 @@
       "_stores.js"
     ]
   },
-  "node_modules/.pnpm/@sveltejs+kit@2.5.8_@sveltejs+vite-plugin-svelte@3.1.0_svelte@5.0.0-next.135_vite@5.2.11_@typ_kvav7biiq33ywztmj6c4mhngo4/node_modules/@sveltejs/kit/src/runtime/components/layout.svelte": {
-    "file": "entries/fallbacks/layout.svelte.js",
-    "name": "entries/fallbacks/layout.svelte",
-    "src": "node_modules/.pnpm/@sveltejs+kit@2.5.8_@sveltejs+vite-plugin-svelte@3.1.0_svelte@5.0.0-next.135_vite@5.2.11_@typ_kvav7biiq33ywztmj6c4mhngo4/node_modules/@sveltejs/kit/src/runtime/components/layout.svelte",
-    "isEntry": true,
-    "imports": [
-      "_index.js"
-    ]
-  },
   "node_modules/.pnpm/@sveltejs+kit@2.5.8_@sveltejs+vite-plugin-svelte@3.1.0_svelte@5.0.0-next.135_vite@5.2.11_@typ_kvav7biiq33ywztmj6c4mhngo4/node_modules/@sveltejs/kit/src/runtime/server/index.js": {
     "file": "index.js",
     "name": "index",
@@ -60,6 +54,36 @@
       "_exports.js",
       "_index.js"
     ]
+  },
+  "src/hooks.server.ts": {
+    "file": "chunks/hooks.server.js",
+    "name": "hooks.server",
+    "src": "src/hooks.server.ts",
+    "isDynamicEntry": true
+  },
+  "src/routes/+layout.server.ts": {
+    "file": "entries/pages/_layout.server.ts.js",
+    "name": "entries/pages/_layout.server.ts",
+    "src": "src/routes/+layout.server.ts",
+    "isEntry": true
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_layout.CeAG9lh6.css"
+    ]
+  },
+  "src/routes/+layout.ts": {
+    "file": "entries/pages/_layout.ts.js",
+    "name": "entries/pages/_layout.ts",
+    "src": "src/routes/+layout.ts",
+    "isEntry": true
   },
   "src/routes/+page.svelte": {
     "file": "entries/pages/_page.svelte.js",
