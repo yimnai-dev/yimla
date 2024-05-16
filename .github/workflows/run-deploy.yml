@@ -1,14 +1,25 @@
 name: Deploy Application on cloudflare pages
 run-name: ${{ github.actor }} is deploying Thola Kimonganga
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Run all tests"]
+    types:
+      - completed
+
 jobs:
   check-deploy-on-cloudflare:
     runs-on: ubuntu-latest
+    default:
+      run:
+        working-directory: packages/thola-kimonganga-ui
+    needs: Run all tests.job_id  # Replace `job_id` with the actual job ID from the dependent workflow
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: cd packages/thola-kimonganga-ui
       - run: npm install -g pnpm && pnpm install
       - run: pnpm run deploy
