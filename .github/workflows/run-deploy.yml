@@ -1,6 +1,6 @@
 name: Deploy Application on cloudflare pages
 run-name: ${{ github.actor }} is deploying Thola Kimonganga
-on: [merge]
+on: [push]
 jobs:
   check-deploy-on-cloudflare:
     runs-on: ubuntu-latest

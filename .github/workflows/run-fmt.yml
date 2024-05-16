@@ -9,5 +9,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: cd packages/thola-kimonganga-ui    
+      - run: cd packages/thola-kimonganga-ui && npm install -g pnpm && pnpm install
       - run: npm run check && npm run format && npm run lint
