@@ -25,13 +25,10 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies
+      - name: Install dependencies and Check formatting and linting
         run: |
           npm install -g pnpm
           pnpm install
-
-      - name: Check formatting and linting
-        run: |
           pnpm run check && pnpm run format && pnpm run lint
 
   check-app-tests:
