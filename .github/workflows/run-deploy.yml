@@ -11,4 +11,4 @@ jobs:
           node-version: '20'
       - run: cd packages/thola-kimonganga-ui
       - run: npm install -g pnpm && pnpm install
-      - run: npm run deploy
+      - run: pnpm run deploy

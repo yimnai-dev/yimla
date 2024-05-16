@@ -10,4 +10,4 @@ jobs:
         with:
           node-version: '20'
       - run: cd packages/thola-kimonganga-ui && npm install -g pnpm && pnpm install
-      - run: npm run check && npm run format && npm run lint
+      - run: pnpm run check && pnpm run format && pnpm run lint
