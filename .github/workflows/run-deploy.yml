@@ -18,6 +18,8 @@ jobs:
     needs: 
       - Run all tests
     steps:
+      - name: Tests completed
+        run: echo "all tests pass successfully"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
