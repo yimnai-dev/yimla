@@ -4,7 +4,7 @@ on: [push]
 jobs:
   check-app-formatting:
     runs-on: ubuntu-latest
-    default:
+    defaults:
       run:
         working-directory: packages/thola-kimonganga-ui
     steps:
