@@ -40,8 +40,8 @@ jobs:
     needs: check-app-formatting
     steps:
        - name: List working directory
-        run: ls -la
-        
+         run: ls -la
+
       - name: Confirm Formatting
         run: echo "App formatted correctly"
 
