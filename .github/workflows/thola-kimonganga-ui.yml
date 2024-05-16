@@ -39,8 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-app-formatting
     steps:
-       - name: List working directory
-         run: ls -la
+      - name: List working directory
+        run: ls -la
 
       - name: Confirm Formatting
         run: echo "App formatted correctly"
