@@ -27,5 +27,9 @@ module.exports = {
 				parser: '@typescript-eslint/parser'
 			}
 		}
-	]
+	],
+	rules: {
+		//this rule makes sure eslint doesn't mark a reactive variable such as $page as an invalid variable name as it is valid svelte syntax
+		'svelte/valid-compile': 'off'
+	}
 };

@@ -1,18 +1,13 @@
 <script lang="ts">
-	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
 
-	let app = $derived.by(() => {
-		if (dev) {
-			return 'thola-client';
-		}
-		const [subdomain] = $page.url.host.split('.');
-		return subdomain;
+	$effect(() => {
+		console.log('tholaApp: ', $page.data.tholaApp);
 	});
 </script>
 
-<h1>Welcome to SvelteKit</h1>
+<h1>Thola Kimonganga Landing Page</h1>
 <p>
 	Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation for
-	tholaKimonganga: {app}
+	tholaKimonganga: {$page.data.tholaApp}
 </p>
