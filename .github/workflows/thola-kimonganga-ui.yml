@@ -13,6 +13,9 @@ jobs:
   check-app-formatting:
     name: Test Application Wide Formatting
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/thola-kimonganga-ui
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,6 +37,9 @@ jobs:
   check-app-tests:
     name: Run all tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/thola-kimonganga-ui
     needs: check-app-formatting
     steps:
       - name: Confirm Formatting
@@ -53,6 +59,9 @@ jobs:
   check-deploy-on-cloudflare:
     name: Deploy Application on cloudflare pages
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/thola-kimonganga-ui
     needs: check-app-tests
     steps:
       - name: Tests completed
