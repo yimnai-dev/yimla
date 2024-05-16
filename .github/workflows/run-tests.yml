@@ -9,4 +9,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - run: cd packages/thola-kimonganga-ui
       - run: npm run test
