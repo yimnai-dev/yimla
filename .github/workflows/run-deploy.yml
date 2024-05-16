@@ -12,7 +12,7 @@ on:
 jobs:
   check-deploy-on-cloudflare:
     runs-on: ubuntu-latest
-    default:
+    defaults:
       run:
         working-directory: packages/thola-kimonganga-ui
     needs: Run all tests.job_id  # Replace `job_id` with the actual job ID from the dependent workflow
