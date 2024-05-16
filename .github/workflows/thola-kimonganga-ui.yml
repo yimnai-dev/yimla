@@ -30,44 +30,14 @@ jobs:
           npm install -g pnpm
           pnpm install
           pnpm run check && pnpm run format && pnpm run lint
-
-  check-app-tests:
-    name: Run all tests
-    runs-on: ubuntu-latest
-    needs: check-app-formatting
-    steps:
-      - name: List working directory
-        run: ls -a
-
-      - name: Confirm Formatting
+      - name: Format complete
         run: echo "App formatted correctly"
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
 
       - name: Run tests
         run: pnpm run test
 
-  check-deploy-on-cloudflare:
-    name: Deploy Application on cloudflare pages
-    runs-on: ubuntu-latest
-    needs: check-app-tests
-    steps:
-      - name: Tests completed
+      - name: Tests complete
         run: echo "All tests passed successfully"
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
 
       - name: Deploy application
         run: pnpm run deploy
