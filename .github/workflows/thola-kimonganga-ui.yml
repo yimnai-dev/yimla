@@ -40,4 +40,6 @@ jobs:
         run: echo "All tests passed successfully"
 
       - name: Deploy application
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: pnpm run deploy
