@@ -1,24 +1,15 @@
-name: Run all tests
-run-name: ${{ github.actor }} is running tests
-on:
-  push:
-    branches:
-      - main
-  workflow_run:
-    workflows: ["Test Application Wide Formatting"]
-    types:
-      - completed
-
+name: Test Application Wide Formatting
+run-name: ${{ github.actor }} is testing for formatting and linting bugs
+on: [push]
 jobs:
-  check-app-tests:
+  check-app-formatting:
     runs-on: ubuntu-latest
-    defaults:
+    default:
       run:
         working-directory: packages/thola-kimonganga-ui
-    needs: Test Application Wide Formatting
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: pnpm run test
+          node-version: "20"
+      - run: pnpm run check && pnpm run format && pnpm run lint

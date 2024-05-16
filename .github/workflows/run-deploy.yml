@@ -15,11 +15,10 @@ jobs:
     defaults:
       run:
         working-directory: packages/thola-kimonganga-ui
-    needs: Run all tests.job_id  # Replace `job_id` with the actual job ID from the dependent workflow
+    needs: Run all tests  # Replace `job_id` with the actual job ID from the dependent workflow
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install -g pnpm && pnpm install
       - run: pnpm run deploy

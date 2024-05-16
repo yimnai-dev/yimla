@@ -1,12 +1,21 @@
 name: Run all tests
 run-name: ${{ github.actor }} is running tests
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Test Application Wide Formatting"]
+    types:
+      - completed
+
 jobs:
   check-app-tests:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: packages/thola-kimonganga-ui
+    needs: Test Application Wide Formatting
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
