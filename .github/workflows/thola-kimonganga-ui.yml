@@ -42,6 +42,8 @@ jobs:
         working-directory: packages/thola-kimonganga-ui
     needs: check-app-formatting
     steps:
+      - name: Debug Directory Structure
+        run: ls -la
       - name: Confirm Formatting
         run: echo "App formatted correctly"
 
