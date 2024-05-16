@@ -51,7 +51,7 @@ jobs:
           node-version: '20'
 
       - name: Run tests
-        run: pnpm run test
+        run: npm run test
 
   check-deploy-on-cloudflare:
     name: Deploy Application on cloudflare pages
@@ -70,4 +70,4 @@ jobs:
           node-version: '20'
 
       - name: Deploy application
-        run: pnpm run deploy
+        run: npm run deploy
