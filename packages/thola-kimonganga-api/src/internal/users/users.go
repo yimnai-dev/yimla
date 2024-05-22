@@ -52,21 +52,20 @@ func CoalesceEmptyStrToNil(s string) *string {
 	return &s
 }
 
-
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	var user UserDetails
 	userId := chi.URLParam(r, "userId")
 	if userId == "" {
-		jsonRes := database.ApiError{Message: "A user id is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "A user id is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	useQuery := `SELECT username, email, first_name, last_name FROM users LEFT JOIN accounts ON users.account_id = accounts.account_id WHERE user_id = $1`
 	err := database.Db.QueryRow(useQuery, userId).Scan(&user.Username, &user.Email, &user.FirstName, &user.LastName)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -75,7 +74,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	bytes, err := json.Marshal(user)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -91,7 +90,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	usersQuery := `SELECT userid, username, email, first_name, last_name FROM users LEFT JOIN accounts ON users.account_id = accounts.account_id`
 	err := database.Db.Select(&users, usersQuery)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -99,7 +98,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	jsonBytes, err := json.Marshal(users)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -113,16 +112,16 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	userId := chi.URLParam(r, "userId")
 	if userId == "" {
-		jsonRes := database.ApiError{Message: "A userId is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "A userId is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	deleteUserQuery := `DELETE FROM users WHERE user_id = $1 AND DELETE FROM search_history WHERE user_id = $1 AND DELETE FROM accounts WHERE account_id = (SELECT account_id FROM users WHERE user_id = $1) AND DELETE FROM sessions WHERE account_id = (SELECT account_id FROM users WHERE user_id = $1)`
 	_, err := database.Db.Exec(deleteUserQuery, userId)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -137,16 +136,16 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	userId := chi.URLParam(r, "userId")
 	var userDetails UserDetails
 	if userId == "" {
-		jsonRes := database.ApiError{Message: "A userId is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "A userId is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&userDetails)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -155,7 +154,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	updateUserQuery := `UPDATE accounts SET username = COALESCE($1, username, username), email = COALESCE($2, email, email), firstname = COALESCE($3, first_name, first_name), last_name = COALESCE($4, last_name, last_name) WHERE (account_id = (SELECT account_id FROM users WHERE user_id = $5))`
 	_, err = database.Db.Exec(updateUserQuery, CoalesceEmptyStrToNil(userDetails.Username), CoalesceEmptyStrToNil(userDetails.Email), CoalesceEmptyStrToNil(userDetails.FirstName), CoalesceEmptyStrToNil(userDetails.LastName), userId)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)

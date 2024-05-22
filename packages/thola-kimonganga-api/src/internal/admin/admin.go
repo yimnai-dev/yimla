@@ -37,13 +37,12 @@ type CreateOrganisationProps struct {
 	ConfirmationCode string `json:"confirmationCode"`
 }
 
-
 func Login(w http.ResponseWriter, r *http.Request) {
 	var credentials LoginWithEmailCredentials
 	var account database.Account
 	err := json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -52,23 +51,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	_, err = mail.ParseAddress(credentials.Email)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Wrong Email Format", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Wrong Email Format", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	adminQuery := `SELECT * FROM accounts WHERE email = $1`
 	err = database.Db.Get(&account, adminQuery, credentials.Email)
-	if err != nil && err.Error() == database.ErrNoRows{
-		jsonRes := database.ApiError{Message: "Admin account does not exist", Status: http.StatusBadRequest}
+	if err != nil && err.Error() == database.ErrNoRows {
+		jsonRes := database.ApiError{Message: "Admin account does not exist", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	if err != nil && err.Error() == database.ErrNoRows {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -76,9 +75,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	passwordsMatch := bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(credentials.Password))
 	if passwordsMatch != nil {
-		jsonRes := database.ApiError{Message: "Wrong Password", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Wrong Password", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
@@ -90,7 +89,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	adminSessionQuery := `INSERT INTO SESSIONS (session_key, account_id, start_time, end_time, ip_address, user_agent) VALUES ($1, $2, $3, $4, $5, $6)`
 	_, err = database.Db.Exec(adminSessionQuery, sessionKey, account.AccountId, sessionStart, sessionEnd, ipAddress, userAgent)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -105,7 +104,7 @@ func GetAdmins(w http.ResponseWriter, r *http.Request) {
 	adminsQuery := `SELECT admin_id, accounts.account_id, accounts.email, accounts.username, accounts.first_name, accounts.last_name FROM admins LEFT JOIN accounts ON accounts.role = 'admin'`
 	err := database.Db.Select(&admins, adminsQuery)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -113,7 +112,7 @@ func GetAdmins(w http.ResponseWriter, r *http.Request) {
 	}
 	jsonBytes, err := json.Marshal(admins)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -129,9 +128,9 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 	var confirmationDetails database.ConfirmationCodeDetails
 	err := json.NewDecoder(r.Body).Decode(&props)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
@@ -139,24 +138,24 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 	err = confirmationcodes.GetConfirmationCodeEntry(confirmationcodes.CreateConfirmationCodeProps{Email: props.AdminEmail, Code: props.ConfirmationCode}, &confirmationDetails)
 
 	if err != nil && err.Error() != database.ErrNoRows {
-		jsonRes := database.ApiError{Message: "Wrong Confirmation Code", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Wrong Confirmation Code", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 
 	if confirmationDetails.Code == "" {
-		jsonRes := database.ApiError{Message: "Invalid confirmation code", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Invalid confirmation code", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(strings.ToLower(props.Username)), bcrypt.DefaultCost)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -166,23 +165,23 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 	if isConfirmationCodeExpired {
 		err = confirmationcodes.DeleteConfirmationCode(confirmationcodes.CreateConfirmationCodeProps{Code: confirmationDetails.Code, Email: confirmationDetails.Email})
 		if err != nil {
-			jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+			jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 			jsonResBytes, _ := json.Marshal(jsonRes)
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write(jsonResBytes)
 			return
 		}
-		jsonRes := database.ApiError{Message: "Confirmation code expired. Please try again", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Confirmation code expired. Please try again", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 
 	if confirmationDetails.Code != props.ConfirmationCode || confirmationDetails.Email != props.AdminEmail {
-		jsonRes := database.ApiError{Message: "Wrong confirmation code", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Wrong confirmation code", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
@@ -192,7 +191,7 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 
 	_, err = database.Db.Exec(createOrgAccountQuery, accountId, props.AdminEmail, props.Username, hashedPass, props.Role)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -202,7 +201,7 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 	createOrganisationQuery := `INSERT INTO organisations (account_id, name) VALUES ($1, $2)`
 	_, err = database.Db.Exec(createOrganisationQuery, accountId, props.Name)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -211,7 +210,7 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 
 	err = confirmationcodes.DeleteConfirmationCode(confirmationcodes.CreateConfirmationCodeProps{Code: confirmationDetails.Code, Email: confirmationDetails.Email})
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -225,16 +224,16 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 func DeleteOrganisation(w http.ResponseWriter, r *http.Request) {
 	organisationId := chi.URLParam(r, "organisationId")
 	if organisationId == "" {
-		jsonRes := database.ApiError{Message: "An organisation id is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "An organisation id is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	deleteOrgQuery := `DELETE FROM organisations WHERE organisation_id = $1`
 	_, err := database.Db.Exec(deleteOrgQuery, organisationId)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)

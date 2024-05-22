@@ -27,6 +27,9 @@
                 },
                 "status": {
                     "type": "integer"
+                },
+                "ok": {
+                    "type": "boolean"
                 }
             }
         }

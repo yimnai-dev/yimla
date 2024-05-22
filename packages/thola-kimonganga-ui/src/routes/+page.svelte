@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	$effect(() => {
-		console.log('tholaApp: ', $page.data.tholaApp);
-	});
 </script>
 
 <h1>Thola Kimonganga Landing Page</h1>

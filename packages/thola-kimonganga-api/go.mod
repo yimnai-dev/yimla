@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/resend/resend-go/v2 v2.6.0 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
