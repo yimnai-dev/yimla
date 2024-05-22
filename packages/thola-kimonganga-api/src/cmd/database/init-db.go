@@ -185,6 +185,7 @@ const (
 type ApiError struct {
 	Message string `json:"message"`
 	Status  int    `json:"status"`
+	Ok      bool   `json:"ok"`
 }
 
 type Transaction struct {

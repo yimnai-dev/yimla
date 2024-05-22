@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 
 	// _ "github.com/swaggo/http-swagger/example/go-chi/docs"
 	"github.com/swaggo/http-swagger/v2"
@@ -14,6 +15,7 @@ import (
 	_ "github.com/yimnai-dev/yimla/src/docs"
 	"github.com/yimnai-dev/yimla/src/internal/accounts"
 	"github.com/yimnai-dev/yimla/src/internal/admin"
+	"github.com/yimnai-dev/yimla/src/internal/sessions"
 	"github.com/yimnai-dev/yimla/src/internal/subscriptionPackages"
 	"github.com/yimnai-dev/yimla/src/internal/users"
 )
@@ -40,9 +42,16 @@ func main() {
 	database.InitDb()
 	initRouter()
 }
+// "https://thola-client.yimnai.dev", "https://thola-org.yimnai.dev", "https://thola-pharmacy.yimnai.dev", "http://*"
 
 func initRouter() {
 	router := chi.NewRouter()
+	router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowCredentials: true,
+		// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+	}))
 	router.Use(middleware.Logger)
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Logger)
@@ -70,7 +79,6 @@ func initRouter() {
 func subscriptionPackageRouter(r chi.Router) {
 	r.Route("/subscription-packages", func(r chi.Router) {
 		r.Post("/create", subscriptionpackages.CreateSubscriptionPackage)
-
 		r.Get("/package/{packageId}", subscriptionpackages.GetSubscriptionPackage)
 		r.Get("/all", subscriptionpackages.GetAllSubscriptionPackages)
 		r.Delete("/package/delete/{packageId}", subscriptionpackages.DeleteSubscriptionPackage)
@@ -81,7 +89,11 @@ func subscriptionPackageRouter(r chi.Router) {
 func userRouter(r chi.Router) {
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/email-verification", accounts.VerifyEmail)
+		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
+		r.Put("/reset-password", accounts.ResetAccountPassword)
+		r.Post("/verify-session", sessions.VerifySessionKey)
 		r.Post("/create", accounts.CreateAccount)
+		r.Post("/login", sessions.Login)
 		r.Get("/user/{userId}", users.GetUser)
 		r.Get("/all", users.GetAllUsers)
 		r.Delete("/user/delete/{userId}", users.DeleteUser)
@@ -92,18 +104,20 @@ func userRouter(r chi.Router) {
 func adminRouter(r chi.Router) {
 	r.Route("/admin", func(r chi.Router) {
 		r.Post("/email-verification", accounts.VerifyEmail)
-		r.Post("/login", admin.Login)
+		r.Post("/login", sessions.Login)
 		r.Post("/create", accounts.CreateAccount)
+		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
+		r.Put("/reset-password", accounts.ResetAccountPassword)
 		r.Route("/organisation", func(r chi.Router) {
 			r.Use(AdminOnly)
 			r.Post("/email-verification", accounts.VerifyEmail)
 			r.Post("/account/create", admin.CreateOrganisation)
 			r.Delete("/account/delete/{organisationId}", admin.DeleteOrganisation)
 		})
-		r.Route("/all", func (r chi.Router )  {
+		r.Route("/all", func(r chi.Router) {
 			r.Use(AdminOnly)
 			r.Get("/", admin.GetAdmins)
-		} )
+		})
 	})
 }
 
@@ -128,7 +142,7 @@ func AdminOnly(next http.Handler) http.Handler {
 			w.Write([]byte(`{"message": "Internal Server Error", "status": 500}`))
 			return
 		}
-		
+
 		isSessionExpired := session.EndTime.Before(time.Now())
 		if isSessionExpired {
 			w.WriteHeader(http.StatusUnauthorized)

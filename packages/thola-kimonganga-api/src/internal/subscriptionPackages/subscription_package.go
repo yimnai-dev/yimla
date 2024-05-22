@@ -27,9 +27,9 @@ func CreateSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	var existingPkg database.SubscriptionPackage
 	err := json.NewDecoder(r.Body).Decode(&pkg)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
@@ -47,7 +47,7 @@ func CreateSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		tx.Rollback()
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -55,7 +55,7 @@ func CreateSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	}
 	if reflect.DeepEqual(existingPkg, pkg) {
 		tx.Rollback()
-		jsonRes := database.ApiError{Message: "Subscription package already exists", Status: http.StatusConflict}
+		jsonRes := database.ApiError{Message: "Subscription package already exists", Status: http.StatusConflict, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusConflict)
 		w.Write(jsonResBytes)
@@ -68,23 +68,23 @@ func GetSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	var pkg database.SubscriptionPackageWithId
 	packageId := chi.URLParam(r, "packageId")
 	if packageId == "" {
-		jsonRes := database.ApiError{Message: "A packageId is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "A packageId is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	packageQuery := `SELECT package_id, package_type, duration, price FROM subscription_packages WHERE package_id = $1`
 	err := database.Db.Get(&pkg, packageQuery, packageId)
 	if pkg.PackageType == "" {
-		jsonRes := database.ApiError{Message: "Package Not Found", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Package Not Found", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -92,7 +92,7 @@ func GetSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	}
 	bytes, err := json.Marshal(pkg)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -107,14 +107,14 @@ func GetAllSubscriptionPackages(w http.ResponseWriter, r *http.Request) {
 	packagesQuery := `SELECT * FROM subscriptionpackages`
 	err := database.Db.Select(&pkgs, packagesQuery)
 	if len(pkgs) == 0 {
-		jsonRes := database.ApiError{Message: "No subscription packages found", Status: http.StatusNotFound}
+		jsonRes := database.ApiError{Message: "No subscription packages found", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -122,7 +122,7 @@ func GetAllSubscriptionPackages(w http.ResponseWriter, r *http.Request) {
 	}
 	bytes, err := json.Marshal(pkgs)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -135,16 +135,16 @@ func GetAllSubscriptionPackages(w http.ResponseWriter, r *http.Request) {
 func DeleteSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	packageId := chi.URLParam(r, "packageId")
 	if packageId == "" {
-		jsonRes := database.ApiError{Message: "A packageId is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "A packageId is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	deletePkgQuery := `DELETE FROM subscription_packages WHERE package_id = $1`
 	_, err := database.Db.Exec(deletePkgQuery, packageId)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -159,15 +159,15 @@ func UpdateSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	var pkg database.UpdateSubscriptionPackageStruct
 	packageId := chi.URLParam(r, "packageId")
 	if packageId == "" {
-		jsonRes := database.ApiError{Message: "A packageId is required", Status: http.StatusBadRequest}
+		jsonRes := database.ApiError{Message: "A packageId is required", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
 	err := json.NewDecoder(r.Body).Decode(&pkg)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)
@@ -176,7 +176,7 @@ func UpdateSubscriptionPackage(w http.ResponseWriter, r *http.Request) {
 	updatePkgQuery := `UPDATE subscription_packages SET duration = COALESCE($1, duration), price = COALESCE($2, price) WHERE package_id = $3`
 	_, err = database.Db.Exec(updatePkgQuery, pkg.Duration, pkg.Price, packageId)
 	if err != nil {
-		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError}
+		jsonRes := database.ApiError{Message: "Internal Server Error", Status: http.StatusInternalServerError, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(jsonResBytes)

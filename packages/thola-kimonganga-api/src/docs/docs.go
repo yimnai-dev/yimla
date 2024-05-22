@@ -33,6 +33,9 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
+                },
+                "ok": {
+                    "type": "boolean"
                 }
             }
         }
