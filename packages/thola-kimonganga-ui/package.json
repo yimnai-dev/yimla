@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"deploy": "pnpm run build && wrangler pages deploy",
+		"deploy": "node -r dotenv/config build && pnpm run build && wrangler pages deploy",
 		"cf-typegen": "wrangler types && mv worker-configuration.d.ts src/"
 	},
 	"devDependencies": {
@@ -55,6 +55,7 @@
 		"bits-ui": "^0.21.8",
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.11",
+		"dotenv": "^16.4.5",
 		"formsnap": "^1.0.0",
 		"lucide-svelte": "^0.378.0",
 		"mapbox-gl": "^3.4.0",

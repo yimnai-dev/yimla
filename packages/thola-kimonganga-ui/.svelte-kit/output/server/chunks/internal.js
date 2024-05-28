@@ -1,4 +1,4 @@
-import { U as UNINITIALIZED, H as HYDRATION_START, a as HYDRATION_END, P as PassiveDelegatedEvents, r as render, p as push$1, s as setContext, b as pop$1 } from "./index.js";
+import { U as UNINITIALIZED, H as HYDRATION_START, a as HYDRATION_END, b as HYDRATION_ERROR, P as PassiveDelegatedEvents, r as render, p as push$1, s as setContext, c as pop$1 } from "./index3.js";
 let base = "";
 let assets = base;
 const initial = { base, assets };
@@ -64,14 +64,9 @@ function effect_update_depth_exceeded() {
     throw new Error("effect_update_depth_exceeded");
   }
 }
-function hydration_missing_marker_close() {
+function hydration_failed() {
   {
-    throw new Error("hydration_missing_marker_close");
-  }
-}
-function hydration_missing_marker_open() {
-  {
-    throw new Error("hydration_missing_marker_open");
+    throw new Error("hydration_failed");
   }
 }
 function state_unsafe_mutation() {
@@ -251,7 +246,7 @@ function destroy_effect(effect2) {
 }
 function flush_tasks() {
 }
-function hydration_mismatch() {
+function hydration_mismatch(location) {
   {
     console.warn("hydration_mismatch");
   }
@@ -287,8 +282,10 @@ function destroy_derived(signal) {
 }
 const FLUSH_MICROTASK = 0;
 const FLUSH_SYNC = 1;
+const FLUSH_YIELD = 2;
 let current_scheduler_mode = FLUSH_MICROTASK;
 let is_micro_task_queued = false;
+let is_yield_task_queued = false;
 let is_flushing_effect = false;
 function set_is_flushing_effect(value) {
   is_flushing_effect = value;
@@ -451,7 +448,7 @@ function remove_reaction(signal, dependency) {
     }
   }
   if (reactions_length === 0 && (dependency.f & UNOWNED) !== 0) {
-    set_signal_status(dependency, DIRTY);
+    set_signal_status(dependency, MAYBE_DIRTY);
     remove_reactions(
       /** @type {import('#client').Derived} **/
       dependency,
@@ -519,11 +516,15 @@ function infinite_loop_guard() {
   flush_count++;
 }
 function flush_queued_root_effects(root_effects) {
+  const length = root_effects.length;
+  if (length === 0) {
+    return;
+  }
   infinite_loop_guard();
   var previously_flushing_effect = is_flushing_effect;
   is_flushing_effect = true;
   try {
-    for (var i = 0; i < root_effects.length; i++) {
+    for (var i = 0; i < length; i++) {
       var effect2 = root_effects[i];
       if (effect2.first === null && (effect2.f & BRANCH_EFFECT) === 0) {
         flush_queued_effects([effect2]);
@@ -548,23 +549,37 @@ function flush_queued_effects(effects) {
     }
   }
 }
-function process_microtask() {
+function process_deferred() {
   is_micro_task_queued = false;
+  is_yield_task_queued = false;
   if (flush_count > 101) {
     return;
   }
   const previous_queued_root_effects = current_queued_root_effects;
   current_queued_root_effects = [];
   flush_queued_root_effects(previous_queued_root_effects);
-  if (!is_micro_task_queued) {
+  if (!is_micro_task_queued && !is_yield_task_queued) {
     flush_count = 0;
   }
+}
+async function yield_tick() {
+  await new Promise((fulfil) => {
+    requestAnimationFrame(() => {
+      setTimeout(fulfil, 0);
+    });
+    setTimeout(fulfil, 100);
+  });
 }
 function schedule_effect(signal) {
   if (current_scheduler_mode === FLUSH_MICROTASK) {
     if (!is_micro_task_queued) {
       is_micro_task_queued = true;
-      queueMicrotask(process_microtask);
+      queueMicrotask(process_deferred);
+    }
+  } else if (current_scheduler_mode === FLUSH_YIELD) {
+    if (!is_yield_task_queued) {
+      is_yield_task_queued = true;
+      yield_tick().then(process_deferred);
     }
   }
   var effect2 = signal;
@@ -634,6 +649,15 @@ function process_effects(effect2, collected_effects) {
     child = effects[i];
     collected_effects.push(child);
     process_effects(child, collected_effects);
+  }
+}
+function yield_updates(fn) {
+  const previous_scheduler_mode = current_scheduler_mode;
+  try {
+    current_scheduler_mode = FLUSH_YIELD;
+    return fn();
+  } finally {
+    current_scheduler_mode = previous_scheduler_mode;
   }
 }
 function flush_sync(fn, flush_previous = true) {
@@ -762,6 +786,9 @@ function push(props, runes = false, fn) {
 function pop(component) {
   const context_stack_item = current_component_context;
   if (context_stack_item !== null) {
+    if (component !== void 0) {
+      context_stack_item.x = component;
+    }
     const effects = context_stack_item.e;
     if (effects !== null) {
       context_stack_item.e = null;
@@ -772,10 +799,8 @@ function pop(component) {
     current_component_context = context_stack_item.p;
     context_stack_item.m = true;
   }
-  return (
-    /** @type {T} */
-    {}
-  );
+  return component || /** @type {T} */
+  {};
 }
 function proxy(value, immutable = true, parent = null) {
   if (typeof value === "object" && value != null && !is_frozen(value)) {
@@ -965,12 +990,12 @@ function hydrate_anchor(node) {
     }
     nodes.push(current);
   }
-  hydration_missing_marker_close();
+  hydration_mismatch();
+  throw HYDRATION_ERROR;
 }
 var node_prototype;
 var element_prototype;
 var text_prototype;
-var text_content_set;
 function init_operations() {
   if (node_prototype !== void 0) {
     return;
@@ -978,27 +1003,17 @@ function init_operations() {
   node_prototype = Node.prototype;
   element_prototype = Element.prototype;
   text_prototype = Text.prototype;
-  node_prototype.appendChild;
-  node_prototype.cloneNode;
   element_prototype.__click = void 0;
   text_prototype.__nodeValue = " ";
   element_prototype.__className = "";
   element_prototype.__attributes = null;
-  // @ts-ignore
-  get_descriptor(node_prototype, "firstChild").get;
-  // @ts-ignore
-  get_descriptor(node_prototype, "nextSibling").get;
-  text_content_set = /** @type {(this: Node, text: string ) => void} */
-  // @ts-ignore
-  get_descriptor(node_prototype, "textContent").set;
-  // @ts-ignore
-  get_descriptor(element_prototype, "className").set;
+  element_prototype.__e = void 0;
 }
 function empty() {
   return document.createTextNode("");
 }
 function clear_text_content(node) {
-  text_content_set.call(node, "");
+  node.textContent = "";
 }
 function handle_event_propagation(handler_element, event) {
   var owner_document = handler_element.ownerDocument;
@@ -1061,7 +1076,10 @@ function handle_event_propagation(handler_element, event) {
     }
   }
   try {
-    next(current_target);
+    yield_updates(() => next(
+      /** @type {Element} */
+      current_target
+    ));
   } finally {
     event.__root = handler_element;
     current_target = handler_element;
@@ -1085,7 +1103,7 @@ function hydrate(component, options2) {
         node = node.nextSibling;
       }
       if (!node) {
-        hydration_missing_marker_open();
+        throw HYDRATION_ERROR;
       }
       const anchor = hydrate_anchor(node);
       const instance = _mount(component, { ...options2, anchor });
@@ -1094,15 +1112,15 @@ function hydrate(component, options2) {
       return instance;
     }, false);
   } catch (error) {
-    if (!hydrated && options2.recover !== false && /** @type {Error} */
-    error.message.includes("hydration_missing_marker_close")) {
-      hydration_mismatch();
+    if (error === HYDRATION_ERROR) {
+      if (options2.recover === false) {
+        hydration_failed();
+      }
       init_operations();
       clear_text_content(target);
       return mount(component, options2);
-    } else {
-      throw error;
     }
+    throw error;
   } finally {
   }
 }
@@ -1278,7 +1296,9 @@ function Root($$payload, $$props) {
     components = [],
     form,
     data_0 = null,
-    data_1 = null
+    data_1 = null,
+    data_2 = null,
+    data_3 = null
   } = $$props;
   {
     setContext("__svelte__", stores);
@@ -1293,8 +1313,42 @@ function Root($$payload, $$props) {
       data: data_0,
       children: ($$payload2, $$slotProps) => {
         $$payload2.out += `<!--[-->`;
-        constructors[1]?.($$payload2, { data: data_1, form });
-        $$payload2.out += `<!--]-->`;
+        if (constructors[2]) {
+          $$payload2.out += `<!--[-->`;
+          constructors[1]?.($$payload2, {
+            data: data_1,
+            children: ($$payload3, $$slotProps2) => {
+              $$payload3.out += `<!--[-->`;
+              if (constructors[3]) {
+                $$payload3.out += `<!--[-->`;
+                constructors[2]?.($$payload3, {
+                  data: data_2,
+                  children: ($$payload4, $$slotProps3) => {
+                    $$payload4.out += `<!--[-->`;
+                    constructors[3]?.($$payload4, { data: data_3, form });
+                    $$payload4.out += `<!--]-->`;
+                  },
+                  $$slots: { default: true }
+                });
+                $$payload3.out += `<!--]-->`;
+                $$payload3.out += "<!--]-->";
+              } else {
+                $$payload3.out += `<!--[-->`;
+                constructors[2]?.($$payload3, { data: data_2, form });
+                $$payload3.out += `<!--]-->`;
+                $$payload3.out += "<!--]!-->";
+              }
+            },
+            $$slots: { default: true }
+          });
+          $$payload2.out += `<!--]-->`;
+          $$payload2.out += "<!--]-->";
+        } else {
+          $$payload2.out += `<!--[-->`;
+          constructors[1]?.($$payload2, { data: data_1, form });
+          $$payload2.out += `<!--]-->`;
+          $$payload2.out += "<!--]!-->";
+        }
       },
       $$slots: { default: true }
     });
@@ -1331,7 +1385,10 @@ const options = {
   root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/favicon.png" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + `/favicon.png" />
+		<link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		` + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -1403,7 +1460,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1bbpakc"
+  version_hash: "dklqt7"
 };
 async function get_hooks() {
   return {

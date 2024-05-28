@@ -6,6 +6,7 @@
 	],
 	"exclude": [
 		"/_app/*",
-		"/favicon.png"
+		"/favicon.png",
+		"/images/placeholder-user.webp"
 	]
 }
