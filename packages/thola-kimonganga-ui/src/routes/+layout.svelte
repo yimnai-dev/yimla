@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import ToastContainer from '$lib/components/toast/ToastContainer.svelte';
 	import '../app.css';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
@@ -6,8 +6,15 @@
 	import { createToastState } from '$lib/components/toast/toast-state.svelte';
 	import { setContext } from 'svelte';
 	import { onNavigate } from '$app/navigation';
+	import { QueryClientProvider } from '@tanstack/svelte-query';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	type Props = {
+		children: import('svelte').Snippet;
+		data: LayoutData;
+	};
+
+	let { children, data }: Props = $props();
 
 	let toastState = createToastState();
 
@@ -25,6 +32,8 @@
 	});
 </script>
 
-<ModeWatcher />
-<ToastContainer />
-{@render children()}
+<QueryClientProvider client={data.queryClient}>
+	<ModeWatcher />
+	<ToastContainer />
+	{@render children()}
+</QueryClientProvider>

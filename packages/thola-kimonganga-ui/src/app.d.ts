@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import { TholaApp, BaseURL, UserRole } from '$lib';
+import { TholaApp, BaseURL, UserRole, type OrganisationDetails } from '$lib';
+import type { QueryClient } from '@tanstack/svelte-query';
 
 declare global {
 	namespace App {
@@ -13,11 +14,18 @@ declare global {
 			tholaApp: TholaApp;
 			baseURL: BaseURL;
 			userRole: UserRole;
+			orgInfo: OrganisationDetails;
+			userInfo: unknown;
+			pharmacistInfo: unknown;
 		}
 		interface PageData {
 			tholaApp: TholaApp;
 			baseURL: BaseURL;
 			userRole: UserRole;
+			orgInfo: OrganisationDetails;
+			userInfo: unknown;
+			pharmacistInfo: unknown;
+			queryClient: QueryClient;
 		}
 
 		interface Error {

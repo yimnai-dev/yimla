@@ -3,8 +3,8 @@ import { type Actions, error, redirect } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { COOKIE_KEYS } from '$lib/cookie-keys';
-import ky from 'ky';
-import { type VerifyEmailResponse } from '$lib';
+import { type VerifyEmailParameters, type VerifyEmailResponse } from '$lib';
+import { post } from '$lib/urls';
 
 export const load = async () => {
 	const forgotPasswordForm = await superValidate(zod(forgotPasswordSchema));
@@ -14,7 +14,7 @@ export const load = async () => {
 };
 
 export const actions = {
-	default: async ({ request, locals, cookies }) => {
+	default: async ({ request, locals, cookies, fetch }) => {
 		const baseURL = locals.baseURL;
 		const userRole = locals.userRole;
 		const forgotPasswordForm = await superValidate(request, zod(forgotPasswordSchema));
@@ -23,21 +23,19 @@ export const actions = {
 				forgotPasswordForm
 			});
 		}
-		const forgotPasswordRes = await ky
-			.post(`${baseURL}/forgot-password`, {
-				json: { email: forgotPasswordForm.data.email, role: userRole }
-			})
-			.json<VerifyEmailResponse>();
-		if (!forgotPasswordRes) {
-			error(500, {
-				message: 'Sorry an unknown error occured. Please try again!',
-				status: 500
-			});
-		}
-		if (!forgotPasswordRes.ok) {
-			error(forgotPasswordRes.status, {
-				message: forgotPasswordRes.message,
-				status: forgotPasswordRes.status
+		const forgotPasswordResponse = await post<VerifyEmailResponse, VerifyEmailParameters>({
+			url: 'forgot-password',
+			input: {
+				email: forgotPasswordForm.data.email,
+				role: userRole
+			},
+			fetcher: fetch,
+			baseURL
+		})
+		if (!forgotPasswordResponse.ok) {
+			error(forgotPasswordResponse.status, {
+				message: forgotPasswordResponse.message,
+				status: forgotPasswordResponse.status
 			});
 		}
 		cookies.set(COOKIE_KEYS.FORGOT_PASSWORD_EMAIL, forgotPasswordForm.data.email, {

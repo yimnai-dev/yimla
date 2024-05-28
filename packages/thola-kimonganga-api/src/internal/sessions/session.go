@@ -1,12 +1,14 @@
 package sessions
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/mail"
 	"time"
 
 	"github.com/yimnai-dev/yimla/src/cmd/database"
+	"github.com/yimnai-dev/yimla/src/cmd/utils"
 	"github.com/yimnai-dev/yimla/src/internal/accounts"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,6 +18,7 @@ type LoginCredentials struct {
 	Password string `json:"password"`
 	Role     string `json:"role"`
 }
+
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var credentials LoginCredentials
@@ -56,33 +59,34 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	passwordsMatch := bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(credentials.Password))
 	if passwordsMatch != nil {
-		jsonRes := database.ApiError{Message: "Wrong Password", Status: http.StatusNotFound, Ok: false}
+		jsonRes := utils.EncodedApiError("Wrong Password", http.StatusNotFound)
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
-	lastUserSession := `SELECT * FROM sessions WHERE account_id = $1 ORDER BY session_id DESC LIMIT 1`
+	lastUserSession := `SELECT * FROM sessions WHERE account_id = $1 ORDER BY id DESC LIMIT 1`
 	err = database.Db.Get(&lastSession, lastUserSession, account.AccountId)
 	if err != nil && err.Error() == database.ErrNoRows {
-		jsonRes := database.ApiError{Message: "No session found", Status: http.StatusNotFound, Ok: false}
+		jsonRes := database.ApiError{Message: "No Session Found", Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
-	if err != nil && err.Error() == database.ErrNoRows {
+	if err != nil && err == sql.ErrNoRows {
 		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusNotFound, Ok: false}
 		jsonResBytes, _ := json.Marshal(jsonRes)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(jsonResBytes)
 		return
 	}
-	timeDiff := lastSession.EndTime.Local().Sub(lastSession.StartTime.Local()).Minutes()
-	if lastSession.IpAddress != "" && timeDiff > 0 && timeDiff <= 30 {
-		newEndTime := lastSession.EndTime.Local().Sub(lastSession.StartTime.Local()) + time.Hour
-		updateEndTimeQuery := `UPDATE sessions SET end_time = $1 WHERE session_key = $2`
-		_, err = database.Db.Exec(updateEndTimeQuery, newEndTime, lastSession.SessionKey)
+	timeDifference := time.Now().Local().Sub(lastSession.EndTime.Local()).Abs().Minutes()
+	if timeDifference <= time.Hour.Minutes() && timeDifference > 0{
+		newStartTime := time.Now().Local()
+		newEndTime := newStartTime.Add(time.Hour).Local()
+		updateEndTimeQuery := `UPDATE sessions SET start_time = $1, end_time = $2 WHERE session_key = $3`
+		_, err = database.Db.Exec(updateEndTimeQuery, newStartTime, newEndTime, lastSession.SessionKey)
 		if err != nil {
 			jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusNotFound, Ok: false}
 			jsonResBytes, _ := json.Marshal(jsonRes)
@@ -91,10 +95,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message": "Account Session refreshed successfully", "sessionKey": "` + string(lastSession.SessionKey) + `"}`))
+		w.Write([]byte(`{"message": "Account Session refreshed successfully", "sessionKey": "` + string(lastSession.SessionKey) + `", "ok": true}`))
 		return
 	}
-	sessionStart := time.Now()
+	sessionStart := time.Now().Local()
 	sessionEnd := time.Now().Local().Add(time.Hour)
 	sessionKey := accounts.GenerateSessionKey()
 	ipAddress := r.RemoteAddr
@@ -102,10 +106,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	adminSessionQuery := `INSERT INTO SESSIONS (session_key, account_id, start_time, end_time, ip_address, user_agent) VALUES ($1, $2, $3, $4, $5, $6)`
 	_, err = database.Db.Exec(adminSessionQuery, sessionKey, account.AccountId, sessionStart, sessionEnd, ipAddress, userAgent)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusNotFound, Ok: false}
-		jsonResBytes, _ := json.Marshal(jsonRes)
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusNotFound)
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(jsonResBytes)
+		w.Write(jsonRes)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -144,13 +147,13 @@ func VerifySessionKey(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"message": "Internal Server Error", "status": 500, "ok": false}`))
 		return
 	}
-
-	isSessionExpired := session.EndTime.Before(time.Now())
-	if isSessionExpired {
+	
+	timeDifference := time.Now().Local().Sub(session.EndTime.Local()).Abs().Minutes()
+	if timeDifference == 0 || timeDifference > time.Hour.Minutes() {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(`{"message": "Current Session Expired. Login to continue", "status": 400, "ok": false}`))
+		w.Write([]byte(`{"message": "Current Session Expired. Login to continue", "status": 401, "ok": false}`))
 		return
 	}
-	w.WriteHeader(http.StatusContinue)
+	w.WriteHeader(http.StatusAccepted)
 	w.Write([]byte(`{"ok": true}`))
 }

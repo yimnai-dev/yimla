@@ -70,11 +70,11 @@ type Account struct {
 }
 
 type Organisation struct {
-	organisationId string    `db:"organisation_id"`
-	accountId      string    `db:"account_id"`
-	name           string    `db:"name"`
-	createdOn      time.Time `db:"created_on"`
-	updatedOn      time.Time `db:"updated_on"`
+	OrganisationID string    `db:"organisation_id"`
+	AccountID      string    `db:"account_id"`
+	Name           string    `db:"name"`
+	CreatedOn      time.Time `db:"created_on"`
+	UpdatedOn      time.Time `db:"updated_on"`
 }
 
 type Subscription struct {
@@ -97,35 +97,35 @@ type Session struct {
 }
 
 type Pharmacy struct {
-	pharmacyId     string    `db:"pharmacy_id"`
-	organisationId string    `db:"organisation_id"`
-	name           string    `db:"name"`
-	createdOn      time.Time `db:"created_on"`
-	updatedOn      time.Time `db:"updated_on"`
-	isActive       bool      `db:"isActive"`
-	geoLocation    string    `db:"geo_location"`
-	country        string    `db:"country"`
-	region         string    `db:"region"`
-	city           string    `db:"city"`
-	address        string    `db:"address"`
+	PharmacyID     string    `db:"pharmacy_id" json:"pharmacyId"`
+	OrganisationID string    `db:"organisation_id" json:"organisationId"`
+	Name           string    `db:"name" json:"name"`
+	CreatedOn      time.Time `db:"created_on" json:"createdOn"`
+	UpdatedOn      time.Time `db:"updated_on" json:"updatedOn"`
+	IsActive       bool      `db:"is_active" json:"isActive"`
+	Geolocation    string    `db:"geo_location" json:"geoLocation"`
+	Country        string    `db:"country" json:"country"`
+	Region         string    `db:"region" json:"region"`
+	City           string    `db:"city" json:"city"`
+	Address        string    `db:"address" json:"address"`
 }
 
 type APICredential struct {
-	id             string    `db:"id"`
-	publicKey      string    `db:"public_key"`
-	privateKey     string    `db:"private_key"`
-	createdOn      time.Time `db:"created_on"`
-	expiryDate     time.Time `db:"expiry_date"`
-	organisationId string    `db:"organisation_id"`
+	ID             string    `db:"id"`
+	PublicKey      string    `db:"public_key"`
+	PrivateKey     string    `db:"private_key"`
+	CreatedOn      time.Time `db:"created_on"`
+	ExpiryDate     time.Time `db:"expiry_date"`
+	OrganisationID string    `db:"organisation_id"`
 }
 
 type Pharmacist struct {
-	pharmacistId string    `db:"pharmacist_id"`
-	pharmacyId   string    `db:"pharmacy_id"`
-	accountId    string    `db:"account_id"`
-	phoneNumber  string    `db:"phone_number"`
-	joinedOn     time.Time `db:"joined_on"`
-	updatedOn    time.Time `db:"updated_on"`
+	PharmacistID string    `db:"pharmacist_id"`
+	PharmacyID   string    `db:"pharmacy_id"`
+	AccountID    string    `db:"account_id"`
+	PhoneNumber  string    `db:"phone_number"`
+	JoinedOn     time.Time `db:"joined_on"`
+	UpdatedOn    time.Time `db:"updated_on"`
 }
 
 type User struct {

@@ -5,8 +5,9 @@ export const load = ({ data }) => {
 		defaultOptions: {
 			queries: {
 				refetchOnWindowFocus: false,
-				refetchOnMount: false,
+				refetchOnMount: true,
 				refetchOnReconnect: true,
+				refetchInterval: 1000 * 60 * 60,
 				retry: (failureCount, error) => {
 					if (error instanceof TypeError) {
 						return false;

@@ -2,6 +2,7 @@
 	import ThemeToggler from '$lib/components/theme/ThemeToggler.svelte';
 	import Logo from '$lib/components/logo/Logo.svelte';
 	import type { Snippet } from 'svelte';
+	import {page} from '$app/stores'
 
 	let { children }: { children: Snippet } = $props();
 </script>
@@ -11,11 +12,11 @@
 	<Logo />
 	<ThemeToggler />
 </div>
-<div class="bg-primary flex flex-col min-h-screen w-full items-center justify-center dark:bg-inherit mt-12">
+<div class="flex flex-col min-h-screen w-full items-center justify-center dark:bg-inherit mt-12">
 	{@render children()}
 	<div class="flex items-center justify-center p-5">
-		<h1 class="text-secondary dark:text-primary text-center text-xl">
-			Welcome to Thola Kimonganga. Log into your account to continue
+		<h1 class="text-center text-xl">
+			Welcome to Thola Kimonganga. {$page.url.pathname.includes('login') ? 'Log into your account to continue' : $page.url.pathname.includes('signup')  ? 'Create an account to continue' : $page.url.pathname.includes('forgot-password') ? 'Enter your email to recover your password' : $page.url.pathname.includes('reset-password') ? 'Reset your password' : ''}
 		</h1>
 	</div>
 </div>

@@ -5,6 +5,64 @@
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/app": [
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacies": [
+		"src/routes/app/pharmacies/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/app/pharmacies/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacies/new": [
+		"src/routes/app/pharmacies/new/+page.server.ts",
+		"src/routes/app/pharmacies/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacies/[pharmacyId]": [
+		"src/routes/app/pharmacies/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacies/[pharmacyId]/edit": [
+		"src/routes/app/pharmacies/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacies/[pharmacyId]/pharmacists": [
+		"src/routes/app/pharmacies/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacists": [
+		"src/routes/app/pharmacists/+page.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/pharmacists/new": [
+		"src/routes/app/pharmacists/new/+page.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/auth": [
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
@@ -31,10 +89,6 @@
 	],
 	"/auth/verify-email": [
 		"src/routes/auth/verify-email/+page.server.ts",
-		"src/routes/+layout.ts",
-		"src/routes/+layout.server.ts"
-	],
-	"/dashboard": [
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	]

@@ -8,7 +8,7 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import Spinner from '$lib/components/spinner/Spinner.svelte';
 	import type { ToastState } from '$lib/components/toast/toast-state.svelte';
-	import { CONTEXT_KEYS } from '$lib/context-keys.js';
+	import { CONTEXT_KEYS } from '$lib/context-keys';
 	import { getContext } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { loginSchema } from '$lib/forms/auth/auth.form';
@@ -37,7 +37,6 @@
 		},
 		onResult: ({ result }) => {
 			signingIn = false;
-			console.log('result: ', result);
 			if (result.type === 'failure') {
 				const errors = result.data?.form.errors;
 				for (const key in errors) {
@@ -88,7 +87,7 @@
 		<Card.Description>Enter your email below to login to your account</Card.Description>
 	</Card.Header>
 	<Card.Content>
-		<form class="grid gap-4" method="POST" use:enhance>
+		<form class="grid gap-4" method="POST" action="?/login" use:enhance>
 			<Form.FormField {form} name="email" class="grid gap-2">
 				<Form.Control let:attrs>
 					<Form.Label>Email</Form.Label>

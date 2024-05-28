@@ -8,10 +8,10 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import Spinner from '$lib/components/spinner/Spinner.svelte';
 	import type { ToastState } from '$lib/components/toast/toast-state.svelte';
-	import { CONTEXT_KEYS } from '$lib/context-keys.js';
+	import { CONTEXT_KEYS } from '$lib/context-keys';
 	import { getContext } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { signupSchema } from '$lib/forms/auth/auth.form.js';
+	import { signupSchema } from '$lib/forms/auth/auth.form';
 
 	let { data } = $props();
 

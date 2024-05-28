@@ -210,8 +210,8 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 ALTER TABLE organisations DROP CONSTRAINT IF EXISTS fk_organisation_id;
-ALTER TABLE pharmacies DROP CONSTRAINT IF EXISTS fk_pharmacy_id;
-ALTER TABLE pharmacists DROP CONSTRAINT IF EXISTS fk_pharmacist_id;
+-- ALTER TABLE pharmacies DROP CONSTRAINT IF EXISTS fk_pharmacy_id;
+-- ALTER TABLE pharmacists DROP CONSTRAINT IF EXISTS fk_pharmacist_id;
 ALTER TABLE organisations ADD CONSTRAINT fk_organisation_id FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE;
-ALTER TABLE pharmacies ADD CONSTRAINT fk_pharmacy_id FOREIGN KEY (pharmacy_id) REFERENCES organisations(organisation_id) ON DELETE CASCADE;
-ALTER TABLE pharmacists ADD CONSTRAINT fk_pharmacist_id FOREIGN KEY (pharmacist_id) REFERENCES accounts(account_id) ON DELETE CASCADE;
+-- ALTER TABLE pharmacies ADD CONSTRAINT fk_pharmacy_id FOREIGN KEY (pharmacy_id) REFERENCES organisations(organisation_id) ON DELETE CASCADE;
+-- ALTER TABLE pharmacists ADD CONSTRAINT fk_pharmacist_id FOREIGN KEY (pharmacist_id) REFERENCES accounts(account_id) ON DELETE CASCADE;

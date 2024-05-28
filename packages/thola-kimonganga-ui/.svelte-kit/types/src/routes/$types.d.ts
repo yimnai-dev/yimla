@@ -12,8 +12,8 @@ type EnsureDefined<T> = T extends null | undefined ? {} : T;
 type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
 export type Snapshot<T = any> = Kit.Snapshot<T>;
 type PageParentData = EnsureDefined<LayoutData>;
-type LayoutRouteId = RouteId | "/" | "/auth/forgot-password" | "/auth/login" | "/auth/reset-password" | "/auth/signup" | "/auth/verify-email" | "/dashboard" | null
-type LayoutParams = RouteParams & {  }
+type LayoutRouteId = RouteId | "/" | "/app" | "/app/pharmacies" | "/app/pharmacies/[pharmacyId]" | "/app/pharmacies/[pharmacyId]/edit" | "/app/pharmacies/[pharmacyId]/pharmacists" | "/app/pharmacies/new" | "/app/pharmacists" | "/app/pharmacists/new" | "/auth/forgot-password" | "/auth/login" | "/auth/reset-password" | "/auth/signup" | "/auth/verify-email" | null
+type LayoutParams = RouteParams & { pharmacyId?: string }
 type LayoutServerParentData = EnsureDefined<{}>;
 type LayoutParentData = EnsureDefined<{}>;
 

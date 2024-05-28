@@ -55,6 +55,7 @@ declare module '$env/static/private' {
 	export const npm_package_scripts_test_unit: string;
 	export const npm_package_scripts_cf_typegen: string;
 	export const PWD: string;
+	export const npm_package_devDependencies_svelte_headless_table: string;
 	export const npm_package_devDependencies_vite: string;
 	export const LOGNAME: string;
 	export const XDG_SESSION_DESKTOP: string;
@@ -64,6 +65,7 @@ declare module '$env/static/private' {
 	export const PNPM_HOME: string;
 	export const SYSTEMD_EXEC_PID: string;
 	export const npm_package_scripts_build: string;
+	export const npm_package_dependencies_mapbox_gl: string;
 	export const XAUTHORITY: string;
 	export const npm_package_devDependencies_prettier: string;
 	export const npm_package_devDependencies_eslint_config_prettier: string;
@@ -76,7 +78,6 @@ declare module '$env/static/private' {
 	export const npm_package_devDependencies_typescript: string;
 	export const LS_COLORS: string;
 	export const XDG_CURRENT_DESKTOP: string;
-	export const npm_package_dependencies_ky: string;
 	export const npm_package_version: string;
 	export const MEMORY_PRESSURE_WATCH: string;
 	export const VTE_VERSION: string;
@@ -135,6 +136,7 @@ declare module '$env/static/private' {
 	export const LC_TIME: string;
 	export const npm_package_scripts_dev: string;
 	export const npm_package_devDependencies__tailwindcss_typography: string;
+	export const npm_package_devDependencies__types_mapbox_gl: string;
 	export const QT_AUTO_SCREEN_SCALE_FACTOR: string;
 	export const XDG_DATA_DIRS: string;
 	export const npm_package_dependencies_tailwind_merge: string;
@@ -169,7 +171,7 @@ declare module '$env/static/private' {
  * ```
  */
 declare module '$env/static/public' {
-	
+	export const PUBLIC_MAPBOX_API_KEY: string;
 }
 
 /**
@@ -217,6 +219,7 @@ declare module '$env/dynamic/private' {
 		npm_package_scripts_test_unit: string;
 		npm_package_scripts_cf_typegen: string;
 		PWD: string;
+		npm_package_devDependencies_svelte_headless_table: string;
 		npm_package_devDependencies_vite: string;
 		LOGNAME: string;
 		XDG_SESSION_DESKTOP: string;
@@ -226,6 +229,7 @@ declare module '$env/dynamic/private' {
 		PNPM_HOME: string;
 		SYSTEMD_EXEC_PID: string;
 		npm_package_scripts_build: string;
+		npm_package_dependencies_mapbox_gl: string;
 		XAUTHORITY: string;
 		npm_package_devDependencies_prettier: string;
 		npm_package_devDependencies_eslint_config_prettier: string;
@@ -238,7 +242,6 @@ declare module '$env/dynamic/private' {
 		npm_package_devDependencies_typescript: string;
 		LS_COLORS: string;
 		XDG_CURRENT_DESKTOP: string;
-		npm_package_dependencies_ky: string;
 		npm_package_version: string;
 		MEMORY_PRESSURE_WATCH: string;
 		VTE_VERSION: string;
@@ -297,6 +300,7 @@ declare module '$env/dynamic/private' {
 		LC_TIME: string;
 		npm_package_scripts_dev: string;
 		npm_package_devDependencies__tailwindcss_typography: string;
+		npm_package_devDependencies__types_mapbox_gl: string;
 		QT_AUTO_SCREEN_SCALE_FACTOR: string;
 		XDG_DATA_DIRS: string;
 		npm_package_dependencies_tailwind_merge: string;
@@ -338,6 +342,7 @@ declare module '$env/dynamic/private' {
  */
 declare module '$env/dynamic/public' {
 	export const env: {
+		PUBLIC_MAPBOX_API_KEY: string;
 		[key: `PUBLIC_${string}`]: string | undefined;
 	}
 }

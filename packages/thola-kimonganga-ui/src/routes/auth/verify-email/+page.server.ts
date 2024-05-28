@@ -1,12 +1,12 @@
 import { redirect, type Actions } from "@sveltejs/kit";
 import { fail, superValidate } from "sveltekit-superforms";
 import { zod } from 'sveltekit-superforms/adapters'
-import ky from "ky";
 import { error } from '@sveltejs/kit';
-import type { VerifyEmailResponse } from "$lib";
+import type { VerifyEmailParameters, VerifyEmailResponse } from "$lib";
 import { COOKIE_KEYS } from "$lib/cookie-keys";
 import { verifyEmailSchema } from "$lib/forms/auth/auth.form";
 import type { PageServerLoad } from "./$types";
+import { post } from "$lib/urls";
 
 export const load: PageServerLoad = async ({ locals }) => {
     const verifyEmailForm = await superValidate(zod(verifyEmailSchema));
@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 }
 
 export const actions = {
-    default: async ({ request, locals, cookies }) => {
+    default: async ({ request, locals, cookies, fetch }) => {
         const baseURL = locals.baseURL;
         const userRole = locals.userRole;
         const verifyEmailForm = await superValidate(request, zod(verifyEmailSchema));
@@ -28,18 +28,19 @@ export const actions = {
                 verifyEmailForm,
             })
         }
-        const verifyEmailRes = await ky.post(`${baseURL}/email-verification`, { json: { email: verifyEmailForm.data.email, role: userRole } }).json<VerifyEmailResponse>()
-        console.log('verificaitonRes: ', verifyEmailRes)
-        if(!verifyEmailRes) {
-            error(500, {
-                message: 'Sorry an unknown error occured. Please try again!',
-                status: 500
-            })
-        }
-        if (!verifyEmailRes.ok) {
-            error(verifyEmailRes.status, {
-                message: verifyEmailRes.message,
-                status: verifyEmailRes.status
+        const verifyEmailResponse = await post<VerifyEmailResponse, VerifyEmailParameters>({
+            url: 'email-verification',
+            input: {
+                email: verifyEmailForm.data.email,
+                role: userRole
+            },
+            fetcher: fetch,
+            baseURL
+        })
+        if (!verifyEmailResponse.ok) {
+            error(verifyEmailResponse.status, {
+                message: verifyEmailResponse.message,
+                status: verifyEmailResponse.status
             })
         }
         cookies.set(COOKIE_KEYS.SIGNUP_EMAIL, verifyEmailForm.data.email, {

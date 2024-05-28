@@ -1,11 +1,10 @@
 import { dev } from '$app/environment';
-import type { VerifySessionResponse } from '$lib';
+import type { VerifySessionParameters, VerifySessionResponse } from '$lib';
 import { COOKIE_KEYS } from '$lib/cookie-keys';
+import { post } from '$lib/urls';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import ky from 'ky';
 
-const PROTECTED_ROUTES = ['dashboard', '/settings'];
 
 const handleApp: Handle = async ({ event, resolve }) => {
 	if (dev) {
@@ -23,29 +22,35 @@ const handleApp: Handle = async ({ event, resolve }) => {
 	return await resolve(event);
 };
 
-const handleProtectedRoutes: Handle = async ({ event, resolve }) => {
-	const currentPathname = event.url.pathname;
+const handleAppHome: Handle = async ({ event, resolve }) => {
+	if (event.url.pathname === '/') {
+		redirect(302, '/app')
+	}
+	return await resolve(event)
+}
+
+
+const setAuthorizationHeaderForProtectedRoutesHandler: Handle = async ({ event, resolve }) => {
 	const sessionKey = event.cookies.get(COOKIE_KEYS.SESSION_KEY);
-	if (PROTECTED_ROUTES.some(r => r.includes(currentPathname))) {
+	if (event.url.pathname.startsWith('/app')) {
 		if (!sessionKey) {
-			redirect(302, '/auth/login?redirectTo=' + currentPathname);
+			redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
 		}
-		const verifySessionResponse = await ky.post(`${event.locals.baseURL}/verify-session`, {
-			json: {
+		const verifySessionResponse = await post<VerifySessionResponse, VerifySessionParameters>({
+			url: 'verify-session',
+			input: {
 				sessionKey
-			}
-		}).json<VerifySessionResponse>()
-		console.log("targettin..lll")
-		if (!verifySessionResponse.ok) {
-			redirect(302, '/auth/login?redirectTo=' + currentPathname);
-		}
-		event.setHeaders({
-			'Authorization': `${sessionKey}`
+			},
+			fetcher: event.fetch,
+			baseURL: event.locals.baseURL
 		})
-		return await resolve(event);
+		if(!verifySessionResponse.ok) {
+			redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
+		}
+		return await resolve(event)
 	}
 	return await resolve(event);
 }
 
-export const handle = sequence(handleApp, handleProtectedRoutes);
 
+export const handle = sequence(handleApp, handleAppHome, setAuthorizationHeaderForProtectedRoutesHandler);

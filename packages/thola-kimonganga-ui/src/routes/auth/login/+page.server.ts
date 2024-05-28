@@ -2,10 +2,10 @@ import { loginSchema } from "$lib/forms/auth/auth.form";
 import { redirect, type Actions } from "@sveltejs/kit";
 import { fail, superValidate } from "sveltekit-superforms";
 import { zod } from 'sveltekit-superforms/adapters'
-import ky from "ky";
 import { error } from '@sveltejs/kit';
-import type { LoginResponse } from "$lib";
+import type { LoginParameters, LoginResponse } from "$lib";
 import { COOKIE_KEYS } from "$lib/cookie-keys";
+import { post } from "$lib/urls";
 
 export const load = async () => {
     const loginForm = await superValidate(zod(loginSchema));
@@ -15,7 +15,7 @@ export const load = async () => {
 }
 
 export const actions = {
-    default: async ({ request, locals, url, cookies }) => {
+    login: async ({ request, locals, url, cookies, fetch }) => {
         const baseURL = locals.baseURL;
         const loginForm = await superValidate(request, zod(loginSchema));
         if (!loginForm.valid) {
@@ -23,23 +23,32 @@ export const actions = {
                 loginForm
             })
         }
-        const loginRes = await ky.post(`${baseURL}/login`, {
-            json: {
+        const loginUser = await post<LoginResponse, LoginParameters>({
+            url: 'login',
+            input: {
                 email: loginForm.data.email,
                 password: loginForm.data.password,
-                role: locals.userRole
+                role: locals.userRole,
             },
-        }).json<LoginResponse>();
-        if (!loginRes.ok) {
-            error(loginRes.status, {
-                message: loginRes.message,
-                status: loginRes.status
+            fetcher: fetch,
+            baseURL
+        })
+        if (!loginUser.ok) {
+            error(loginUser.status, {
+                message: loginUser.message,
+                status: loginUser.status
             })
         }
-        cookies.set(COOKIE_KEYS.SESSION_KEY, loginRes.sessionKey, {
+        cookies.set(COOKIE_KEYS.SESSION_KEY, loginUser.sessionKey, {
             path: '/',
         })
-        const redirectURL = url.searchParams.get('redirectTo') || '/dashboard';
+        const redirectURL = url.searchParams.has('redirectTo') ? url.searchParams.get('redirectTo') as string : '/app';
         redirect(302, redirectURL);
+    },
+    logout: async ({ cookies }) => {
+        cookies.delete(COOKIE_KEYS.SESSION_KEY, {
+            path: '/',
+        })
+        redirect(302, '/auth/login')
     }
 } satisfies Actions

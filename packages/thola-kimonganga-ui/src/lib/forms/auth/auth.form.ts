@@ -19,10 +19,10 @@ export const resetPasswordSchema = z
 			.email({ message: 'Invalid email address' }),
 		newPassword: z
 			.string({ required_error: 'Password is required' })
-			.min(6, { message: 'Password must be at least 6 characters' }),
+			.min(5, { message: 'Password must be at least 6 characters' }),
 		confirmPassword: z
 			.string({ required_error: 'Password is required' })
-			.min(6, { message: 'Password must be at least 6 characters' }),
+			.min(5, { message: 'Password must be at least 6 characters' }),
 		confirmationCode: z.string({ required_error: 'Reset confirmation code is required' }).length(6)
 	})
 	.superRefine((fields, ctx) => {
@@ -41,7 +41,7 @@ export const loginSchema = z.object({
 		.email({ message: 'Invalid email address' }),
 	password: z
 		.string({ required_error: 'Password is required' })
-		.min(6, { message: 'Password must be at least 6 characters' })
+		.min(5, { message: 'Password must be at least 6 characters' })
 });
 
 export const signupSchema = z
@@ -53,7 +53,7 @@ export const signupSchema = z
 			.min(3, { message: 'Username must be at least 3 characters' }),
 		password: z
 			.string({ required_error: 'Password is required' })
-			.min(6, { message: 'Password must be at least 6 characters' }),
+			.min(5, { message: 'Password must be at least 6 characters' }),
 		confirmPassword: z.string({ required_error: 'Confirm password is required' }),
 		confirmationCode: z
 			.string({ required_error: 'Confirmation code is required' })

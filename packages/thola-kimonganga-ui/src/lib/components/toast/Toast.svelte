@@ -3,8 +3,7 @@
 	import { CONTEXT_KEYS } from '$lib/context-keys';
 	import { getContext, onMount } from 'svelte';
 	import type { ToastState } from './toast-state.svelte';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import { CircleX, BanIcon, CircleCheckBigIcon, InfoIcon, FileWarningIcon } from 'lucide-svelte';
+	import { CircleX } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 
 	type Props = {
@@ -27,8 +26,8 @@
 
 {#if toastActive}
 	<div
-		transition:fly={{ duration: 300, delay: 250 }}
-		class="min-w-[100px] rounded-sm px-2 py-4 shadow-md"
+		transition:fly={{ duration: 300, delay: 100, x: 100, y: 0 }}
+		class="min-w-[100px] rounded-sm px-2 py-4 shadow-md z-50"
 		class:bg-red-500={toast.type === 'error'}
 		class:bg-green-500={toast.type === 'success'}
 		class:bg-blue-500={toast.type === 'info'}

@@ -12,9 +12,11 @@ import (
 	// _ "github.com/swaggo/http-swagger/example/go-chi/docs"
 	"github.com/swaggo/http-swagger/v2"
 	"github.com/yimnai-dev/yimla/src/cmd/database"
+	"github.com/yimnai-dev/yimla/src/cmd/utils"
 	_ "github.com/yimnai-dev/yimla/src/docs"
 	"github.com/yimnai-dev/yimla/src/internal/accounts"
 	"github.com/yimnai-dev/yimla/src/internal/admin"
+	"github.com/yimnai-dev/yimla/src/internal/organisation"
 	"github.com/yimnai-dev/yimla/src/internal/sessions"
 	"github.com/yimnai-dev/yimla/src/internal/subscriptionPackages"
 	"github.com/yimnai-dev/yimla/src/internal/users"
@@ -42,6 +44,7 @@ func main() {
 	database.InitDb()
 	initRouter()
 }
+
 // "https://thola-client.yimnai.dev", "https://thola-org.yimnai.dev", "https://thola-pharmacy.yimnai.dev", "http://*"
 
 func initRouter() {
@@ -63,6 +66,7 @@ func initRouter() {
 		subscriptionPackageRouter(r)
 		userRouter(r)
 		adminRouter(r)
+		organisationRouter(r)
 	})
 
 	router.Get("/", func(writer http.ResponseWriter, request *http.Request) {
@@ -101,6 +105,41 @@ func userRouter(r chi.Router) {
 	})
 }
 
+func organisationRouter(r chi.Router) {
+	r.Route("/org", func(r chi.Router) {
+		r.Post("/email-verification", accounts.VerifyEmail)
+		r.Post("/account/create", admin.CreateOrganisation)
+		r.Post("/login", sessions.Login)
+		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
+		r.Put("/reset-password", accounts.ResetAccountPassword)
+		r.Post("/verify-session", sessions.VerifySessionKey)
+		r.Route("/account", func(r chi.Router) {
+			r.Use(AuthenticateAdmin)
+			r.Get("/details", organisation.GetOrganisation)
+		})
+		r.Route("/account/delete", func(r chi.Router) {
+			r.Use(AuthenticateAdmin)
+			r.Delete("/{organisationId}", admin.DeleteOrganisation)
+		})
+		r.Route("/pharmacy", func(r chi.Router) {
+			r.Use(AuthenticateOrganisation)
+			r.Post("/create/{organisationId}", organisation.CreatePharmacy)
+			r.Put("/update/{pharmacyId}/{organisationId}", organisation.UpdatePharmacy)
+			r.Delete("/delete/{pharmacyId}/{organisationId}", organisation.DeletePharmacy)
+			r.Get("/{pharmacyId}", organisation.GetPharmacy)
+			r.Get("/all/{organisationId}", organisation.GetOganisationPharmacies)
+		})
+		r.Route("/pharmacist", func(r chi.Router) {
+			r.Use(AuthenticateAccountHolder)
+			r.Post("/create/{pharmacyId}", organisation.CreatePharmacist)
+			r.Get("/{pharmacistId}", organisation.GetPharmacist)
+			r.Get("/pharma/all/{pharmacyId}", organisation.GetPharmacists)
+			r.Get("/org/all/{organisationId}", organisation.GetOrganisationPharmacists)
+			r.Delete("/delete/{pharmacistId}", organisation.DeletePharmacist)
+		})
+	})
+}
+
 func adminRouter(r chi.Router) {
 	r.Route("/admin", func(r chi.Router) {
 		r.Post("/email-verification", accounts.VerifyEmail)
@@ -109,46 +148,33 @@ func adminRouter(r chi.Router) {
 		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
 		r.Put("/reset-password", accounts.ResetAccountPassword)
 		r.Route("/organisation", func(r chi.Router) {
-			r.Use(AdminOnly)
+			r.Use(AuthenticateAdmin)
+			// r.Use(AdminOnly)
 			r.Post("/email-verification", accounts.VerifyEmail)
 			r.Post("/account/create", admin.CreateOrganisation)
 			r.Delete("/account/delete/{organisationId}", admin.DeleteOrganisation)
 		})
 		r.Route("/all", func(r chi.Router) {
-			r.Use(AdminOnly)
+			r.Use(AuthenticateAdmin)
 			r.Get("/", admin.GetAdmins)
 		})
 	})
 }
 
-func AdminOnly(next http.Handler) http.Handler {
+func AuthenticateOrganisation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var session database.Session
-		sessionKey := r.Header.Get("Authorization")
-		if sessionKey == "" {
-			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte(`{"message": "UnAuthorized Access", "status": 400}`))
-			return
-		}
-		adminSessionQuery := `SELECT * FROM sessions WHERE session_key = $1 AND (SELECT role FROM accounts WHERE account_id = accounts.account_id LIMIT 1) = 'admin' LIMIT 1`
-		err := database.Db.QueryRow(adminSessionQuery, sessionKey).Scan(&session.ID, &session.SessionKey, &session.AccountId, &session.StartTime, &session.EndTime, &session.IpAddress, &session.UserAgent)
-		if err != nil && err.Error() == database.ErrNoRows {
-			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte(`{"message": "UnAuthorized Access", "status": 400}`))
-			return
-		}
-		if err != nil && err.Error() == database.ErrNoRows {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(`{"message": "Internal Server Error", "status": 500}`))
-			return
-		}
+		utils.AuthenticateAccountHolder(w, r, next, "organisation")
+	})
+}
 
-		isSessionExpired := session.EndTime.Before(time.Now())
-		if isSessionExpired {
-			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte(`{"message": "Current Session Expired. Login to continue", "status": 400}`))
-			return
-		}
-		next.ServeHTTP(w, r)
+func AuthenticateAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		utils.AuthenticateAccountHolder(w, r, next, "admin")
+	})
+}
+
+func AuthenticateAccountHolder(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		utils.AuthenticateAccountHolder(w, r, next, "")
 	})
 }
