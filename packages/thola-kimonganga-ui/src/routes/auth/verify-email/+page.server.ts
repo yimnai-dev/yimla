@@ -5,10 +5,9 @@ import { error } from '@sveltejs/kit';
 import type { VerifyEmailParameters, VerifyEmailResponse } from "$lib";
 import { COOKIE_KEYS } from "$lib/cookie-keys";
 import { verifyEmailSchema } from "$lib/forms/auth/auth.form";
-import type { PageServerLoad } from "./$types";
 import { post } from "$lib/urls";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load = async ({ locals }) => {
     const verifyEmailForm = await superValidate(zod(verifyEmailSchema));
     if (locals.tholaApp !== 'thola-client') {
         redirect(302, '/auth/login');

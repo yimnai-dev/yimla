@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { Separator } from '$lib/components/ui/separator';
-    import OrganisationHome from '$lib/components/dashboard/organisation-home.svelte'
+	import OrganisationHome from '$lib/components/dashboard/organisation-home.svelte';
 </script>
 
 <div class="container mx-auto flex flex-col items-center justify-center space-y-3 py-4">
@@ -9,9 +9,9 @@
 		Hello, {$page.data.orgInfo
 			? $page.data.orgInfo.username
 			: $page.data.pharmacistInfo
-				? $page.data.pharmacistInfo.firstName
-				: $page.data.userInfo
-					? $page.data.userInfo.firstName
+				? $page.data.pharmacistInfo
+				: 'Pharmacist'
+					? $page.data.userInfo
 					: 'User'}
 	</h1>
 	<p>Welcome back to Thola Kimonganga</p>

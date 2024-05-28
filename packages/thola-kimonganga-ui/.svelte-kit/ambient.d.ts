@@ -146,6 +146,7 @@ declare module '$env/static/private' {
 	export const npm_config_node_gyp: string;
 	export const GDMSESSION: string;
 	export const npm_package_devDependencies__sveltejs_kit: string;
+	export const npm_package_dependencies_dayjs: string;
 	export const npm_package_dependencies_formsnap: string;
 	export const DBUS_SESSION_BUS_ADDRESS: string;
 	export const npm_package_devDependencies__playwright_test: string;
@@ -310,6 +311,7 @@ declare module '$env/dynamic/private' {
 		npm_config_node_gyp: string;
 		GDMSESSION: string;
 		npm_package_devDependencies__sveltejs_kit: string;
+		npm_package_dependencies_dayjs: string;
 		npm_package_dependencies_formsnap: string;
 		DBUS_SESSION_BUS_ADDRESS: string;
 		npm_package_devDependencies__playwright_test: string;

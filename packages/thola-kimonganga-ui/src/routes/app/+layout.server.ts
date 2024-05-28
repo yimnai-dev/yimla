@@ -35,7 +35,7 @@ export const load = async ({ locals, fetch, parent, cookies }) => {
             pharmacyListStream: get<PharmacyListResponse>({
                 url: `pharmacy/all/${orgDetailsResponse.organisation.organisationId}`,
                 baseURL: locals.baseURL,
-                fetcher: fetch,
+            fetcher: fetch,
                 options: {
                     headers: {
                         "Authorization": sessionKey || ""

@@ -4,10 +4,9 @@ import { redirect, type Actions, error } from '@sveltejs/kit';
 import { superValidate, fail } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { ResetPasswordParameters, ResetPasswordResponse } from '$lib';
-import type { PageServerLoad } from './$types';
 import { post } from '$lib/urls';
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load = async ({ cookies }) => {
 	const forgotPasswordEmail = cookies.get(COOKIE_KEYS.FORGOT_PASSWORD_EMAIL);
 	if (!forgotPasswordEmail) {
 		redirect(302, `/auth/forgot-password`);
