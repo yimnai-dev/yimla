@@ -17,17 +17,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals, fetch, parent, cookies }) => {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
-	const pharmacistInfoResponse = await get<PharmacistDetailsResponse>({
-		url: 'account/details',
-		fetcher: fetch,
-		baseURL: locals.baseURL,
-		options: {
-			headers: {
-				Authorization: sessionKey || ''
-			}
-		}
-	});
-	const pharmacistInfo = pharmacistInfoResponse.ok ? pharmacistInfoResponse.pharmacist : null;
+	
 	if (locals.tholaApp === 'thola-org') {
 		const orgDetailsResponse = await get<OrganisationResponse>({
 			url: 'account/details',
@@ -82,7 +72,7 @@ export const load = async ({ locals, fetch, parent, cookies }) => {
 				}
 			}),
 			medicationListStream: get<MedicationListResponse>({
-				url: `medication/all/org/${orgDetailsResponse.organisation.organisationId}`,
+				url: `medication/all/${orgDetailsResponse.organisation.organisationId}`,
 				baseURL: locals.baseURL,
 				fetcher: fetch,
 				options: {
@@ -92,24 +82,39 @@ export const load = async ({ locals, fetch, parent, cookies }) => {
 				}
 			}),
 			deletePharmacistForm: await superValidate(zod(deletePharmacistSchema)),
-			updatePharmacyActiveStatusForm: await superValidate(zod(updatePharmacyActiveStatusSchema))
+			updatePharmacyActiveStatusForm: await superValidate(zod(updatePharmacyActiveStatusSchema)),
+			deleteMedicationForm: await superValidate(zod(removeMedicationSchema)),
 		};
 	}
-	return {
-		...(await parent()),
-		orgInfo: null,
-		pharmacistInfo,
-		medicationListStream: get<MedicationListResponse>({
-			url: `medication/all/pharma/${pharmacistInfo?.pharmacyId}`,
-			baseURL: locals.baseURL,
+	else if(locals.tholaApp === 'thola-pharmacy') {
+		console.log('called: ')
+		const pharmacistInfoResponse = await get<PharmacistDetailsResponse>({
+			url: 'account/details',
 			fetcher: fetch,
+			baseURL: locals.baseURL,
 			options: {
 				headers: {
 					Authorization: sessionKey || ''
 				}
 			}
-		}),
-		deleteMedicationForm: await superValidate(zod(removeMedicationSchema)),
-		updateMedicationForm: await superValidate(zod(updateMedicationSchema))
-	};
+		});
+		const pharmacistInfo = pharmacistInfoResponse.ok ? pharmacistInfoResponse.pharmacist : null;
+		return {
+			...(await parent()),
+			orgInfo: null,
+			pharmacistInfo,
+			medicationListStream: get<MedicationListResponse>({
+				url: `medication/all/pharma/${pharmacistInfo?.pharmacyId}`,
+				baseURL: locals.baseURL,
+				fetcher: fetch,
+				options: {
+					headers: {
+						Authorization: sessionKey || ''
+					}
+				}
+			}),
+			deleteMedicationForm: await superValidate(zod(removeMedicationSchema)),
+			updateMedicationForm: await superValidate(zod(updateMedicationSchema))
+		};
+	}
 };

@@ -127,7 +127,7 @@ func pharmacyRouter(r chi.Router) {
 					r.Put("/update/{drugId}", pharmacy.UpdateMedication)
 				})
 				r.Delete("/delete/{drugId}", pharmacy.DeleteMedication)
-				r.Get("/all/pharma/{pharmacyId}", pharmacy.GetPharmacyMedications)
+				r.Get("/all/{pharmacyId}", pharmacy.GetPharmacyMedications)
 				r.Get("/all/org/{organisationId}", pharmacy.GetOrganisationMedications)
 				r.Get("/medication/{drugId}", pharmacy.GetMedicationDetails)
 			})
@@ -143,6 +143,10 @@ func organisationRouter(r chi.Router) {
 		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
 		r.Put("/reset-password", accounts.ResetAccountPassword)
 		r.Post("/verify-session", sessions.VerifySessionKey)
+		r.Route("/medication", func(r chi.Router) {
+			r.Get("/all/{organisationId}", pharmacy.GetOrganisationMedications)
+			r.Get("/medication/{drugId}", pharmacy.GetMedicationDetails)
+		})
 		r.Route("/account", func(r chi.Router) {
 			r.Use(AuthenticateAdmin)
 			r.Get("/details", organisation.GetOrganisation)

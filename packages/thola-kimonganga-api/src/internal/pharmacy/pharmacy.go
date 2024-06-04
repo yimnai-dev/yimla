@@ -258,6 +258,7 @@ func GetOrganisationMedications(w http.ResponseWriter, r *http.Request) {
 	organisationId := chi.URLParam(r, "organisationId")
 	organisationMedicationListQuery := `SELECT drugs.drug_id, drugs.name, drugs.description, drugs.manufacturer, drugs.expiry_date, drugs.created_on, drugs.updated_on, drugs.category, drugs.strength, drugs.dosage_form, drug_stocks.stock_id, drug_stocks.quantity, drug_stocks.price FROM drugs LEFT JOIN drug_stocks ON drugs.drug_id = drug_stocks.drug_id LEFT JOIN pharmacies ON drugs.pharmacy_id = pharmacies.pharmacy_id WHERE pharmacies.organisation_id = $1`
 	err := database.Db.Select(&medications, organisationMedicationListQuery, organisationId)
+	fmt.Printf("errIni: %v", err)
 	if err != nil {
 		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)

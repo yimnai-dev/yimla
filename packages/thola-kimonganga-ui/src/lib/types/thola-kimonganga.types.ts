@@ -22,7 +22,7 @@ export type RequestURLSegment =
 	| `pharmacist/${string}`
 	| `subscriptions/${SubscriptionSuffix}`
 	| `medication/create/${string}`
-	| `medication/all/${'pharma' | 'org'}/${string}`
+	| `medication/all/${string}`
 	| `medication/${'delete' | 'update'}/${string}`;
 
 export type PostRequestOptions<T = unknown, OptionalInput = undefined> = {

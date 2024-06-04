@@ -95,7 +95,7 @@
 
 	$effect(() => {
 		$formData.isActive = !isActive;
-		console.log(untrack(() => $formData));
+		untrack(() => $formData)
 	});
 
 	onMount(() => {

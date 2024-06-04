@@ -62,8 +62,10 @@ export const get = async <TData = unknown>({
 	const response = await fetcher(reqURL, {
 		...options
 	});
-	const json = await response.json<TData>();
-	return json;
+	return  await response.json<TData>().catch(e => {
+		return e;
+	});
+	
 };
 
 export const deleteRequest = async <TData = unknown>({

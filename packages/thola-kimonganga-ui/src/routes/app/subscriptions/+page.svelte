@@ -33,7 +33,7 @@
 		console.log('noas: ', $query.data);
 	});
 	onMount(async () => {
-		stripe = await loadStripe(import.meta.env.STRIPE_PUBLISHABLE_TEST_KEY);
+		stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY);
 	});
 </script>
 

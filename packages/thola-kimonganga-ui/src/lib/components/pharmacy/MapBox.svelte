@@ -16,7 +16,7 @@
 		formData.update(($prev) => {
 			return { ...$prev, longitude: bueaLongitude, latitude: bueaLatitude };
 		});
-		mapboxgl.accessToken = import.meta.env.MAPBOX_API_KEY;
+		mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_API_KEY;
 		const map = new mapboxgl.Map({
 			container: 'map',
 			style: 'mapbox://styles/mapbox/streets-v12',

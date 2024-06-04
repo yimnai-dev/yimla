@@ -41,6 +41,7 @@
 	);
 
 	let form = superForm(deletePharmacistForm, {
+		id: `delete_pharmacist_form_${pharmacistId}`,
 		validators: zodClient(deletePharmacistSchema),
 		onSubmit: () => {
 			deletingPharmacist = true;

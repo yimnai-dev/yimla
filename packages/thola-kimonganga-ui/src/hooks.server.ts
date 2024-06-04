@@ -1,15 +1,13 @@
 import { dev } from '$app/environment';
-// import type { VerifySessionParameters, VerifySessionResponse } from '$lib';
 import { COOKIE_KEYS } from '$lib/cookie-keys';
-// import { post } from '$lib/urls';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 const handleApp: Handle = async ({ event, resolve }) => {
 	if (dev) {
-		event.locals.tholaApp = 'thola-pharmacy';
-		event.locals.baseURL = 'http://localhost:8080/api/v1/pharmacy';
-		event.locals.userRole = 'pharmacist';
+		event.locals.tholaApp = 'thola-org';
+		event.locals.baseURL = 'http://localhost:8080/api/v1/org';
+		event.locals.userRole = 'organisation';
 		return await resolve(event);
 	}
 	const [subdomain] = event.url.host.split('.');
