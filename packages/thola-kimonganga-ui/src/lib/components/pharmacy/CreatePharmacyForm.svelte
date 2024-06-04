@@ -61,12 +61,12 @@
 	let { form: formData, enhance } = $state(form);
 
 	onMount(() => {
-		if($page.data.orgInfo) {
+		if ($page.data.orgInfo) {
 			formData.update(($prev) => {
-				return { ...$prev, organisationId: $page.data.orgInfo.organisationId }
-			})
+				return { ...$prev, organisationId: $page.data.orgInfo.organisationId };
+			});
 		}
-	})
+	});
 </script>
 
 <h1 class="text-xl md:text-2xl lg:text-3xl">Create A New Pharmacy</h1>
@@ -99,23 +99,23 @@
 					{/each}
 				</Select.Content>
 			</Select.Root>
-			<Input hidden bind:value={$formData.country} name={attrs.name} class="hidden"/>
+			<Input hidden bind:value={$formData.country} name={attrs.name} class="hidden" />
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.FormField>
-	<Form.FormField {form} name="organisationId" class="gap-2 hidden">
+	<Form.FormField {form} name="organisationId" class="hidden gap-2">
 		<Form.Control let:attrs>
-			<Input hidden class="hidden" bind:value={$formData.organisationId} name={attrs.name}/>
+			<Input hidden class="hidden" bind:value={$formData.organisationId} name={attrs.name} />
 		</Form.Control>
 	</Form.FormField>
-	<Form.FormField {form} name="latitude" class="gap-2 hidden">
+	<Form.FormField {form} name="latitude" class="hidden gap-2">
 		<Form.Control let:attrs>
-			<Input hidden class="hidden" bind:value={$formData.latitude} name={attrs.name}/>
+			<Input hidden class="hidden" bind:value={$formData.latitude} name={attrs.name} />
 		</Form.Control>
 	</Form.FormField>
-	<Form.FormField {form} name="longitude" class="gap-2 hidden">
+	<Form.FormField {form} name="longitude" class="hidden gap-2">
 		<Form.Control let:attrs>
-			<Input hidden class="hidden" bind:value={$formData.longitude} name={attrs.name}/>
+			<Input hidden class="hidden" bind:value={$formData.longitude} name={attrs.name} />
 		</Form.Control>
 	</Form.FormField>
 
@@ -145,7 +145,7 @@
 					{/if}
 				</Select.Content>
 			</Select.Root>
-			<Input hidden bind:value={$formData.region} name={attrs.name} class="hidden"/>
+			<Input hidden bind:value={$formData.region} name={attrs.name} class="hidden" />
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.FormField>

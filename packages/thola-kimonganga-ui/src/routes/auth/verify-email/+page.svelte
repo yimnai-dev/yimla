@@ -21,7 +21,7 @@
 
 	const form = superForm(data.verifyEmailForm, {
 		validators: zodClient(verifyEmailSchema),
-        resetForm: true,
+		resetForm: true,
 		onSubmit: () => {
 			sendingVerificationEmail = true;
 		},
@@ -38,16 +38,16 @@
 		},
 		onResult: ({ result }) => {
 			sendingVerificationEmail = false;
-            if(result.type === 'failure') {
-                const errors = result.data?.form.errors
-                for(const key in errors) {
-                    toastState.addToast({
-                        type: 'error',
-                        message: errors[key][0]
-                    })
-                }
-                return;
-            }
+			if (result.type === 'failure') {
+				const errors = result.data?.form.errors;
+				for (const key in errors) {
+					toastState.addToast({
+						type: 'error',
+						message: errors[key][0]
+					});
+				}
+				return;
+			}
 			if (result.type === 'error') {
 				toastState.addToast({
 					type: 'error',

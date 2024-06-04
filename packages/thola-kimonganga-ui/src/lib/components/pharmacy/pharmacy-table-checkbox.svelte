@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { Checkbox } from "$lib/components/ui/checkbox";
-   
-     type Props = {
-        checked: boolean;
-     }
+	import { Checkbox } from '$lib/components/ui/checkbox';
 
-     let {checked = $bindable()}: Props  = $props()
-  </script>
-   
-  <Checkbox bind:checked />
+	type Props = {
+		checked: boolean;
+	};
+
+	let { checked = $bindable() }: Props = $props();
+</script>
+
+<Checkbox bind:checked />

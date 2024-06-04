@@ -1,6 +1,15 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import { TholaApp, BaseURL, UserRole, type OrganisationDetails, type CustomerDetails, type PharmacistDetails, type SubscriptionListResponse, type MedicationListResponse } from '$lib';
+import {
+	TholaApp,
+	BaseURL,
+	UserRole,
+	type OrganisationDetails,
+	type CustomerDetails,
+	type PharmacistDetails,
+	type SubscriptionListResponse,
+	type MedicationListResponse
+} from '$lib';
 import type { RemoveMedicationSchema, UpdateMedicationSchema } from '$lib/forms/medication.form';
 import type { QueryClient } from '@tanstack/svelte-query';
 import type { SuperValidated } from 'sveltekit-superforms';

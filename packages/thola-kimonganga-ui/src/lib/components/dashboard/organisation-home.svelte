@@ -6,6 +6,6 @@
 
 <div class="flex flex-col gap-5 px-5">
 	<PharmacyTableWrapper />
-	<Separator/>
+	<Separator />
 	<PharmacistsTableWrapper />
 </div>

@@ -77,7 +77,6 @@
 		}
 		return 'pharmacy.myorg@thola.com';
 	});
-	
 </script>
 
 <Card.Root

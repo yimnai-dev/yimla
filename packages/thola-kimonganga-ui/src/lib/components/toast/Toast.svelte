@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Toast } from '$lib';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import type { ToastState } from './toast-state.svelte';
 	import { CircleX } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
@@ -27,7 +27,7 @@
 {#if toastActive}
 	<div
 		transition:fly={{ duration: 300, delay: 100, x: 100, y: 0 }}
-		class="min-w-[100px] rounded-sm px-2 py-4 shadow-md z-50"
+		class="z-50 min-w-[100px] rounded-sm px-2 py-4 shadow-md"
 		class:bg-red-500={toast.type === 'error'}
 		class:bg-green-500={toast.type === 'success'}
 		class:bg-blue-500={toast.type === 'info'}

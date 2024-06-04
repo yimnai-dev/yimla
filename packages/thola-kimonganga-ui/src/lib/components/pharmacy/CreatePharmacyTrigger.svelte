@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
 	import { Button } from '$lib/components/ui/button';
-    import { PlusCircleIcon } from 'lucide-svelte';
+	import { PlusCircleIcon } from 'lucide-svelte';
 </script>
 
 <div
-	class="container mx-auto flex items-center justify-center rounded-md border-2 border-dashed py-6 mt-5"
+	class="container mx-auto mt-5 flex items-center justify-center rounded-md border-2 border-dashed py-6"
 >
 	<Button variant="outline" href="/app/pharmacies/new">
-        Create A New Pharmacy
-        <PlusCircleIcon class="ml-2 h-4 w-4" />
-    </Button>
+		Create A New Pharmacy
+		<PlusCircleIcon class="ml-2 h-4 w-4" />
+	</Button>
 </div>

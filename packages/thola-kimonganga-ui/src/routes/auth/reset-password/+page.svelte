@@ -61,8 +61,8 @@
 	let { form: formData, enhance, errors } = form;
 
 	onMount(() => {
-		$formData.email = data.forgotPasswordEmail
-	})
+		$formData.email = data.forgotPasswordEmail;
+	});
 </script>
 
 <Card.Root

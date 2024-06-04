@@ -13,7 +13,6 @@
 
 	let { data } = $props();
 
-
 	let stripe: Stripe | null = $state(null);
 
 	let priceListQuery = createQuery({
@@ -103,7 +102,7 @@
 						<p>Expires on: {dayjs(activeSubscription.current_period_end).format('MMM DD, YYYY')}</p>
 					</div>
 				{/if}
-				<div class="container  my-4 flex">
+				<div class="container my-4 flex">
 					<SubscriptionsTable {subscriptionList} />
 				</div>
 			{/if}

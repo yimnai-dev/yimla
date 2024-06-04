@@ -1,10 +1,6 @@
 <script lang="ts">
 	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
-	import {
-		addPagination,
-		addSortBy,
-		addTableFilter,
-	} from 'svelte-headless-table/plugins';
+	import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins';
 	import { type Pharmacy } from '$lib/types/thola-kimonganga.types';
 	import { readable } from 'svelte/store';
 	import { Button } from '$lib/components/ui/button';
@@ -40,7 +36,11 @@
 			accessor: ({ pharmacyId }) => pharmacyId,
 			header: 'Actions',
 			cell: ({ value }) => {
-				return createRender(PharmaciesTableAction, { pharmacyId: value, activePharmacyCount: pharmacies.filter(p => p.isActive).length, isActive: (pharmacies.find(p => p.pharmacyId === value) as Pharmacy).isActive });
+				return createRender(PharmaciesTableAction, {
+					pharmacyId: value,
+					activePharmacyCount: pharmacies.filter((p) => p.isActive).length,
+					isActive: (pharmacies.find((p) => p.pharmacyId === value) as Pharmacy).isActive
+				});
 			}
 		})
 	]);

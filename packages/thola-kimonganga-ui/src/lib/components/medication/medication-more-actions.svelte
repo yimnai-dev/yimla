@@ -2,21 +2,15 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
-	import { createQuery } from '@tanstack/svelte-query';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import dayjs from 'dayjs';
-	import { getContext, onMount, untrack } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
-	import { superForm, type SuperValidated } from 'sveltekit-superforms';
-	import {
-		updatePharmacyActiveStatusSchema,
-		type UpdatePharmacyActiveStatusSchema
-	} from '$lib/forms/pharmacy.form';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import type { ToastState } from '../toast/toast-state.svelte';
 	import EditMedicationSidebar from './edit-medication-sidebar.svelte';
-	import type { MedicationDetails, MedicationListResponse } from '$lib';
+	import type { MedicationListResponse } from '$lib';
 	import { medicationListOptions } from '$lib/query/medication.query';
 	import { removeMedicationSchema } from '$lib/forms/medication.form';
 

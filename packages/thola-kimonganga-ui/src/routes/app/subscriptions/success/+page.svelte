@@ -11,11 +11,11 @@
 	>
 		{#if orgInfo}
 			<h1 class="text-2xl font-bold capitalize md:text-3xl lg:text-4xl">Hey, {orgInfo.username}</h1>
-			<CircleCheckBig size={150}/>
+			<CircleCheckBig size={150} />
 			<p class="md:text-2x text-xl lg:text-3xl">
 				Your subscription to Thola Kimonganga was successful
 			</p>
-            <Button variant="outline" href="/app/subscriptions">Go back to Subscriptions</Button>
+			<Button variant="outline" href="/app/subscriptions">Go back to Subscriptions</Button>
 		{/if}
 	</div>
 </div>

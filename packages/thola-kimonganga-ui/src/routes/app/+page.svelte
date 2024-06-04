@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { Separator } from '$lib/components/ui/separator';
-	import {Button} from '$lib/components/ui/button'
+	import { Button } from '$lib/components/ui/button';
 	import OrganisationHome from '$lib/components/dashboard/organisation-home.svelte';
 	import PharmacyHome from '$lib/components/dashboard/pharmacy-home.svelte';
 	import CustomerHome from '$lib/components/dashboard/customer-home.svelte';
@@ -9,14 +9,18 @@
 
 <div class="container mx-auto flex flex-col items-center justify-center space-y-3 py-4">
 	<h1 class="text-xl font-bold capitalize sm:text-2xl md:text-3xl lg:text-5xl">
-		Hello, {$page.data.orgInfo?.username ?? $page.data.pharmacistInfo?.firstName + ' ' + $page.data.pharmacistInfo?.lastName ?? $page.data.userInfo?.firstName + ' ' + $page.data.userInfo?.lastName}
+		Hello, {$page.data.orgInfo?.username ??
+			$page.data.pharmacistInfo?.firstName + ' ' + $page.data.pharmacistInfo?.lastName ??
+			$page.data.userInfo?.firstName + ' ' + $page.data.userInfo?.lastName}
 	</h1>
 	<p>Welcome back to Thola Kimonganga</p>
 	{#if $page.data.tholaApp === 'thola-pharmacy' && $page.data.pharmacistInfo}
-		<h1 class="text-xl font-bold capitalize md:text-2xl">Pharmacy Branch: {$page.data.pharmacistInfo.pharmacyName}</h1>
-		<div class="w-full flex flex-col space-y-3">
+		<h1 class="text-xl font-bold capitalize md:text-2xl">
+			Pharmacy Branch: {$page.data.pharmacistInfo.pharmacyName}
+		</h1>
+		<div class="flex w-full flex-col space-y-3">
 			<h3>Quick Actions</h3>
-			<div class="w-full flex space-x-2">
+			<div class="flex w-full space-x-2">
 				<Button variant="outline" href="/app/medication">Explore Medication Listing</Button>
 				<Button variant="outline" href="/app/customers">View Customer Listing</Button>
 				<Button variant="outline" href="/app/orders?status=pending">Pending Orders</Button>

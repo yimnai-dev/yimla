@@ -9,11 +9,15 @@
 
 	let medicationListQuery = createQuery(medicationListOptions($page.data.medicationListStream));
 
-    let medications = $derived.by(() => {
-        if(!$medicationListQuery.data || !$medicationListQuery.data.ok || !$medicationListQuery.data.medications.length) return []
-        return $medicationListQuery.data.medications
-    })
-
+	let medications = $derived.by(() => {
+		if (
+			!$medicationListQuery.data ||
+			!$medicationListQuery.data.ok ||
+			!$medicationListQuery.data.medications.length
+		)
+			return [];
+		return $medicationListQuery.data.medications;
+	});
 </script>
 
 {#if $medicationListQuery.isFetching}

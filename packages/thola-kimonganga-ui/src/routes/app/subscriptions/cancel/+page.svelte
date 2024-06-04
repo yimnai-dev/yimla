@@ -3,7 +3,6 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { LucideRabbit } from 'lucide-svelte';
 	let orgInfo = $page.data.orgInfo;
-	
 </script>
 
 <div class="container flex h-screen items-center justify-center">

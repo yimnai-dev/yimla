@@ -127,7 +127,7 @@
 			}}
 			>
 				<Select.Trigger class="w-full">
-					<Select.Value placeholder="Select Pharmacy" />  
+					<Select.Value placeholder="Select Pharmacy" />
 				</Select.Trigger>
 				{#if $pharmacyListQuery.data && $pharmacyListQuery.data.ok}
 					{@const pharmacies = $pharmacyListQuery.data.pharmacies}

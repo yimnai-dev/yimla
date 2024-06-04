@@ -6,9 +6,8 @@ declare global {
 				publishableKey: string;
 			};
 		}
-		
-		// style attributes interface? 
 
+		// style attributes interface?
 	}
 }
 

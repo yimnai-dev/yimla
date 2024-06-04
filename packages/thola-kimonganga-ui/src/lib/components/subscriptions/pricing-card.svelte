@@ -27,7 +27,7 @@
 		};
 	};
 
-    let checkoutForm = getContext<SuperValidated<InitializeCheckoutForm>>(CONTEXT_KEYS.CHECKOUT_FORM)
+	let checkoutForm = getContext<SuperValidated<InitializeCheckoutForm>>(CONTEXT_KEYS.CHECKOUT_FORM);
 
 	let toastState = getContext<ToastState>(CONTEXT_KEYS.TOAST);
 
@@ -51,7 +51,7 @@
 			}
 		},
 		onResult: ({ result }) => {
-            console.log('resultatFinale: ', result)
+			console.log('resultatFinale: ', result);
 			initializing = false;
 			if (result.type === 'failure') {
 				const errors = result.data?.form.errors;
@@ -69,8 +69,8 @@
 					type: 'success',
 					message: result.data?.message,
 					duration: 5
-				})
-				location.href=result.data?.paymentUrl
+				});
+				location.href = result.data?.paymentUrl;
 			}
 		}
 	});
@@ -83,7 +83,7 @@
 	let { form: formData, enhance } = form;
 
 	onMount(() => {
-        if ($page.data.orgInfo) {
+		if ($page.data.orgInfo) {
 			$formData.customerId = $page.data.orgInfo.customerId;
 		}
 		$formData.currency = plan.currency;
@@ -93,10 +93,10 @@
 </script>
 
 <div
-	class="start shadow-accent flex w-full flex-col items-center justify-between rounded-md border p-5 shadow-sm transition-all duration-300 ease-in-out hover:border-purple-200"
+	class="start flex w-full flex-col items-center justify-between rounded-md border p-5 shadow-sm shadow-accent transition-all duration-300 ease-in-out hover:border-purple-200"
 >
 	<h1 class="py-2 text-xl md:text-2xl lg:text-3xl">{plan.name}</h1>
-	<h1 class="text-primary text-pretty py-2 text-xl uppercase md:text-2xl lg:text-3xl">
+	<h1 class="text-pretty py-2 text-xl uppercase text-primary md:text-2xl lg:text-3xl">
 		{formattedPrice} <span class="capitalize"> / {plan.unit.slice(0, -1)}</span>
 	</h1>
 	<img src={plan.image} alt="Thola Kimonganga" />
@@ -119,13 +119,10 @@
 		<Input name="productId" hidden class="hidden" bind:value={$formData.productId} />
 		<Input name="currency" hidden class="hidden" bind:value={$formData.currency} />
 		<Button
-            type="submit"
+			type="submit"
 			variant="outline"
 			disabled={initializing || $formData.seats === 0}
-			class={cn(
-				'px-20',
-				initializing ? 'cursor-not-allowed' : 'cursor-pointer'
-			)}
+			class={cn('px-20', initializing ? 'cursor-not-allowed' : 'cursor-pointer')}
 		>
 			{#if initializing}
 				<Spinner />

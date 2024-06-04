@@ -68,7 +68,7 @@
 		table.column({
 			accessor: 'drugId',
 			header: 'More',
-			cell: ({ value, ...rest }) => {
+			cell: ({ value }) => {
 				return createRender(MedicationMoreActions, { drugId: value });
 			}
 		})
@@ -81,13 +81,11 @@
 	const { filterValue } = $state(pluginStates.filter);
 
 	$effect(() => {
-		let medicationListResponse = 
-		$page.data.queryClient.getQueryData<MedicationListResponse>(
+		let medicationListResponse = $page.data.queryClient.getQueryData<MedicationListResponse>(
 			medicationListOptions($page.data.medicationListStream).queryKey
-		)
-		if(!medicationListResponse || !medicationListResponse.ok) return;
+		);
+		if (!medicationListResponse || !medicationListResponse.ok) return;
 		$writableMedications = medicationListResponse.medications;
-		
 	});
 </script>
 

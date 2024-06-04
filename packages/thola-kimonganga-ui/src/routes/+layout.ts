@@ -13,7 +13,7 @@ export const load = ({ data }) => {
 					} else {
 						return failureCount < 3;
 					}
-				},
+				}
 			}
 		}
 	});

@@ -37,7 +37,7 @@
 </script>
 
 <header
-	class="bg-background sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
+	class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
 >
 	<Sheet.Root>
 		<Sheet.Trigger asChild let:builder>
@@ -50,46 +50,46 @@
 			<nav class="grid gap-6 text-lg font-medium">
 				<a
 					href="/app"
-					class="bg-primary text-primary-foreground group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold md:text-base"
+					class="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
 				>
 					<Package2 class="h-5 w-5 transition-all group-hover:scale-110" />
 					<span class="sr-only">Acme Inc</span>
 				</a>
 				<a
 					href="/app"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<Home class="h-5 w-5" />
 					Home
 				</a>
-				<a href="/app/pharmacies" class="text-foreground flex items-center gap-4 px-2.5">
+				<a href="/app/pharmacies" class="flex items-center gap-4 px-2.5 text-foreground">
 					<Hospital class="h-5 w-5" />
 					Pharmacies
 				</a>
 				<a
 					href="/app/pharmacists"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<ShieldPlus class="h-5 w-5" />
 					Pharmacists
 				</a>
 				<a
 					href="/app/customers"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<UsersRound class="h-5 w-5" />
 					Customers
 				</a>
 				<a
 					href="/app/analytics"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<LineChart class="h-5 w-5" />
 					Analytics
 				</a>
 				<a
 					href="/app/settings"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<SettingsIcon class="h-5 w-5" />
 					Settings
@@ -113,11 +113,11 @@
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
 	<div class="relative ml-auto flex-1 md:grow-0">
-		<Search class="text-muted-foreground absolute left-2.5 top-2.5 h-4 w-4" />
+		<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 		<Input
 			type="search"
 			placeholder="Search..."
-			class="bg-background w-full rounded-lg pl-8 md:w-[200px] lg:w-[336px]"
+			class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
 		/>
 	</div>
 	<DropdownMenu.Root>
@@ -139,11 +139,17 @@
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end">
 			{#if $page.data.tholaApp === 'thola-org' && $page.data.orgInfo}
-				<DropdownMenu.Label class="capitalize">{$page.data.orgInfo.username}'s Account</DropdownMenu.Label>
+				<DropdownMenu.Label class="capitalize"
+					>{$page.data.orgInfo.username}'s Account</DropdownMenu.Label
+				>
 			{:else if $page.data.tholaApp === 'thola-pharmacy' && $page.data.pharmacistInfo && typeof $page.data.pharmacistInfo === 'object' && 'username' in $page.data.pharmacistInfo}
-				<DropdownMenu.Label class="capitalize">{$page.data.pharmacistInfo.username}'s Account</DropdownMenu.Label>
+				<DropdownMenu.Label class="capitalize"
+					>{$page.data.pharmacistInfo.username}'s Account</DropdownMenu.Label
+				>
 			{:else if $page.data.tholaApp === 'thola-client' && $page.data.userInfo && typeof $page.data.userInfo === 'object' && 'firstName' in $page.data.userInfo}
-				<DropdownMenu.Label class="capitalize">{$page.data.userInfo.firstName}'s Account</DropdownMenu.Label>
+				<DropdownMenu.Label class="capitalize"
+					>{$page.data.userInfo.firstName}'s Account</DropdownMenu.Label
+				>
 			{:else}
 				<DropdownMenu.Label class="capitalize">My Account</DropdownMenu.Label>
 			{/if}

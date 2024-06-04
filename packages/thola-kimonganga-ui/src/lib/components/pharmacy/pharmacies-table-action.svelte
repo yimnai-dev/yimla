@@ -2,7 +2,7 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import dayjs from 'dayjs';
@@ -95,7 +95,7 @@
 
 	$effect(() => {
 		$formData.isActive = !isActive;
-		console.log(untrack(() => $formData))
+		console.log(untrack(() => $formData));
 	});
 
 	onMount(() => {

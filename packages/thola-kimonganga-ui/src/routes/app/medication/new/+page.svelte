@@ -21,7 +21,8 @@
 
 	let { data } = $props();
 
-	let noMedicationDefaultImage = "https://imgs.search.brave.com/f6k3j-9KDPyQ2aCYUWC5MywQocGi1-P-xq5Q4IO8res/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTA5/Mzk2ODkwMC9waG90/by9waWxsLWFuZC1i/bGlzdGVyLXBhY2su/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PWd1TWZENFNHeDdh/TURVNEFoU0NMWjdY/ZGxEdGtaSW5KLW1m/MF94R0t6RVE9"
+	let noMedicationDefaultImage =
+		'https://imgs.search.brave.com/f6k3j-9KDPyQ2aCYUWC5MywQocGi1-P-xq5Q4IO8res/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTA5/Mzk2ODkwMC9waG90/by9waWxsLWFuZC1i/bGlzdGVyLXBhY2su/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PWd1TWZENFNHeDdh/TURVNEFoU0NMWjdY/ZGxEdGtaSW5KLW1m/MF94R0t6RVE9';
 
 	const dosageForms = [
 		'tablet',
@@ -37,7 +38,6 @@
 	const df = new DateFormatter('en-US', {
 		dateStyle: 'long'
 	});
-
 
 	let expiryDate: DateValue | undefined = $state(undefined);
 
@@ -98,9 +98,9 @@
 
 	let { form: formData, enhance } = form;
 
-	formData.subscribe($f => {
-		console.log($f.image)
-	})
+	formData.subscribe(($f) => {
+		console.log($f.image);
+	});
 
 	$effect(() => {
 		if (expiryDate) {
@@ -108,22 +108,22 @@
 		}
 	});
 
-    onMount(() => {
-        $formData.pharmacyId = $page.data.pharmacistInfo.pharmacyId
-    })
+	onMount(() => {
+		$formData.pharmacyId = $page.data.pharmacistInfo.pharmacyId;
+	});
 </script>
 
 <form class="container mx-auto p-5" method="POST" use:enhance enctype="multipart/form-data">
 	<h1 class="text-2xl font-bold max-md:text-center md:text-3xl">
 		Add New Medication To Your Stock
 	</h1>
-    <Form.Field {form} name="pharmacyId" class="w-full sm:w-1/2">
-        <Form.Control let:attrs>
-            <Input hidden class="hidden" name={attrs.name} bind:value={$formData.pharmacyId} />
-        </Form.Control>
-        <Form.Description />
-        <Form.FieldErrors />
-    </Form.Field>
+	<Form.Field {form} name="pharmacyId" class="w-full sm:w-1/2">
+		<Form.Control let:attrs>
+			<Input hidden class="hidden" name={attrs.name} bind:value={$formData.pharmacyId} />
+		</Form.Control>
+		<Form.Description />
+		<Form.FieldErrors />
+	</Form.Field>
 	<div class="flex w-full flex-col items-start py-3 max-sm:space-y-3 sm:flex-row sm:space-x-3">
 		<Form.Field {form} name="name" class="w-full sm:w-1/2">
 			<Form.Control let:attrs>
@@ -264,7 +264,10 @@
 		<Form.Field {form} name="image" class="w-full sm:w-1/2">
 			<Form.Control let:attrs>
 				<Form.Label>Drug Image</Form.Label>
-				<Input type="file" {...attrs} onchange={(e) => {
+				<Input
+					type="file"
+					{...attrs}
+					onchange={(e) => {
 					const target = e.target as HTMLInputElement
 					if(!target.files || target.files.length === 0) return
 					const file = target.files[0]
@@ -273,20 +276,29 @@
 						return { ...$prev, image: file};
 					})
 
-				}} />
-			<Input hidden name={attrs.name} class="hidden" bind:value={$formData.image} />
+				}}
+				/>
+				<Input hidden name={attrs.name} class="hidden" bind:value={$formData.image} />
 			</Form.Control>
 			<Form.Description />
 			<Form.FieldErrors />
 		</Form.Field>
 	</div>
-	<div class="w-full flex items-center justify-center">
-		<div class="lg:w-3/4 md:w-1/2 w-full relative">
+	<div class="flex w-full items-center justify-center">
+		<div class="relative w-full md:w-1/2 lg:w-3/4">
 			{#if !$formData.image}
-				<h1 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-bold text-3xl bg-background rounded-md p-2">The image of the drug will be shown here</h1>
+				<h1
+					class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md bg-background p-2 text-center text-3xl font-bold"
+				>
+					The image of the drug will be shown here
+				</h1>
 			{/if}
-		
-			<img alt="Medication" class="w-full max-h-[400px] object-cover object-center rounded-lg shadow-md" src={$formData.image ? URL.createObjectURL($formData.image) : noMedicationDefaultImage} />
+
+			<img
+				alt="Medication"
+				class="max-h-[400px] w-full rounded-lg object-cover object-center shadow-md"
+				src={$formData.image ? URL.createObjectURL($formData.image) : noMedicationDefaultImage}
+			/>
 		</div>
 	</div>
 	<div class="flex w-full items-center justify-center py-2">

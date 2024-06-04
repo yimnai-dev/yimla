@@ -14,7 +14,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { updateMedicationSchema, type UpdateMedicationSchema } from '$lib/forms/medication.form';
-	import { CalendarIcon, AlertTriangle } from 'lucide-svelte';
+	import { CalendarIcon } from 'lucide-svelte';
 	import { Calendar } from '$lib/components/ui/calendar';
 	import * as Popover from '$lib/components/ui/popover';
 	import { getContext, onMount } from 'svelte';
@@ -110,7 +110,7 @@
 					};
 				}
 			);
-            open = false;
+			open = false;
 			toastState.addToast({
 				type: 'info',
 				message: 'Medication is being updated in the background',
@@ -195,7 +195,13 @@
 					Make changes to {medication.name} here. Click save when you're done.
 				</Sheet.Description>
 			</Sheet.Header>
-			<form class="grid gap-4 py-4" method="POST" action="/app/?/updateMedication" use:enhance enctype="multipart/form-data">
+			<form
+				class="grid gap-4 py-4"
+				method="POST"
+				action="/app/?/updateMedication"
+				use:enhance
+				enctype="multipart/form-data"
+			>
 				<!-- Hidden Fields start-->
 				<Form.Field {form} name="drugId" class="w-full sm:w-1/2">
 					<Form.Control let:attrs>
@@ -317,13 +323,13 @@
 					</div>
 				</div>
 				<Button disabled={!isTainted($tainted) || updatingMedication} type="submit" class="py-3">
-                    {#if updatingMedication}
-                        <Spinner/>
-                        Updating
-                        {:else}
-                        Save Changes
-                    {/if}
-                </Button>
+					{#if updatingMedication}
+						<Spinner />
+						Updating
+					{:else}
+						Save Changes
+					{/if}
+				</Button>
 			</form>
 		</Sheet.Content>
 	</Sheet.Root>

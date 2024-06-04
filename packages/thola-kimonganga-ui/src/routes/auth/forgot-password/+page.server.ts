@@ -31,7 +31,7 @@ export const actions = {
 			},
 			fetcher: fetch,
 			baseURL
-		})
+		});
 		if (!forgotPasswordResponse.ok) {
 			error(forgotPasswordResponse.status, {
 				message: forgotPasswordResponse.message,

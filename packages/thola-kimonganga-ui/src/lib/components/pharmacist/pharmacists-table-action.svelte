@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { getContext, onMount } from 'svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
-	import { superForm, type SuperForm, type SuperValidated } from 'sveltekit-superforms';
+	import { superForm, type SuperValidated } from 'sveltekit-superforms';
 	import { deletePharmacistSchema, type DeletePharmacistSchema } from '$lib/forms/pharmacist.form';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import type { ToastState } from '../toast/toast-state.svelte';

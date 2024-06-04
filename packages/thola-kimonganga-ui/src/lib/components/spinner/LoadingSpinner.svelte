@@ -19,7 +19,7 @@
 		<svg
 			aria-hidden="true"
 			class={cn(
-				'fill-primary dark:fill-secondary animate-spin text-gray-200 dark:text-gray-600',
+				'animate-spin fill-primary text-gray-200 dark:fill-secondary dark:text-gray-600',
 				dimension
 			)}
 			viewBox="0 0 100 101"

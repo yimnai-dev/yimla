@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { Button } from '$lib/components/ui/button';
 	import { PlusCircleIcon } from 'lucide-svelte';
-    import MedicationTableWrapper from '$lib/components/medication/medication-table-wrapper.svelte';
+	import MedicationTableWrapper from '$lib/components/medication/medication-table-wrapper.svelte';
 </script>
 
 <div class="container flex flex-col gap-5">
@@ -13,5 +13,5 @@
 			<PlusCircleIcon class="ml-2 h-4 w-4" />
 		</Button>
 	</div>
-    <MedicationTableWrapper/>
+	<MedicationTableWrapper />
 </div>

@@ -20,16 +20,16 @@
 					exists = true;
 				}
 			})
-			.catch((e) => {
+			.catch(() => {
 				loading = false;
 			});
 	});
 </script>
 
 {#if !loading && exists}
-	<img {src} {alt} class="rounded-md"/>
+	<img {src} {alt} class="rounded-md" />
 {:else}
-	<div class="w-full flex items-center justify-center p-3">
+	<div class="flex w-full items-center justify-center p-3">
 		<AlertTriangle size={100} />
 	</div>
 {/if}

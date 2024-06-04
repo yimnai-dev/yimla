@@ -4,7 +4,7 @@ import { redirect, type Actions, error } from '@sveltejs/kit';
 import { superValidate, fail } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { ResetPasswordParameters, ResetPasswordResponse } from '$lib';
-import { post, update } from '$lib/urls';
+import { update } from '$lib/urls';
 
 export const load = async ({ cookies }) => {
 	const forgotPasswordEmail = cookies.get(COOKIE_KEYS.FORGOT_PASSWORD_EMAIL);
@@ -42,11 +42,11 @@ export const actions = {
 				email: resetPasswordForm.data.email || email,
 				password: resetPasswordForm.data.newPassword,
 				confirmationCode: resetPasswordForm.data.confirmationCode,
-				role: userRole,
+				role: userRole
 			},
 			fetcher: fetch,
 			baseURL
-		})
+		});
 		if (!resetPasswordResponse.ok) {
 			error(resetPasswordResponse.status, {
 				message: resetPasswordResponse.message,

@@ -37,15 +37,15 @@
 		},
 		onResult: ({ result }) => {
 			signingUp = false;
-            if(result.type === 'failure') {
-                for(const key in result.data?.form.errors) {
-                    toastState.addToast({
-                        type: 'error',
-                        message: result.data?.form.errors[key][0]
-                    })
-                }
-                return;
-            }
+			if (result.type === 'failure') {
+				for (const key in result.data?.form.errors) {
+					toastState.addToast({
+						type: 'error',
+						message: result.data?.form.errors[key][0]
+					});
+				}
+				return;
+			}
 			if (result.type === 'error') {
 				toastState.addToast({
 					type: 'error',
@@ -66,16 +66,6 @@
 	});
 
 	let { form: formData, enhance } = form;
-
-	let emailPlaceholder = $derived.by(() => {
-		if ($page.data.tholaApp === 'thola-client') {
-			return 'johnddoe@gmail.com';
-		}
-		if ($page.data.tholaApp === 'thola-org') {
-			return 'pharma-org@thola.com';
-		}
-		return 'pharmacy.myorg@thola.com';
-	});
 </script>
 
 <Card.Root
@@ -87,8 +77,10 @@
 	</Card.Header>
 	<Card.Content>
 		<form class="grid gap-4" method="POST" use:enhance>
-            <h1 class="font-bold">Signup Email</h1>
-			<p class="w-full border-2 border-secondary rounded-md p-2 cursor-not-allowed">{data.signupEmail}</p>
+			<h1 class="font-bold">Signup Email</h1>
+			<p class="w-full cursor-not-allowed rounded-md border-2 border-secondary p-2">
+				{data.signupEmail}
+			</p>
 			<div class="flex w-full flex-col gap-2 py-2 md:flex-row">
 				<Form.FormField {form} name="firstName" class="grid gap-2">
 					<Form.Control let:attrs>

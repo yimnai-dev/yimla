@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { CreatePharmacySchema } from '$lib/forms/pharmacy.form';
-	// @ts-ignore
+	// @ts-expect-error TODO: Find stub types for mapbox
 	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
 
 	type Props = {
-		formData: SuperForm<CreatePharmacySchema>['form']
+		formData: SuperForm<CreatePharmacySchema>['form'];
 	};
 
 	let bueaLongitude = $state(9.243536);
@@ -16,7 +16,7 @@
 	onMount(() => {
 		formData.update(($prev) => {
 			return { ...$prev, longitude: bueaLongitude, latitude: bueaLatitude };
-		})
+		});
 		mapboxgl.accessToken = import.meta.env.MAPBOX_API_KEY;
 		const map = new mapboxgl.Map({
 			container: 'map',
@@ -28,7 +28,7 @@
 			const coordinates = e.lngLat;
 			formData.update(($prev) => {
 				return { ...$prev, longitude: coordinates.lng, latitude: coordinates.lat };
-			})
+			});
 		});
 	});
 </script>
