@@ -7,6 +7,7 @@
 	"exclude": [
 		"/_app/*",
 		"/favicon.png",
-		"/images/placeholder-user.webp"
+		"/images/placeholder-user.webp",
+		"/logo/logo.svg"
 	]
 }

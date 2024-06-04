@@ -38,13 +38,15 @@ const BLOCK_EFFECT = 1 << 4;
 const BRANCH_EFFECT = 1 << 5;
 const ROOT_EFFECT = 1 << 6;
 const UNOWNED = 1 << 7;
-const CLEAN = 1 << 8;
-const DIRTY = 1 << 9;
-const MAYBE_DIRTY = 1 << 10;
-const INERT = 1 << 11;
-const DESTROYED = 1 << 12;
-const EFFECT_RAN = 1 << 13;
+const DISCONNECTED = 1 << 8;
+const CLEAN = 1 << 9;
+const DIRTY = 1 << 10;
+const MAYBE_DIRTY = 1 << 11;
+const INERT = 1 << 12;
+const DESTROYED = 1 << 13;
+const EFFECT_RAN = 1 << 14;
 const STATE_SYMBOL = Symbol("$state");
+const STATE_FROZEN_SYMBOL = Symbol("$state.frozen");
 function equals(value) {
   return value === this.v;
 }
@@ -207,12 +209,12 @@ function execute_effect_teardown(effect2) {
     }
   }
 }
-function destroy_effect(effect2) {
+function destroy_effect(effect2, remove_dom = true) {
   var dom = effect2.dom;
-  if (dom !== null) {
+  if (dom !== null && remove_dom) {
     remove(dom);
   }
-  destroy_effect_children(effect2);
+  destroy_effect_children(effect2, remove_dom);
   remove_reactions(effect2, 0);
   set_signal_status(effect2, DESTROYED);
   if (effect2.transitions) {
@@ -282,10 +284,8 @@ function destroy_derived(signal) {
 }
 const FLUSH_MICROTASK = 0;
 const FLUSH_SYNC = 1;
-const FLUSH_YIELD = 2;
 let current_scheduler_mode = FLUSH_MICROTASK;
 let is_micro_task_queued = false;
-let is_yield_task_queued = false;
 let is_flushing_effect = false;
 function set_is_flushing_effect(value) {
   is_flushing_effect = value;
@@ -316,11 +316,13 @@ function check_dirtiness(reaction) {
   if (is_dirty && !is_unowned) {
     return true;
   }
+  var is_disconnected = (flags & DISCONNECTED) !== 0;
   if ((flags & MAYBE_DIRTY) !== 0 || is_dirty && is_unowned) {
     var dependencies = reaction.deps;
     if (dependencies !== null) {
       var length = dependencies.length;
       var is_equal;
+      var reactions;
       for (var i = 0; i < length; i++) {
         var dependency = dependencies[i];
         if (!is_dirty && check_dirtiness(
@@ -333,15 +335,15 @@ function check_dirtiness(reaction) {
             true
           );
         }
+        var version = dependency.version;
         if (is_unowned) {
-          var version = dependency.version;
           if (version > /** @type {import('#client').Derived} */
           reaction.version) {
             reaction.version = version;
             return !is_equal;
           }
           if (!current_skip_reaction && !dependency?.reactions?.includes(reaction)) {
-            var reactions = dependency.reactions;
+            reactions = dependency.reactions;
             if (reactions === null) {
               dependency.reactions = [reaction];
             } else {
@@ -350,11 +352,26 @@ function check_dirtiness(reaction) {
           }
         } else if ((reaction.f & DIRTY) !== 0) {
           return true;
+        } else if (is_disconnected) {
+          if (version > /** @type {import('#client').Derived} */
+          reaction.version) {
+            reaction.version = version;
+            is_dirty = true;
+          }
+          reactions = dependency.reactions;
+          if (reactions === null) {
+            dependency.reactions = [reaction];
+          } else if (!reactions.includes(reaction)) {
+            reactions.push(reaction);
+          }
         }
       }
     }
     if (!is_unowned) {
       set_signal_status(reaction, CLEAN);
+    }
+    if (is_disconnected) {
+      reaction.f ^= DISCONNECTED;
     }
   }
   return is_dirty;
@@ -447,8 +464,11 @@ function remove_reaction(signal, dependency) {
       }
     }
   }
-  if (reactions_length === 0 && (dependency.f & UNOWNED) !== 0) {
+  if (reactions_length === 0 && (dependency.f & DERIVED) !== 0) {
     set_signal_status(dependency, MAYBE_DIRTY);
+    if ((dependency.f & (UNOWNED | DISCONNECTED)) === 0) {
+      dependency.f ^= DISCONNECTED;
+    }
     remove_reactions(
       /** @type {import('#client').Derived} **/
       dependency,
@@ -469,14 +489,14 @@ function remove_reactions(signal, start_index) {
     }
   }
 }
-function destroy_effect_children(signal) {
+function destroy_effect_children(signal, remove_dom = true) {
   let effect2 = signal.first;
   signal.first = null;
   signal.last = null;
   var sibling;
   while (effect2 !== null) {
     sibling = effect2.next;
-    destroy_effect(effect2);
+    destroy_effect(effect2, remove_dom);
     effect2 = sibling;
   }
 }
@@ -551,35 +571,21 @@ function flush_queued_effects(effects) {
 }
 function process_deferred() {
   is_micro_task_queued = false;
-  is_yield_task_queued = false;
-  if (flush_count > 101) {
+  if (flush_count > 1001) {
     return;
   }
   const previous_queued_root_effects = current_queued_root_effects;
   current_queued_root_effects = [];
   flush_queued_root_effects(previous_queued_root_effects);
-  if (!is_micro_task_queued && !is_yield_task_queued) {
+  if (!is_micro_task_queued) {
     flush_count = 0;
   }
-}
-async function yield_tick() {
-  await new Promise((fulfil) => {
-    requestAnimationFrame(() => {
-      setTimeout(fulfil, 0);
-    });
-    setTimeout(fulfil, 100);
-  });
 }
 function schedule_effect(signal) {
   if (current_scheduler_mode === FLUSH_MICROTASK) {
     if (!is_micro_task_queued) {
       is_micro_task_queued = true;
       queueMicrotask(process_deferred);
-    }
-  } else if (current_scheduler_mode === FLUSH_YIELD) {
-    if (!is_yield_task_queued) {
-      is_yield_task_queued = true;
-      yield_tick().then(process_deferred);
     }
   }
   var effect2 = signal;
@@ -651,15 +657,6 @@ function process_effects(effect2, collected_effects) {
     process_effects(child, collected_effects);
   }
 }
-function yield_updates(fn) {
-  const previous_scheduler_mode = current_scheduler_mode;
-  try {
-    current_scheduler_mode = FLUSH_YIELD;
-    return fn();
-  } finally {
-    current_scheduler_mode = previous_scheduler_mode;
-  }
-}
 function flush_sync(fn, flush_previous = true) {
   var previous_scheduler_mode = current_scheduler_mode;
   var previous_queued_root_effects = current_queued_root_effects;
@@ -668,6 +665,7 @@ function flush_sync(fn, flush_previous = true) {
     const root_effects = [];
     current_scheduler_mode = FLUSH_SYNC;
     current_queued_root_effects = root_effects;
+    is_micro_task_queued = false;
     if (flush_previous) {
       flush_queued_root_effects(previous_queued_root_effects);
     }
@@ -696,7 +694,7 @@ function get(signal) {
     } else if (dependencies === null || current_dependencies_index === 0 || dependencies[current_dependencies_index - 1] !== signal) {
       if (current_dependencies === null) {
         current_dependencies = [signal];
-      } else {
+      } else if (current_dependencies[current_dependencies.length - 1] !== signal) {
         current_dependencies.push(signal);
       }
     }
@@ -786,9 +784,6 @@ function push(props, runes = false, fn) {
 function pop(component) {
   const context_stack_item = current_component_context;
   if (context_stack_item !== null) {
-    if (component !== void 0) {
-      context_stack_item.x = component;
-    }
     const effects = context_stack_item.e;
     if (effects !== null) {
       context_stack_item.e = null;
@@ -799,11 +794,13 @@ function pop(component) {
     current_component_context = context_stack_item.p;
     context_stack_item.m = true;
   }
-  return component || /** @type {T} */
-  {};
+  return (
+    /** @type {T} */
+    {}
+  );
 }
-function proxy(value, immutable = true, parent = null) {
-  if (typeof value === "object" && value != null && !is_frozen(value)) {
+function proxy(value, immutable = true, parent = null, prev) {
+  if (typeof value === "object" && value != null && !is_frozen(value) && !(STATE_FROZEN_SYMBOL in value)) {
     if (STATE_SYMBOL in value) {
       const metadata = (
         /** @type {import('#client').ProxyMetadata<T>} */
@@ -956,6 +953,14 @@ const state_proxy_handler = {
 };
 function set_hydrating(value) {
 }
+let hydrate_nodes = (
+  /** @type {any} */
+  null
+);
+function set_hydrate_nodes(nodes) {
+  hydrate_nodes = nodes;
+  nodes && nodes[0];
+}
 function hydrate_anchor(node) {
   if (node.nodeType !== 8) {
     return node;
@@ -983,6 +988,9 @@ function hydrate_anchor(node) {
         depth += 1;
       } else if (data[0] === HYDRATION_END) {
         if (depth === 0) {
+          hydrate_nodes = /** @type {import('#client').TemplateNode[]} */
+          nodes;
+          nodes[0];
           return current;
         }
         depth -= 1;
@@ -993,21 +1001,18 @@ function hydrate_anchor(node) {
   hydration_mismatch();
   throw HYDRATION_ERROR;
 }
-var node_prototype;
-var element_prototype;
-var text_prototype;
+var $window;
 function init_operations() {
-  if (node_prototype !== void 0) {
+  if ($window !== void 0) {
     return;
   }
-  node_prototype = Node.prototype;
-  element_prototype = Element.prototype;
-  text_prototype = Text.prototype;
+  $window = window;
+  var element_prototype = Element.prototype;
   element_prototype.__click = void 0;
-  text_prototype.__nodeValue = " ";
   element_prototype.__className = "";
   element_prototype.__attributes = null;
   element_prototype.__e = void 0;
+  Text.prototype.__nodeValue = " ";
 }
 function empty() {
   return document.createTextNode("");
@@ -1054,32 +1059,43 @@ function handle_event_propagation(handler_element, event) {
       return current_target || owner_document;
     }
   });
-  function next(next_target) {
-    current_target = next_target;
-    var parent_element = next_target.parentNode || /** @type {any} */
-    next_target.host || null;
-    try {
-      var delegated = next_target["__" + event_name];
-      if (delegated !== void 0 && !/** @type {any} */
-      next_target.disabled) {
-        if (is_array(delegated)) {
-          var [fn, ...data] = delegated;
-          fn.apply(next_target, [event, ...data]);
+  try {
+    var throw_error;
+    var other_errors = [];
+    while (current_target !== null) {
+      var parent_element = current_target.parentNode || /** @type {any} */
+      current_target.host || null;
+      try {
+        var delegated = current_target["__" + event_name];
+        if (delegated !== void 0 && !/** @type {any} */
+        current_target.disabled) {
+          if (is_array(delegated)) {
+            var [fn, ...data] = delegated;
+            fn.apply(current_target, [event, ...data]);
+          } else {
+            delegated.call(current_target, event);
+          }
+        }
+      } catch (error) {
+        if (throw_error) {
+          other_errors.push(error);
         } else {
-          delegated.call(next_target, event);
+          throw_error = error;
         }
       }
-    } finally {
-      if (!event.cancelBubble && parent_element !== handler_element && parent_element !== null && next_target !== handler_element) {
-        next(parent_element);
+      if (event.cancelBubble || parent_element === handler_element || parent_element === null || current_target === handler_element) {
+        break;
       }
+      current_target = parent_element;
     }
-  }
-  try {
-    yield_updates(() => next(
-      /** @type {Element} */
-      current_target
-    ));
+    if (throw_error) {
+      for (let error of other_errors) {
+        queueMicrotask(() => {
+          throw error;
+        });
+      }
+      throw throw_error;
+    }
   } finally {
     event.__root = handler_element;
     current_target = handler_element;
@@ -1093,7 +1109,7 @@ function mount(component, options2) {
 }
 function hydrate(component, options2) {
   const target = options2.target;
-  let hydrated = false;
+  const previous_hydrate_nodes = hydrate_nodes;
   try {
     return flush_sync(() => {
       set_hydrating(true);
@@ -1108,7 +1124,6 @@ function hydrate(component, options2) {
       const anchor = hydrate_anchor(node);
       const instance = _mount(component, { ...options2, anchor });
       set_hydrating(false);
-      hydrated = true;
       return instance;
     }, false);
   } catch (error) {
@@ -1122,6 +1137,7 @@ function hydrate(component, options2) {
     }
     throw error;
   } finally {
+    set_hydrate_nodes(previous_hydrate_nodes);
   }
 }
 function _mount(Component, { target, anchor, props = {}, events, context, intro = false }) {
@@ -1375,7 +1391,7 @@ const options = {
   app_dir: "_app",
   app_template_contains_nonce: false,
   csp: { "mode": "auto", "directives": { "upgrade-insecure-requests": false, "block-all-mixed-content": false }, "reportOnly": { "upgrade-insecure-requests": false, "block-all-mixed-content": false } },
-  csrf_check_origin: true,
+  csrf_check_origin: false,
   embedded: false,
   env_public_prefix: "PUBLIC_",
   env_private_prefix: "",
@@ -1385,10 +1401,7 @@ const options = {
   root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + `/favicon.png" />
-		<link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		` + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/logo/logo.svg" />\n		<link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + "</div>\n	</body>\n</html>\n",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -1460,7 +1473,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "dklqt7"
+  version_hash: "183qoeq"
 };
 async function get_hooks() {
   return {

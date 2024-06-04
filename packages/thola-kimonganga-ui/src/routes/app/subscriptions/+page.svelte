@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { VITE_STRIPE_PUBLISHABLE_TEST_KEY } from './../../../../.svelte-kit/ambient.d.ts';
 	import SubscriptionsTable from '$lib/components/subscriptions/subscriptions-table.svelte';
 	import { LucideRabbit, PlusCircleIcon } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
@@ -10,7 +11,6 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
-	import { PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY } from '$env/static/public';
 
 	let { data } = $props();
 
@@ -31,7 +31,7 @@
 	setContext(CONTEXT_KEYS.CHECKOUT_FORM, data.initializeCheckoutForm);
 
 	onMount(async () => {
-			stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY);
+			stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY);
 	});
 </script>
 

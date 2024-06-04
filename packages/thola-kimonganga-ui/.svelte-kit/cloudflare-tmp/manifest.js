@@ -7,10 +7,10 @@ function __memo(fn) {
 return {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set(["favicon.png","images/placeholder-user.webp"]),
-	mimeTypes: {".png":"image/png",".webp":"image/webp"},
+	assets: new Set(["favicon.png","images/placeholder-user.webp","logo/logo.svg"]),
+	mimeTypes: {".png":"image/png",".webp":"image/webp",".svg":"image/svg+xml"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.BQKu8JTU.js","app":"_app/immutable/entry/app.5EJvniNT.js","imports":["_app/immutable/entry/start.BQKu8JTU.js","_app/immutable/chunks/entry.DX3ARJt5.js","_app/immutable/chunks/index-client.CnoYmsF-.js","_app/immutable/chunks/runtime.Bhf-vxpv.js","_app/immutable/entry/app.5EJvniNT.js","_app/immutable/chunks/runtime.Bhf-vxpv.js","_app/immutable/chunks/render.DPGttwyb.js","_app/immutable/chunks/disclose-version.DtR1NMXz.js","_app/immutable/chunks/props.D_dd-OEt.js","_app/immutable/chunks/svelte-component.DG8WHjyG.js","_app/immutable/chunks/this.2d3mUT6l.js","_app/immutable/chunks/index-client.CnoYmsF-.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
+		client: {"start":"_app/immutable/entry/start.BxmJfTk9.js","app":"_app/immutable/entry/app.DXPwH9NQ.js","imports":["_app/immutable/entry/start.BxmJfTk9.js","_app/immutable/chunks/entry.C8C5xLvk.js","_app/immutable/chunks/index-client.CWvzmG2s.js","_app/immutable/chunks/runtime.Uw8iV3qd.js","_app/immutable/entry/app.DXPwH9NQ.js","_app/immutable/chunks/runtime.Uw8iV3qd.js","_app/immutable/chunks/render.B4iQOYLA.js","_app/immutable/chunks/disclose-version.C2_SEnP2.js","_app/immutable/chunks/props.BFTgb3o-.js","_app/immutable/chunks/svelte-component.DA2W9rpE.js","_app/immutable/chunks/this.BW2iguQX.js","_app/immutable/chunks/index-client.CWvzmG2s.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
 		nodes: [
 			__memo(() => import('../output/server/nodes/0.js')),
 			__memo(() => import('../output/server/nodes/1.js')),
@@ -31,7 +31,12 @@ return {
 			__memo(() => import('../output/server/nodes/16.js')),
 			__memo(() => import('../output/server/nodes/17.js')),
 			__memo(() => import('../output/server/nodes/18.js')),
-			__memo(() => import('../output/server/nodes/19.js'))
+			__memo(() => import('../output/server/nodes/19.js')),
+			__memo(() => import('../output/server/nodes/20.js')),
+			__memo(() => import('../output/server/nodes/21.js')),
+			__memo(() => import('../output/server/nodes/22.js')),
+			__memo(() => import('../output/server/nodes/23.js')),
+			__memo(() => import('../output/server/nodes/24.js'))
 		],
 		routes: [
 			{
@@ -49,87 +54,122 @@ return {
 				endpoint: null
 			},
 			{
+				id: "/app/medication",
+				pattern: /^\/app\/medication\/?$/,
+				params: [],
+				page: { layouts: [0,2,], errors: [1,,], leaf: 8 },
+				endpoint: null
+			},
+			{
+				id: "/app/medication/new",
+				pattern: /^\/app\/medication\/new\/?$/,
+				params: [],
+				page: { layouts: [0,2,], errors: [1,,], leaf: 9 },
+				endpoint: null
+			},
+			{
 				id: "/app/pharmacies",
 				pattern: /^\/app\/pharmacies\/?$/,
 				params: [],
-				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 8 },
+				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 10 },
 				endpoint: null
 			},
 			{
 				id: "/app/pharmacies/new",
 				pattern: /^\/app\/pharmacies\/new\/?$/,
 				params: [],
-				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 12 },
+				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 14 },
 				endpoint: null
 			},
 			{
 				id: "/app/pharmacies/[pharmacyId]",
 				pattern: /^\/app\/pharmacies\/([^/]+?)\/?$/,
 				params: [{"name":"pharmacyId","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 9 },
+				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 11 },
 				endpoint: null
 			},
 			{
 				id: "/app/pharmacies/[pharmacyId]/edit",
 				pattern: /^\/app\/pharmacies\/([^/]+?)\/edit\/?$/,
 				params: [{"name":"pharmacyId","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 10 },
+				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 12 },
 				endpoint: null
 			},
 			{
 				id: "/app/pharmacies/[pharmacyId]/pharmacists",
 				pattern: /^\/app\/pharmacies\/([^/]+?)\/pharmacists\/?$/,
 				params: [{"name":"pharmacyId","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 11 },
+				page: { layouts: [0,2,3,], errors: [1,,,], leaf: 13 },
 				endpoint: null
 			},
 			{
 				id: "/app/pharmacists",
 				pattern: /^\/app\/pharmacists\/?$/,
 				params: [],
-				page: { layouts: [0,2,4,], errors: [1,,,], leaf: 13 },
+				page: { layouts: [0,2,4,], errors: [1,,,], leaf: 15 },
 				endpoint: null
 			},
 			{
 				id: "/app/pharmacists/new",
 				pattern: /^\/app\/pharmacists\/new\/?$/,
 				params: [],
-				page: { layouts: [0,2,4,], errors: [1,,,], leaf: 14 },
+				page: { layouts: [0,2,4,], errors: [1,,,], leaf: 16 },
+				endpoint: null
+			},
+			{
+				id: "/app/subscriptions",
+				pattern: /^\/app\/subscriptions\/?$/,
+				params: [],
+				page: { layouts: [0,2,], errors: [1,,], leaf: 17 },
+				endpoint: null
+			},
+			{
+				id: "/app/subscriptions/cancel",
+				pattern: /^\/app\/subscriptions\/cancel\/?$/,
+				params: [],
+				page: { layouts: [0,2,], errors: [1,,], leaf: 18 },
+				endpoint: null
+			},
+			{
+				id: "/app/subscriptions/success",
+				pattern: /^\/app\/subscriptions\/success\/?$/,
+				params: [],
+				page: { layouts: [0,2,], errors: [1,,], leaf: 19 },
 				endpoint: null
 			},
 			{
 				id: "/auth/forgot-password",
 				pattern: /^\/auth\/forgot-password\/?$/,
 				params: [],
-				page: { layouts: [0,5,], errors: [1,,], leaf: 15 },
+				page: { layouts: [0,5,], errors: [1,,], leaf: 20 },
 				endpoint: null
 			},
 			{
 				id: "/auth/login",
 				pattern: /^\/auth\/login\/?$/,
 				params: [],
-				page: { layouts: [0,5,], errors: [1,,], leaf: 16 },
+				page: { layouts: [0,5,], errors: [1,,], leaf: 21 },
 				endpoint: null
 			},
 			{
 				id: "/auth/reset-password",
 				pattern: /^\/auth\/reset-password\/?$/,
 				params: [],
-				page: { layouts: [0,5,], errors: [1,,], leaf: 17 },
+				page: { layouts: [0,5,], errors: [1,,], leaf: 22 },
 				endpoint: null
 			},
 			{
 				id: "/auth/signup",
 				pattern: /^\/auth\/signup\/?$/,
 				params: [],
-				page: { layouts: [0,5,], errors: [1,,], leaf: 18 },
+				page: { layouts: [0,5,], errors: [1,,], leaf: 23 },
 				endpoint: null
 			},
 			{
 				id: "/auth/verify-email",
 				pattern: /^\/auth\/verify-email\/?$/,
 				params: [],
-				page: { layouts: [0,5,], errors: [1,,], leaf: 19 },
+				page: { layouts: [0,5,], errors: [1,,], leaf: 24 },
 				endpoint: null
 			}
 		],

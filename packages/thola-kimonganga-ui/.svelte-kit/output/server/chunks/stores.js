@@ -50,7 +50,7 @@ const userPrefersMode = createUserPrefersMode();
 const systemPrefersMode = createSystemMode();
 const themeColors = writable(void 0);
 const disableTransitions = writable(true);
-const derivedMode = createDerivedMode();
+createDerivedMode();
 function createUserPrefersMode() {
   const defaultValue = "system";
   const storage = isBrowser ? localStorage : noopStorage;
@@ -115,11 +115,11 @@ function createDerivedMode() {
   const { subscribe } = derived([userPrefersMode, systemPrefersMode, themeColors, disableTransitions], ([$userPrefersMode, $systemPrefersMode, $themeColors, $disableTransitions]) => {
     if (!isBrowser)
       return void 0;
-    const derivedMode2 = $userPrefersMode === "system" ? $systemPrefersMode : $userPrefersMode;
+    const derivedMode = $userPrefersMode === "system" ? $systemPrefersMode : $userPrefersMode;
     function update() {
       const htmlEl = document.documentElement;
       const themeColorEl = document.querySelector('meta[name="theme-color"]');
-      if (derivedMode2 === "light") {
+      if (derivedMode === "light") {
         htmlEl.classList.remove("dark");
         htmlEl.style.colorScheme = "light";
         if (themeColorEl && $themeColors) {
@@ -138,7 +138,7 @@ function createDerivedMode() {
     } else {
       update();
     }
-    return derivedMode2;
+    return derivedMode;
   });
   return {
     subscribe
@@ -150,7 +150,6 @@ function isValidMode(value) {
   return modes.includes(value);
 }
 export {
-  derivedMode as a,
   disableTransitions as d,
   themeColors as t
 };
