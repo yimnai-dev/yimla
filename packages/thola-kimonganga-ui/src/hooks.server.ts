@@ -6,6 +6,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 
+
 const handleApp: Handle = async ({ event, resolve }) => {
 	if (dev) {
 		event.locals.tholaApp = 'thola-pharmacy';
