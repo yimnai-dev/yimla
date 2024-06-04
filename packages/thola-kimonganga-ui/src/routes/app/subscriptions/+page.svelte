@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { VITE_STRIPE_PUBLISHABLE_TEST_KEY } from './../../../../.svelte-kit/ambient.d.ts';
 	import SubscriptionsTable from '$lib/components/subscriptions/subscriptions-table.svelte';
 	import { LucideRabbit, PlusCircleIcon } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
