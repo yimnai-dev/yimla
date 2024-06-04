@@ -1,6 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import { loadEnv } from 'vite';
+// import { loadEnv } from 'vite';
 import { defineConfig } from 'vitest/config';
+import {config} from 'dotenv'
 
 // export default defineConfig({
 // 	plugins: [sveltekit()],
@@ -10,7 +11,7 @@ import { defineConfig } from 'vitest/config';
 // })
 
 export default defineConfig(({ mode }) => {
-	Object.assign(process.env, loadEnv(mode, process.cwd()));
+	config({ path: `./.env.${mode}` })
 	return {
 		plugins: [sveltekit()],
 		test: {
