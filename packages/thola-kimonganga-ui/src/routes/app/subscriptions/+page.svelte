@@ -2,11 +2,8 @@
 	import SubscriptionsTable from '$lib/components/subscriptions/subscriptions-table.svelte';
 	import { LucideRabbit, PlusCircleIcon } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
-	import type { InitializeSubscriptionSessionResponse } from '$lib/types/thola-kimonganga.types';
-	import { post } from '$lib/urls';
 	import LoadingSpinner from '$lib/components/spinner/LoadingSpinner.svelte';
 	import dayjs from 'dayjs';
-	import { PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY } from '$env/static/public';
 	import { loadStripe, type Stripe } from '@stripe/stripe-js';
 	import PricingTable from '$lib/components/subscriptions/pricing-table.svelte';
 	import { onMount, setContext } from 'svelte';
@@ -16,7 +13,6 @@
 
 	let { data } = $props();
 
-	let currentSubscription = $state(false);
 
 	let stripe: Stripe | null = $state(null);
 
@@ -38,7 +34,7 @@
 		console.log('noas: ', $query.data);
 	});
 	onMount(async () => {
-		stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY);
+		stripe = await loadStripe(import.meta.env.STRIPE_PUBLISHABLE_TEST_KEY);
 	});
 </script>
 
