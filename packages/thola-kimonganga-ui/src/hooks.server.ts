@@ -11,6 +11,9 @@ const handleApp: Handle = async ({ event, resolve }) => {
 		
 		return await resolve(event);
 	}
+	if(event.platform?.env) {
+		event.locals.env = event.platform.env;
+	}
 	const [subdomain] = event.url.host.split('.');
 	if (subdomain === 'thola-client' || subdomain === 'thola-org' || subdomain === 'thola-pharmacy') {
 		event.locals.tholaApp = subdomain;
