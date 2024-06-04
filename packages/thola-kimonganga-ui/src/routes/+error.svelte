@@ -21,14 +21,14 @@
 <div class="flex min-h-screen w-screen flex-col items-center justify-center space-y-4">
 	<h1 class="text-3xl font-bold md:text-4xl">{$page.error?.message}</h1>
 	<LucideRabbit size={rabbitWidth} />
-	<p>
+	<p class="text-2xl">
 		{$page.status === 404
 			? 'Are you sure this is the page you are looking for?'
 			: 'Sorry, something went wrong.'}
 	</p>
 
 	<div class="flex items-center justify-center space-x-3">
-		<Button variant="outline" href="/app">Go Back <Undo2 /></Button>
-		<Button variant="outline" href="/app">Reload <RotateCw /></Button>
+		<Button variant="outline" href="/app">Go Back &nbsp; <Undo2 /></Button>
+		<Button variant="outline" onclick={() => window.location.reload()}>Reload &nbsp; <RotateCw /></Button>
 	</div>
 </div>
