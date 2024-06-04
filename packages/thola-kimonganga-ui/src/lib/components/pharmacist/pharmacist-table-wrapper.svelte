@@ -25,7 +25,7 @@
 {:else if $pharmaciesQuery.isError}
 	<QueryErrorPlaceHolder query={pharmaciesQuery} />
 {:else if $pharmaciesQuery.data && $pharmaciesQuery.data.ok}
-	{@const pharmacists = $pharmaciesQuery.data.pharmacists}
+	{@const pharmacists = $pharmaciesQuery.data.pharmacists || []}
 	<div class="flex items-center justify-between">
 		<h1 class="text-xl font-bold">Pharmacists Listing</h1>
 		{#if $page.url.pathname === '/app'}
