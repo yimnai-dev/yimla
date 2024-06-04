@@ -14,6 +14,12 @@ import type { RemoveMedicationSchema, UpdateMedicationSchema } from '$lib/forms/
 import type { QueryClient } from '@tanstack/svelte-query';
 import type { SuperValidated } from 'sveltekit-superforms';
 
+interface Env {
+	readonly VITE_MAPBOX_API_KEY: string;
+	readonly VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
+	readonly VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
+}
+
 declare global {
 	namespace App {
 		interface Platform {

@@ -3,6 +3,8 @@
 	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
+	import { dev } from '$app/environment';
+	import { env } from '$env/dynamic/private';
 
 	type Props = {
 		formData: SuperForm<CreatePharmacySchema>['form'];
@@ -16,7 +18,7 @@
 		formData.update(($prev) => {
 			return { ...$prev, longitude: bueaLongitude, latitude: bueaLatitude };
 		});
-		mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_API_KEY;
+		mapboxgl.accessToken = dev ? import.meta.env.VITE_MAPBOX_API_KEY : env.VITE_MAPBOX_API_KEY;
 		const map = new mapboxgl.Map({
 			container: 'map',
 			style: 'mapbox://styles/mapbox/streets-v12',

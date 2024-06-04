@@ -8,6 +8,7 @@ const handleApp: Handle = async ({ event, resolve }) => {
 		event.locals.tholaApp = 'thola-org';
 		event.locals.baseURL = 'http://localhost:8080/api/v1/org';
 		event.locals.userRole = 'organisation';
+		
 		return await resolve(event);
 	}
 	const [subdomain] = event.url.host.split('.');
