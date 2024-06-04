@@ -121,12 +121,6 @@ func AuthenticateAccountHolder(w http.ResponseWriter, r *http.Request, next http
 		w.Write([]byte(`{"message": "UnAuthorized Access", "status": 401}`))
 		return
 	}
-	if err != nil && err.Error() == database.ErrNoRows {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(`{"message": "UnAuthorized Access", "status": 401}`))
-		return
-	}
-
 	timeDifference := time.Now().Local().Sub(session.EndTime.Local()).Abs().Minutes()
 	fmt.Printf("session expired: %v\n", session.EndTime)
 	if timeDifference <= time.Hour.Minutes() && session.EndTime.After(time.Now()) {

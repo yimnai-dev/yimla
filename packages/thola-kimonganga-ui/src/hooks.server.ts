@@ -19,7 +19,7 @@ const handleApp: Handle = async ({ event, resolve }) => {
 				? 'user'
 				: subdomain === 'thola-org'
 					? 'organisation'
-					: 'pharmacy';
+					: 'pharmacist';
 		event.locals.baseURL = `https://thola-kimonganga-api.yimnai.dev/api/v1/${subdomain === 'thola-client' ? 'users' : subdomain === 'thola-org' ? 'org' : 'pharmacy'}`;
 	}
 	return await resolve(event);
