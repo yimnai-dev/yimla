@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { CreatePharmacySchema } from '$lib/forms/pharmacy.form';
-	// @ts-expect-error TODO: Find stub types for mapbox
 	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
