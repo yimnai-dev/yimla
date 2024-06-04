@@ -7,7 +7,7 @@
 	import { readable } from 'svelte/store';
 	import Button from '../ui/button/button.svelte';
     import * as Table from '$lib/components/ui/table';
-	import { ArrowUpDown, ChevronRight } from 'lucide-svelte';
+	import { ArrowUpDown } from 'lucide-svelte';
 
     type Props = {
         subscriptionList: Stripe.Subscription[];
@@ -39,9 +39,10 @@
         table.column({ accessor: 'current_period_end', header: 'End Date', cell: ({ value }) => {
             return dayjs(value).format('MMM D, YYYY, h:mm A');
         }}),
-        table.column({ accessor: 'days_until_due', header: 'Days Until Due', cell: ({ value }) => {
-            return value?.toString().padStart(2, '0')
-        }}),
+		table.column({ accessor: 'days_until_due', header: 'Days Until Due', cell: ({value}) => {
+			if(!value) return 'N/A';
+			return value.toString().padStart(2, '0')
+		} })
 	]);
 
     const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
