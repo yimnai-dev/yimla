@@ -3,7 +3,7 @@
 	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import type { SuperForm } from 'sveltekit-superforms';
-	import { env } from '$env/dynamic/public';
+	import { PUBLIC_MAPBOX_API_KEY } from '$env/static/public';
 
 	type Props = {
 		formData: SuperForm<CreatePharmacySchema>['form'];
@@ -17,19 +17,19 @@
 		formData.update(($prev) => {
 			return { ...$prev, longitude: bueaLongitude, latitude: bueaLatitude };
 		});
-		mapboxgl.accessToken = env.PUBLIC_MAPBOX_API_KEY
-		const map = new mapboxgl.Map({
-			container: 'map',
-			style: 'mapbox://styles/mapbox/streets-v12',
-			zoom: 15,
-			center: [bueaLongitude, bueaLatitude]
-		});
-		map.on('click', (e: { lngLat: { lat: number; lng: number } }) => {
-			const coordinates = e.lngLat;
-			formData.update(($prev) => {
-				return { ...$prev, longitude: coordinates.lng, latitude: coordinates.lat };
+			mapboxgl.accessToken = PUBLIC_MAPBOX_API_KEY
+			const map = new mapboxgl.Map({
+				container: 'map',
+				style: 'mapbox://styles/mapbox/streets-v12',
+				zoom: 15,
+				center: [bueaLongitude, bueaLatitude]
 			});
-		});
+			map.on('click', (e: { lngLat: { lat: number; lng: number } }) => {
+				const coordinates = e.lngLat;
+				formData.update(($prev) => {
+					return { ...$prev, longitude: coordinates.lng, latitude: coordinates.lat };
+				});
+			});
 	});
 </script>
 
