@@ -102,7 +102,7 @@
 			{#each pathSegments as segment, idx (segment)}
 				<Breadcrumb.Item>
 					<Breadcrumb.Link
-						href={segment === 'app' ? '/app' : `${pathSegments.slice(0, idx + 1).join('/')}`}
+						href={segment === 'app' ? '/app' : `/${pathSegments.slice(0, idx + 1).join('/')}`}
 						class="capitalize">{segment === 'app' ? 'Home' : segment}</Breadcrumb.Link
 					>
 				</Breadcrumb.Item>

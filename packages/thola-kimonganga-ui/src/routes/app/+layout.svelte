@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import DashboardHeader from '$lib/components/dashboard/DashboardHeader.svelte';
 	import OrganisationLayout from '$lib/components/dashboard/OrganisationLayout.svelte';
+	import PharmacyLayout from '$lib/components/dashboard/pharmacy-layout.svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys.js';
 	import { setContext } from 'svelte';
 	import type { LayoutData } from './$types';
@@ -14,18 +15,30 @@
 
 	let { children, data }: Props = $props();
 
-	setContext(CONTEXT_KEYS.PHARMACY_LIST_STREAM, data.pharmacyListStream)
-	setContext(CONTEXT_KEYS.ORGANISATION_PHARMACIST_LIST_STREAM, data.organisationPharmacistListStream)
+	setContext(CONTEXT_KEYS.PHARMACY_LIST_STREAM, data.pharmacyListStream);
+	setContext(
+		CONTEXT_KEYS.ORGANISATION_PHARMACIST_LIST_STREAM,
+		data.organisationPharmacistListStream
+	);
 	setContext(CONTEXT_KEYS.DELETE_PHARMACIST_FORM, data.deletePharmacistForm);
+	setContext(CONTEXT_KEYS.SESSION_KEY, data.sessionKey);
+	setContext(CONTEXT_KEYS.UPDATE_PHARMACY_SUBSCRIPTION_FORM, data.updatePharmacyActiveStatusForm);
 </script>
 
 {#if $page.data.tholaApp === 'thola-org'}
 	<OrganisationLayout>
 		<div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-			<DashboardHeader/>
+			<DashboardHeader />
 			{@render children()}
 		</div>
 	</OrganisationLayout>
-{:else}
+{:else if $page.data.tholaApp === 'thola-pharmacy'}
+	<PharmacyLayout>
+		<div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+			<DashboardHeader />
+			{@render children()}
+		</div>
+	</PharmacyLayout>
+{:else if $page.data.tholaApp === 'thola-client'}
 	{@render children()}
 {/if}

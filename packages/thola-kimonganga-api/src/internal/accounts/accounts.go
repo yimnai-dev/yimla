@@ -349,6 +349,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 func ResetAccountPassword(w http.ResponseWriter, r *http.Request) {
 	var details ResetAccountPasswordDetails
 	var confirmationDetails database.ConfirmationCodeDetails
+	fmt.Printf("Details: %+v\n", details)
 	err := json.NewDecoder(r.Body).Decode(&details)
 	if err != nil {
 		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusNotFound, Ok: false}

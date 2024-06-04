@@ -7,7 +7,6 @@ export const load = ({ data }) => {
 				refetchOnWindowFocus: false,
 				refetchOnMount: true,
 				refetchOnReconnect: true,
-				refetchInterval: 1000 * 60 * 60,
 				retry: (failureCount, error) => {
 					if (error instanceof TypeError) {
 						return false;
@@ -15,7 +14,6 @@ export const load = ({ data }) => {
 						return failureCount < 3;
 					}
 				},
-				staleTime: 1000 * 60 * 60
 			}
 		}
 	});

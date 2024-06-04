@@ -306,6 +306,46 @@ func GetPharmacist(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 }
 
+func GetPharmacistDetails(w http.ResponseWriter, r *http.Request) {
+	sessionKey := r.Header.Get("Authorization")
+	var session database.Session
+	var pharmacistDetails PharmacistDetails
+	if sessionKey == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(`{"message": "Unauthorized Access", "status": 401, "ok": false}`))
+		return
+	}
+	err := database.Db.Get(&session, `SELECT * FROM sessions WHERE session_key = $1 ORDER BY id DESC LIMIT 1`, sessionKey)
+	if err != nil {
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(jsonRes)
+		return
+	}
+	pharmacistQuery := `SELECT pharmacists.pharmacy_id, pharmacists.phone_number, accounts.first_name, accounts.last_name, accounts.username, accounts.email, pharmacies.name AS pharmacy_name, pharmacists.joined_on FROM pharmacists LEFT JOIN accounts ON accounts.account_id = pharmacists.account_id LEFT JOIN pharmacies ON pharmacies.pharmacy_id = pharmacists.pharmacy_id WHERE pharmacists.account_id = $1`
+	err = database.Db.Get(&pharmacistDetails, pharmacistQuery, session.AccountId)
+	if err != nil && err != sql.ErrNoRows {
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(jsonRes)
+		return
+	}
+	data := map[string]interface{}{
+		"pharmacist": pharmacistDetails,
+		"status":     http.StatusOK,
+		"ok":         true,
+	}
+	bytes, err := utils.MarshalInterface(data)
+	if err != nil {
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(jsonRes)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(bytes)
+}
+
 func GetOrganisationPharmacists(w http.ResponseWriter, r *http.Request) {
 	var data map[string]interface{} = make(map[string]interface{})
 	organisationId := chi.URLParam(r, "organisationId")
@@ -367,6 +407,7 @@ type OrganisationDetails struct {
 	Username       string `json:"username" db:"username"`
 	Email          string `json:"email" db:"email"`
 	Role           string `json:"role" db:"role"`
+	CustomerID     string `json:"customerId" db:"customer_id"`
 }
 
 func GetOrganisation(w http.ResponseWriter, r *http.Request) {
@@ -380,7 +421,7 @@ func GetOrganisation(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonRes)
 		return
 	}
-	orgQuery := `SELECT organisations.organisation_id, accounts.account_id, accounts.username, accounts.email, accounts.role FROM organisations LEFT JOIN accounts ON accounts.account_id = organisations.account_id WHERE organisations.account_id = $1`
+	orgQuery := `SELECT organisations.organisation_id, organisations.customer_id, accounts.account_id, accounts.username, accounts.email, accounts.role FROM organisations LEFT JOIN accounts ON accounts.account_id = organisations.account_id WHERE organisations.account_id = $1`
 	err = database.Db.Get(&organisationDetails, orgQuery, session.AccountId)
 	if err != nil && err != sql.ErrNoRows {
 		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)

@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
-	import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins';
+	import {
+		addPagination,
+		addSortBy,
+		addTableFilter,
+	} from 'svelte-headless-table/plugins';
 	import { type Pharmacy } from '$lib/types/thola-kimonganga.types';
 	import { readable } from 'svelte/store';
 	import { Button } from '$lib/components/ui/button';
@@ -36,7 +40,7 @@
 			accessor: ({ pharmacyId }) => pharmacyId,
 			header: 'Actions',
 			cell: ({ value }) => {
-				return createRender(PharmaciesTableAction, { pharmacyId: value });
+				return createRender(PharmaciesTableAction, { pharmacyId: value, activePharmacyCount: pharmacies.filter(p => p.isActive).length, isActive: (pharmacies.find(p => p.pharmacyId === value) as Pharmacy).isActive });
 			}
 		})
 	]);
@@ -112,15 +116,11 @@
 				disabled={!$hasNextPage}
 				onclick={() => ($pageIndex = $pageIndex + 1)}>Next</Button
 			>
-			{:else}
-			<Button
-				variant="outline"
-				size="sm"
-				href="/app/pharmacies"
+		{:else}
+			<Button variant="outline" size="sm" href="/app/pharmacies"
 				>View More
-					<ChevronRight class="ml-2 h-4 w-4" />
-				</Button
-			>
+				<ChevronRight class="ml-2 h-4 w-4" />
+			</Button>
 		{/if}
 	</div>
 </div>

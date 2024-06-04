@@ -1,7 +1,6 @@
 package sessions
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/mail"
@@ -19,11 +18,11 @@ type LoginCredentials struct {
 	Role     string `json:"role"`
 }
 
-
 func Login(w http.ResponseWriter, r *http.Request) {
 	var credentials LoginCredentials
 	var account database.Account
 	var lastSession database.Session
+	var pharmacyActiveStatus bool
 	err := json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil {
 		jsonRes := database.ApiError{Message: "Wrong Request Format", Status: http.StatusNotFound, Ok: false}
@@ -57,32 +56,40 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonResBytes)
 		return
 	}
-	passwordsMatch := bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(credentials.Password))
-	if passwordsMatch != nil {
-		jsonRes := utils.EncodedApiError("Wrong Password", http.StatusNotFound)
-		jsonResBytes, _ := json.Marshal(jsonRes)
+	passwordsMatchError := bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(credentials.Password))
+	if passwordsMatchError != nil {
+		jsonRes := utils.EncodedApiError("Passwords do not match", http.StatusNotFound)
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(jsonResBytes)
+		w.Write(jsonRes)
 		return
+	}
+
+	if credentials.Role == "pharmacist" {
+		err = database.Db.Get(&pharmacyActiveStatus, `SELECT pharmacies.is_active FROM pharmacists LEFT JOIN pharmacies ON pharmacies.pharmacy_id = pharmacists.pharmacy_id WHERE pharmacists.account_id = $1`, account.AccountId)
+		if err != nil && err.Error() == database.ErrNoRows {
+			jsonRes := utils.EncodedApiError("Pharmacist Account does not exist", http.StatusNotFound)
+			w.WriteHeader(http.StatusNotFound)
+			w.Write(jsonRes)
+			return
+		}
+		if !pharmacyActiveStatus {
+			jsonRes := utils.EncodedApiError("You can not log in to this account as it has not been activated by your organisation", http.StatusNotFound)
+			jsonResBytes, _ := json.Marshal(jsonRes)
+			w.WriteHeader(http.StatusNotFound)
+			w.Write(jsonResBytes)
+			return
+		}
 	}
 	lastUserSession := `SELECT * FROM sessions WHERE account_id = $1 ORDER BY id DESC LIMIT 1`
 	err = database.Db.Get(&lastSession, lastUserSession, account.AccountId)
-	if err != nil && err.Error() == database.ErrNoRows {
-		jsonRes := database.ApiError{Message: "No Session Found", Status: http.StatusNotFound, Ok: false}
-		jsonResBytes, _ := json.Marshal(jsonRes)
+	if err != nil && err.Error() != database.ErrNoRows {
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(jsonResBytes)
-		return
-	}
-	if err != nil && err == sql.ErrNoRows {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusNotFound, Ok: false}
-		jsonResBytes, _ := json.Marshal(jsonRes)
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(jsonResBytes)
+		w.Write(jsonRes)
 		return
 	}
 	timeDifference := time.Now().Local().Sub(lastSession.EndTime.Local()).Abs().Minutes()
-	if timeDifference <= time.Hour.Minutes() && timeDifference > 0{
+	if lastSession.SessionKey != "" && timeDifference <= time.Hour.Minutes() && timeDifference > 0 {
 		newStartTime := time.Now().Local()
 		newEndTime := newStartTime.Add(time.Hour).Local()
 		updateEndTimeQuery := `UPDATE sessions SET start_time = $1, end_time = $2 WHERE session_key = $3`
@@ -117,11 +124,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 type SessionKeyStruct struct {
 	SessionKey string `json:"sessionKey"`
-} 
+}
 
 func VerifySessionKey(w http.ResponseWriter, r *http.Request) {
 	var session database.Session
-	var sessionKeyStruct SessionKeyStruct 
+	var sessionKeyStruct SessionKeyStruct
 	err := json.NewDecoder(r.Body).Decode(&sessionKeyStruct)
 	if err != nil {
 		jsonRes := database.ApiError{Message: "A session Key is required", Status: http.StatusNotFound, Ok: false}
@@ -147,7 +154,7 @@ func VerifySessionKey(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"message": "Internal Server Error", "status": 500, "ok": false}`))
 		return
 	}
-	
+
 	timeDifference := time.Now().Local().Sub(session.EndTime.Local()).Abs().Minutes()
 	if timeDifference == 0 || timeDifference > time.Hour.Minutes() {
 		w.WriteHeader(http.StatusUnauthorized)

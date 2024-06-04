@@ -15,7 +15,7 @@ export const load = async () => {
 }
 
 export const actions = {
-    login: async ({ request, locals, url, cookies, fetch }) => {
+    login: async ({ request, locals, cookies, fetch, url }) => {
         const baseURL = locals.baseURL;
         const loginForm = await superValidate(request, zod(loginSchema));
         if (!loginForm.valid) {
@@ -31,7 +31,7 @@ export const actions = {
                 role: locals.userRole,
             },
             fetcher: fetch,
-            baseURL
+            baseURL,
         })
         if (!loginUser.ok) {
             error(loginUser.status, {
@@ -42,8 +42,7 @@ export const actions = {
         cookies.set(COOKIE_KEYS.SESSION_KEY, loginUser.sessionKey, {
             path: '/',
         })
-        const redirectURL = url.searchParams.has('redirectTo') ? url.searchParams.get('redirectTo') as string : '/app';
-        redirect(302, redirectURL);
+       redirect(301, url.searchParams.get('redirectTo') || '/app')
     },
     logout: async ({ cookies }) => {
         cookies.delete(COOKIE_KEYS.SESSION_KEY, {

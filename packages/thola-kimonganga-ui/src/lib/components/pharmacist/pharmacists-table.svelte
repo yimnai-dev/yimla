@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins';
-	import { type PharmacistDetails, type Pharmacy } from '$lib/types/thola-kimonganga.types';
+	import { type PharmacistDetails } from '$lib/types/thola-kimonganga.types';
 	import { readable } from 'svelte/store';
 	import { Button } from '$lib/components/ui/button';
 	import * as Table from '$lib/components/ui/table';
@@ -9,6 +9,7 @@
 	import { ArrowUpDown, ChevronRight } from 'lucide-svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { page } from '$app/stores';
+	import dayjs from 'dayjs';
 
 	let { pharmacists }: { pharmacists: Array<PharmacistDetails> } = $props();
 	const table = createTable(readable(pharmacists), {
@@ -32,11 +33,18 @@
 		table.column({ accessor: 'phoneNumber', header: 'Phone Number' }),
 		table.column({ accessor: 'pharmacyName', header: 'Pharmacy' }),
 		table.column({
+			accessor: 'joinedOn',
+			header: 'Employed On',
+			cell: ({ value }) => {
+				return dayjs(value).format('MMM D, YYYY');
+			}
+		}),
+		table.column({
 			accessor: ({ pharmacistId, pharmacyId, firstName }) => {
 				return {
 					pharmacyId,
 					pharmacistId,
-                    firstName
+					firstName
 				};
 			},
 			header: 'Actions',
@@ -44,7 +52,7 @@
 				return createRender(PharmacistsTableAction, {
 					pharmacistId: value.pharmacistId,
 					pharmacyId: value.pharmacyId,
-                    firstName: value.firstName
+					firstName: value.firstName
 				});
 			}
 		})

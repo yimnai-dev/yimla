@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { mode } from 'mode-watcher';
+	import { goto } from '$app/navigation';
+	import * as Avatar from '$lib/components/ui/avatar';
 </script>
 
-{#if $mode === 'dark'}
-	<h1>Dark Logo</h1>
-{:else}
-	<h1>Light Logo</h1>
-{/if}
+<Avatar.Root
+	class="cursor-pointer"
+	onclick={() => {
+		goto(`/app`);
+	}}
+>
+	<Avatar.Image src="/logo/logo.svg" alt="Thola Kimonganga" />
+	<Avatar.Fallback>TK</Avatar.Fallback>
+</Avatar.Root>

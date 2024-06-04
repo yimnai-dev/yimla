@@ -6,9 +6,22 @@
 		"src/routes/+layout.server.ts"
 	],
 	"/app": [
+		"src/routes/app/+page.server.ts",
 		"src/routes/app/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/medication": [
+		"src/routes/app/medication/+page.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/medication/new": [
+		"src/routes/app/medication/new/+page.server.ts",
 		"src/routes/app/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
@@ -59,6 +72,22 @@
 	],
 	"/app/pharmacists/new": [
 		"src/routes/app/pharmacists/new/+page.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/subscriptions": [
+		"src/routes/app/subscriptions/+page.server.ts",
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/subscriptions/cancel": [
+		"src/routes/app/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/app/subscriptions/success": [
 		"src/routes/app/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"

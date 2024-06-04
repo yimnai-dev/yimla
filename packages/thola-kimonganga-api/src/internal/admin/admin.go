@@ -9,7 +9,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/stripe/stripe-go"
 	"github.com/yimnai-dev/yimla/src/cmd/database"
+	"github.com/yimnai-dev/yimla/src/cmd/utils"
 	"github.com/yimnai-dev/yimla/src/internal/accounts"
 	confirmationcodes "github.com/yimnai-dev/yimla/src/internal/confirmation-codes"
 	"golang.org/x/crypto/bcrypt"
@@ -187,24 +189,28 @@ func CreateOrganisation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accountId := uuid.New().String()
-	createOrgAccountQuery := `INSERT INTO accounts (account_id, email, username, password, role) VALUES ($1, $2, $3, $4, $5)`
-
+	createOrgAccountQuery := `INSERT INTO accounts (account_id, email, username, password, role, customer_id) VALUES ($1, $2, $3, $4, $5)`
+	customer, err := utils.CreateOrganisationStripeCustomer(&stripe.CustomerParams{Email: stripe.String(props.AdminEmail), Name: stripe.String(props.Username)})
+	if err != nil {
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(jsonRes)
+		return
+	}
 	_, err = database.Db.Exec(createOrgAccountQuery, accountId, props.AdminEmail, props.Username, hashedPass, props.Role)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
-		jsonResBytes, _ := json.Marshal(jsonRes)
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(jsonResBytes)
+		w.Write(jsonRes)
 		return
 	}
 
-	createOrganisationQuery := `INSERT INTO organisations (account_id, name) VALUES ($1, $2)`
-	_, err = database.Db.Exec(createOrganisationQuery, accountId, props.Name)
+	createOrganisationQuery := `INSERT INTO organisations (account_id, name, customer_id) VALUES ($1, $2, $3)`
+	_, err = database.Db.Exec(createOrganisationQuery, accountId, props.Name, customer.ID)
 	if err != nil {
-		jsonRes := database.ApiError{Message: err.Error(), Status: http.StatusInternalServerError, Ok: false}
-		jsonResBytes, _ := json.Marshal(jsonRes)
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(jsonResBytes)
+		w.Write(jsonRes)
 		return
 	}
 

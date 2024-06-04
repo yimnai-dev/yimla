@@ -1,12 +1,15 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"github.com/supabase-community/supabase-go"
+	storage_go "github.com/supabase-community/storage-go"
 )
 
 type SubscriptionPackageType string
@@ -142,23 +145,23 @@ type ConfirmationCodeDetails struct {
 type Admin struct {
 	AdminId   string `db:"adminid"`
 	Username  string `db:"username"`
-	accountId string `db:"account_id"`
+	AccountId string `db:"account_id"`
 }
 
 type Drug struct {
-	drugId            string         `db:"drug_id"`
-	pharmacyId        string         `db:"pharmacy_id"`
-	name              string         `db:"name"`
-	description       string         `db:"description"`
-	manufacturer      string         `db:"manufacturer"`
-	expiryDate        time.Time      `db:"expiry_date"`
-	createdOn         time.Time      `db:"created_on"`
-	updatedOn         time.Time      `db:"updated_on"`
-	category          string         `db:"category"`
-	strength          string         `db:"strength"`
-	dosageForm        DrugDosageForm `db:"dosage_form"`
-	instructions      string         `db:"instructions"`
-	storageConditions string         `db:"storage_conditions"`
+	DrugID            string         `db:"drug_id"`
+	PharmacyID        string         `db:"pharmacy_id"`
+	Name              string         `db:"name"`
+	Description       string         `db:"description"`
+	Manufacturer      string         `db:"manufacturer"`
+	ExpiryDate        time.Time      `db:"expiry_date"`
+	CreatedOn         time.Time      `db:"created_on"`
+	UpdatedOn         time.Time      `db:"updated_on"`
+	Category          string         `db:"category"`
+	Strength          string         `db:"strength"`
+	DosageForm        DrugDosageForm `db:"dosage_form"`
+	Instructions      string         `db:"instructions"`
+	StorageConditions string         `db:"storage_conditions"`
 }
 
 const (
@@ -169,10 +172,10 @@ const (
 )
 
 type DrugStock struct {
-	stockId  string  `db:"stock_id"`
-	drugId   string  `db:"drug_id"`
-	quantity int     `db:"quantity"`
-	price    float64 `db:"price"`
+	StockID  string  `db:"stock_id"`
+	DrugID   string  `db:"drug_id"`
+	Quantity int     `db:"quantity"`
+	Price    float64 `db:"price"`
 }
 
 type ApiStatus string
@@ -213,17 +216,26 @@ type SearchHistory struct {
 
 var Db *sqlx.DB
 
+var SupabaseClient *supabase.Client
+var StorageClient *storage_go.Client
+
 func InitDb() {
 	schema, err := os.ReadFile("src/cmd/database/schema.sql")
 
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	Db, err = sqlx.Connect("postgres", "user=postgres.kgzrdwvmmyjoutwoeggw password=F7IxIko1WlpwWA6E host=aws-0-us-west-1.pooler.supabase.com port=5432 dbname=postgres")
-
+	pass := os.Getenv("SUPABASE_DB_PASSWORD")
+	dbConnStr := fmt.Sprintf("user=postgres.kgzrdwvmmyjoutwoeggw password=%s host=aws-0-us-west-1.pooler.supabase.com port=5432 dbname=postgres", pass)
+	Db, err = sqlx.Connect("postgres", dbConnStr)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	Db.MustExec(string(schema))
+	supabaseApiKey := os.Getenv("SUPABASE_API_KEY")
+	apiURL := os.Getenv("SUPABASE_API_URL")
+	SupabaseClient, err = supabase.NewClient(apiURL, supabaseApiKey, &supabase.ClientOptions{})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	Db.MustExec(string(schema)) 
 }

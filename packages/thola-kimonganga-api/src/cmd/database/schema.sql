@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS accounts (
 
 CREATE TABLE IF NOT EXISTS organisations (
 	organisation_id UUID DEFAULT uuid_generate_v4(),
+	customer_id TEXT NOT NULL,
 	account_id UUID NOT NULL REFERENCES accounts(account_id),
 	name VARCHAR(255) NOT NULL,
 	created_on TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -158,7 +159,7 @@ CREATE TABLE IF NOT EXISTS drugs (
 	strength VARCHAR(255) NOT NULL,
 	dosage_form drug_dosage_form NOT NULL,
 	instructions VARCHAR(255),
-	storageConditions VARCHAR(255),
+	storage_conditions VARCHAR(255),
 	PRIMARY KEY (drug_id)
 );
 

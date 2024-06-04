@@ -125,7 +125,7 @@
 				// delete pharmacist logic
 			}}
 		>
-			<form method="POST" action="?/deletePharmacist" use:enhance>
+			<form method="POST" action="?/deletePharmacist" class="w-full" use:enhance>
 				<Form.FormField {form} name="pharmacistId" class="grid gap-2">
 					<Form.Control let:attrs>
 						<Input hidden name={attrs.name} class="hidden" bind:value={$formData.pharmacistId} />

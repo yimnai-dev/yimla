@@ -62,6 +62,18 @@
 					title: 'Login successful'
 				});
 				goto(result.location);
+				return
+			}
+			if(result.type === 'success') {
+				toastState.addToast({
+					type: 'success',
+					message: 'Login successful',
+					title: 'Login successful'
+				});
+				const redirectTo = $page.url.searchParams.get('redirectTo') || '/app'
+				goto(redirectTo, {
+					replaceState: true
+				});
 			}
 		}
 	});

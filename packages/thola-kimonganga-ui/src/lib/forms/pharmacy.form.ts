@@ -11,4 +11,19 @@ export const createPharmacySchema = z.object({
     organisationId: z.string().uuid('Invalid organisation id'),
 })
 
+export const updatePharmacyActiveStatusSchema = z.object({
+    pharmacyId: z.string().uuid('Invalid pharmacy id'),
+    isActive: z.boolean({
+        invalid_type_error: 'Active status is required'
+    })
+})
+
+export const removePharmacyFromSubscriptionSchema = z.object({
+    pharmacyId: z.string().uuid('Invalid pharmacy id')
+})
+
 export type CreatePharmacySchema = z.infer<typeof createPharmacySchema>
+
+export type UpdatePharmacyActiveStatusSchema = z.infer<typeof updatePharmacyActiveStatusSchema>
+
+export type RemovePharmacyFromSubscriptionSchema = z.infer<typeof removePharmacyFromSubscriptionSchema>

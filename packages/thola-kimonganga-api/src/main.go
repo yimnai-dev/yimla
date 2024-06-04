@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/stripe/stripe-go/v78"
 
 	// _ "github.com/swaggo/http-swagger/example/go-chi/docs"
 	"github.com/swaggo/http-swagger/v2"
@@ -17,8 +18,10 @@ import (
 	"github.com/yimnai-dev/yimla/src/internal/accounts"
 	"github.com/yimnai-dev/yimla/src/internal/admin"
 	"github.com/yimnai-dev/yimla/src/internal/organisation"
+	"github.com/yimnai-dev/yimla/src/internal/pharmacy"
 	"github.com/yimnai-dev/yimla/src/internal/sessions"
 	"github.com/yimnai-dev/yimla/src/internal/subscriptionPackages"
+	"github.com/yimnai-dev/yimla/src/internal/subscriptions"
 	"github.com/yimnai-dev/yimla/src/internal/users"
 )
 
@@ -41,6 +44,7 @@ const AdminSessionKey = "admin:session-key"
 // @host petstore.swagger.io
 // @BasePath /api/v1
 func main() {
+	utils.LoadEnv()
 	database.InitDb()
 	initRouter()
 }
@@ -48,12 +52,12 @@ func main() {
 // "https://thola-client.yimnai.dev", "https://thola-org.yimnai.dev", "https://thola-pharmacy.yimnai.dev", "http://*"
 
 func initRouter() {
+	stripe.Key = utils.GetEnv(utils.StripeTestPrivateKey)
 	router := chi.NewRouter()
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"https://punch-cir-exhaust-spent.trycloudflare.com"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowCredentials: true,
-		// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 	}))
 	router.Use(middleware.Logger)
 	router.Use(middleware.RealIP)
@@ -62,11 +66,13 @@ func initRouter() {
 	router.Use(middleware.Timeout(60 * time.Second))
 	router.Use(middleware.SetHeader("Content-Type", "application/json"))
 
+
 	router.Route(basePath, func(r chi.Router) {
 		subscriptionPackageRouter(r)
 		userRouter(r)
 		adminRouter(r)
 		organisationRouter(r)
+		pharmacyRouter(r)
 	})
 
 	router.Get("/", func(writer http.ResponseWriter, request *http.Request) {
@@ -105,6 +111,30 @@ func userRouter(r chi.Router) {
 	})
 }
 
+func pharmacyRouter(r chi.Router) {
+	r.Route("/pharmacy", func(r chi.Router) {
+		r.Post("/email-verification", accounts.VerifyEmail)
+		r.Post("/login", sessions.Login)
+		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
+		r.Put("/reset-password", accounts.ResetAccountPassword)
+		r.Post("/verify-session", sessions.VerifySessionKey)
+		r.Route("/", func(r chi.Router) {
+			r.Use(AuthenticatePharmacist)
+			r.Get("/account/details", organisation.GetPharmacistDetails)
+			r.Route("/medication", func(r chi.Router) {
+				r.With(MultipartMiddleware).Route("/", func(r chi.Router) {
+					r.Post("/create/{pharmacyId}", pharmacy.CreateMedication)
+					r.Put("/update/{drugId}", pharmacy.UpdateMedication)
+				})
+				r.Delete("/delete/{drugId}", pharmacy.DeleteMedication)
+				r.Get("/all/pharma/{pharmacyId}", pharmacy.GetPharmacyMedications)
+				r.Get("/all/org/{organisationId}", pharmacy.GetOrganisationMedications)
+				r.Get("/medication/{drugId}", pharmacy.GetMedicationDetails)
+			})
+		})
+	})
+}
+
 func organisationRouter(r chi.Router) {
 	r.Route("/org", func(r chi.Router) {
 		r.Post("/email-verification", accounts.VerifyEmail)
@@ -120,6 +150,14 @@ func organisationRouter(r chi.Router) {
 		r.Route("/account/delete", func(r chi.Router) {
 			r.Use(AuthenticateAdmin)
 			r.Delete("/{organisationId}", admin.DeleteOrganisation)
+		})
+		r.Route("/subscriptions", func(r chi.Router) {
+			r.Use(AuthenticateOrganisation)
+			r.Get("/price-list", subscriptions.GetStripePriceList)
+			r.Get("/product-price-list", subscriptions.GetStripeProductListWithPriceList)
+			r.Post("/initialize-checkout/{customerId}", subscriptions.InitializeCheckout)
+			r.Get("/{customerId}", subscriptions.GetCustomerSubscriptions)
+			r.Put("/pharmacies/update/{pharmacyId}", subscriptions.UpdatePharmacySubscriptionActiveState)
 		})
 		r.Route("/pharmacy", func(r chi.Router) {
 			r.Use(AuthenticateOrganisation)
@@ -167,6 +205,12 @@ func AuthenticateOrganisation(next http.Handler) http.Handler {
 	})
 }
 
+func AuthenticatePharmacist(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		utils.AuthenticateAccountHolder(w, r, next, "pharmacist")
+	})
+}
+
 func AuthenticateAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		utils.AuthenticateAccountHolder(w, r, next, "admin")
@@ -176,5 +220,12 @@ func AuthenticateAdmin(next http.Handler) http.Handler {
 func AuthenticateAccountHolder(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		utils.AuthenticateAccountHolder(w, r, next, "")
+	})
+}
+
+func MultipartMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "multipart/form-data")
+		next.ServeHTTP(w, r)
 	})
 }

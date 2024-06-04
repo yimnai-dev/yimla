@@ -16,12 +16,23 @@ export const THOLA_KIMONGANGA_URL = {
     }
 } as const
 
-export const post = async <TData = unknown, TInput = unknown>({ url, input, fetcher = fetch, baseURL, options }: PostRequestOptions<TInput>): Promise<TData> => {
+export const post = async <TData = unknown, TInput = unknown>({ url, input, fetcher = fetch, baseURL, options, isFormData }: PostRequestOptions<TInput>): Promise<TData> => {
     const reqURL = `${baseURL}/${url}`
     const response = await fetcher(reqURL, {
         ...options,
         method: 'POST',
-        body: JSON.stringify(input),
+        body: isFormData ? input as unknown as FormData : JSON.stringify(input),
+    })
+    const json = await response.json<TData>()
+    return json
+}
+
+export const update = async <TData = unknown, TInput = unknown>({ url, input, fetcher = fetch, baseURL, options, isFormData }: PostRequestOptions<TInput, undefined>): Promise<TData> => {
+    const reqURL = `${baseURL}/${url}`
+    const response = await fetcher(reqURL, {
+        ...options,
+        method: 'PUT',
+        body: isFormData ? input as unknown as FormData : JSON.stringify(input),
     })
     const json = await response.json<TData>()
     return json
