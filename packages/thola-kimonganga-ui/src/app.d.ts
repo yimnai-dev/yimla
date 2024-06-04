@@ -34,7 +34,6 @@ declare global {
 			orgInfo: OrganisationDetails;
 			userInfo: CustomerDetails;
 			pharmacistInfo: PharmacistDetails;
-			env: Env;
 		}
 		interface PageData {
 			tholaApp: TholaApp;
@@ -48,7 +47,6 @@ declare global {
 			medicationListStream: Promise<MedicationListResponse>;
 			deleteMedicationForm: SuperValidated<RemoveMedicationSchema>;
 			updateMedicationForm: SuperValidated<UpdateMedicationSchema>;
-			env: Env;
 		}
 
 		interface Error {

@@ -26,9 +26,6 @@
  * ```
  */
 declare module '$env/static/private' {
-	export const VITE_MAPBOX_API_KEY: string;
-	export const VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
-	export const VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
 	export const SHELL: string;
 	export const LSCOLORS: string;
 	export const npm_command: string;
@@ -180,7 +177,9 @@ declare module '$env/static/private' {
  * ```
  */
 declare module '$env/static/public' {
-	
+	export const PUBLIC_MAPBOX_API_KEY: string;
+	export const PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY: string;
+	export const PUBLIC_STRIPE_PRICING_TABLE_TEST_ID: string;
 }
 
 /**
@@ -199,9 +198,6 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
-		VITE_MAPBOX_API_KEY: string;
-		VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
-		VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
 		SHELL: string;
 		LSCOLORS: string;
 		npm_command: string;
@@ -360,6 +356,9 @@ declare module '$env/dynamic/private' {
  */
 declare module '$env/dynamic/public' {
 	export const env: {
+		PUBLIC_MAPBOX_API_KEY: string;
+		PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY: string;
+		PUBLIC_STRIPE_PRICING_TABLE_TEST_ID: string;
 		[key: `PUBLIC_${string}`]: string | undefined;
 	}
 }

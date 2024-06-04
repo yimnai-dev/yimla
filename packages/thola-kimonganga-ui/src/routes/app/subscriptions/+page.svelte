@@ -10,7 +10,7 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
-	import { dev } from '$app/environment';
+	import { env } from '$env/dynamic/public';
 
 	let { data } = $props();
 
@@ -31,7 +31,7 @@
 	setContext(CONTEXT_KEYS.CHECKOUT_FORM, data.initializeCheckoutForm);
 
 	onMount(async () => {
-		stripe = await loadStripe(dev ? import.meta.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY : $page.data.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY);
+		stripe = await loadStripe(env.PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY);
 	});
 </script>
 
