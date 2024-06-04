@@ -104,7 +104,7 @@ export const load = async ({ locals, fetch, parent, cookies }) => {
 			orgInfo: null,
 			pharmacistInfo,
 			medicationListStream: get<MedicationListResponse>({
-				url: `medication/all/pharma/${pharmacistInfo?.pharmacyId}`,
+				url: `medication/all/${pharmacistInfo?.pharmacyId}`,
 				baseURL: locals.baseURL,
 				fetcher: fetch,
 				options: {
