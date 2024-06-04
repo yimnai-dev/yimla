@@ -30,7 +30,9 @@
 	setContext(CONTEXT_KEYS.CHECKOUT_FORM, data.initializeCheckoutForm);
 
 	onMount(async () => {
-			stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY);
+			if(data.publishableKey) {
+				stripe = await loadStripe(data.publishableKey);
+			}
 	});
 </script>
 

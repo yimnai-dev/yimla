@@ -6,9 +6,9 @@ import { zod } from 'sveltekit-superforms/adapters';
 import type { CreatePharmacyResponse } from '$lib';
 import { COOKIE_KEYS } from '$lib/cookie-keys';
 
-export const load = async () => {
+export const load = async ({ platform }) => {
 	const createPharmacyForm = await superValidate(zod(createPharmacySchema));
-	return { createPharmacyForm };
+	return { createPharmacyForm, mapBoxApiKey: platform?.env.VITE_MAPBOX_API_KEY };
 };
 
 export const actions = {

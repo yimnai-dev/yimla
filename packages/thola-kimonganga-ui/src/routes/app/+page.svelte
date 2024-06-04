@@ -7,10 +7,6 @@
 	import CustomerHome from '$lib/components/dashboard/customer-home.svelte';
 </script>
 
-{#each Object.keys(import.meta.env) as key}
-	<h1>Key: {key} Value: {import.meta.env[key]}</h1>
-{/each}
-
 <div class="container mx-auto flex flex-col items-center justify-center space-y-3 py-4">
 	<h1 class="text-xl font-bold capitalize sm:text-2xl md:text-3xl lg:text-5xl">
 		Hello, {$page.data.orgInfo?.username ??

@@ -163,7 +163,9 @@
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.FormField>
-	<MapBox bind:formData />
+	{#if data.mapBoxApiKey}
+		<MapBox bind:formData accessToken={data.mapBoxApiKey} />
+	{/if}
 	<div class="container flex w-full items-center justify-center py-2">
 		<Form.Button type="submit" class="md:w-[200px]">
 			{#if creatingPharmacy}

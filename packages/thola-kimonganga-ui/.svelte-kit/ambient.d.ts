@@ -29,7 +29,6 @@ declare module '$env/static/private' {
 	export const VITE_MAPBOX_API_KEY: string;
 	export const VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
 	export const VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
-	export const VITE_APP_NAME: string;
 	export const SHELL: string;
 	export const LSCOLORS: string;
 	export const npm_command: string;
@@ -203,7 +202,6 @@ declare module '$env/dynamic/private' {
 		VITE_MAPBOX_API_KEY: string;
 		VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
 		VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
-		VITE_APP_NAME: string;
 		SHELL: string;
 		LSCOLORS: string;
 		npm_command: string;

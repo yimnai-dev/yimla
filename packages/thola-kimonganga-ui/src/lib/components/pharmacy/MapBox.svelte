@@ -6,17 +6,18 @@
 
 	type Props = {
 		formData: SuperForm<CreatePharmacySchema>['form'];
+		accessToken: string;
 	};
 
 	let bueaLongitude = $state(9.243536);
 	let bueaLatitude = $state(4.159302);
 
-	let { formData = $bindable() }: Props = $props();
+	let { formData = $bindable(), accessToken }: Props = $props();
 	onMount(() => {
 		formData.update(($prev) => {
 			return { ...$prev, longitude: bueaLongitude, latitude: bueaLatitude };
 		});
-			mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_API_KEY
+			mapboxgl.accessToken = accessToken
 			const map = new mapboxgl.Map({
 				container: 'map',
 				style: 'mapbox://styles/mapbox/streets-v12',

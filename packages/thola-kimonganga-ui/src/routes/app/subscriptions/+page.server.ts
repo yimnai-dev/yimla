@@ -9,11 +9,12 @@ import { error, redirect, type Actions } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-export const load = async ({ locals, cookies, fetch }) => {
+export const load = async ({ locals, cookies, fetch, platform }) => {
 	if (locals.tholaApp !== 'thola-org') {
 		redirect(302, '/app');
 	}
 	return {
+	 publishableKey: platform?.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY,
 		streamed: {
 			stripePriceListStream: get<StripePriceListResponse>({
 				url: 'subscriptions/product-price-list',
