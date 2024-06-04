@@ -7,8 +7,9 @@
 	import CustomerHome from '$lib/components/dashboard/customer-home.svelte';
 </script>
 
-<h1>Thola Kimonganga mapbox: {import.meta.env.VITE_MAPBOX_API_KEY}</h1>
-<h1>Thola Kimonganga stripe: {import.meta.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY}</h1>
+{#each Object.keys(import.meta.env) as key}
+	<h1>Key: {key} Value: {import.meta.env[key]}</h1>
+{/each}
 
 <div class="container mx-auto flex flex-col items-center justify-center space-y-3 py-4">
 	<h1 class="text-xl font-bold capitalize sm:text-2xl md:text-3xl lg:text-5xl">
