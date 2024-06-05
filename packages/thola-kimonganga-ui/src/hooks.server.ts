@@ -42,6 +42,9 @@ const handleUnAuthorizedRequests: Handle = async ({ event, resolve }) => {
 	}
 	const response = await resolve(event);
 	if (response.status === 401) {
+		event.cookies.delete(COOKIE_KEYS.SESSION_KEY, {
+			path: '/',
+		})
 		redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
 	}
 	return response;

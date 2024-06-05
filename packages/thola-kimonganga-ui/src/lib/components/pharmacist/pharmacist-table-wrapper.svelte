@@ -8,7 +8,7 @@
 	import type { PharmacistListResponse } from '$lib/types/thola-kimonganga.types';
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
-	import { ChevronRight, PlusCircleIcon } from 'lucide-svelte';
+	import { ChevronRight, LucideRabbit, PlusCircleIcon } from 'lucide-svelte';
 	import { organisationPharmacistListOptions } from '$lib/query/pharmacist.query';
 
 	let organisationPharmacistListStream = getContext<Promise<PharmacistListResponse>>(
@@ -25,7 +25,9 @@
 {:else if $pharmaciesQuery.isError}
 	<QueryErrorPlaceHolder query={pharmaciesQuery} />
 {:else if $pharmaciesQuery.data && $pharmaciesQuery.data.ok}
-	{@const pharmacists = $pharmaciesQuery.data.pharmacists.length ? $pharmaciesQuery.data.pharmacists : []}
+	{@const pharmacists = $pharmaciesQuery.data.pharmacists.length
+		? $pharmaciesQuery.data.pharmacists
+		: []}
 	<div class="flex items-center justify-between">
 		<h1 class="text-xl font-bold">Pharmacists Listing</h1>
 		{#if $page.url.pathname === '/app'}
@@ -41,7 +43,19 @@
 			</div>
 		{/if}
 	</div>
-	<PharmacistsTable
-		pharmacists={$page.url.pathname === '/app/pharmacists' ? pharmacists : pharmacists?.slice(0, 5)}
-	/>
+	{#if pharmacists.length === 0}
+		<div class="flex w-full flex-col items-center justify-center space-y-4">
+			<h1 class="text-xl md:text-2xl lg:text-3xl">No Pharmacists found</h1>
+			<LucideRabbit size={150} />
+			<Button variant="outline" href="/app/pharmacists/new"
+				>Add A Pharmacist &nbsp; <PlusCircleIcon />
+			</Button>
+		</div>
+	{:else}
+		<PharmacistsTable
+			pharmacists={$page.url.pathname === '/app/pharmacists'
+				? pharmacists
+				: pharmacists?.slice(0, 5)}
+		/>
+	{/if}
 {/if}

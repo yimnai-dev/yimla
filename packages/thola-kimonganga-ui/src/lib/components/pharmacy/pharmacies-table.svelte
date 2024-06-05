@@ -2,16 +2,17 @@
 	import { createRender, createTable, Render, Subscribe } from 'svelte-headless-table';
 	import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins';
 	import { type Pharmacy } from '$lib/types/thola-kimonganga.types';
-	import { readable } from 'svelte/store';
 	import { Button } from '$lib/components/ui/button';
 	import * as Table from '$lib/components/ui/table';
 	import PharmaciesTableAction from './pharmacies-table-action.svelte';
 	import { ArrowUpDown, ChevronRight } from 'lucide-svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { page } from '$app/stores';
+	import { writable } from 'svelte/store';
 
 	let { pharmacies }: { pharmacies: Array<Pharmacy> } = $props();
-	const table = createTable(readable(pharmacies), {
+	let writablePharmacies = writable(pharmacies);
+	const table = createTable(writablePharmacies, {
 		page: addPagination({ initialPageSize: 10 }),
 		sort: addSortBy(),
 		filter: addTableFilter({
@@ -50,6 +51,8 @@
 
 	let { pageIndex, hasNextPage, hasPreviousPage } = $state(pluginStates.page);
 	const { filterValue } = $state(pluginStates.filter);
+
+	
 </script>
 
 {#if $page.url.pathname === '/app/pharmacies'}

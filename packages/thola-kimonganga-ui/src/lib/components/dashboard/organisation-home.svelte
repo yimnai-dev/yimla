@@ -9,5 +9,6 @@
 	<PharmacyTableWrapper />
 	<Separator />
 	<PharmacistsTableWrapper />
+	<Separator />
 	<MedicationTableWrapper />
 </div>

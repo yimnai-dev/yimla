@@ -146,7 +146,7 @@ func VerifySessionKey(w http.ResponseWriter, r *http.Request) {
 	err = database.Db.QueryRow(adminSessionQuery, sessionKeyStruct.SessionKey).Scan(&session.ID, &session.SessionKey, &session.AccountId, &session.StartTime, &session.EndTime, &session.IpAddress, &session.UserAgent)
 	if err != nil && err.Error() == database.ErrNoRows {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(`{"message": "UnAuthorized Access", "status": 400, "ok": false}`))
+		w.Write([]byte(`{"message": "UnAuthorized Access", "status": 401, "ok": false}`))
 		return
 	}
 	if err != nil && err.Error() == database.ErrNoRows {

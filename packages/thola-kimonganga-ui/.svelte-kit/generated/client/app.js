@@ -25,31 +25,33 @@ export const nodes = [
 	() => import('./nodes/21'),
 	() => import('./nodes/22'),
 	() => import('./nodes/23'),
-	() => import('./nodes/24')
+	() => import('./nodes/24'),
+	() => import('./nodes/25')
 ];
 
 export const server_loads = [0,2,3];
 
 export const dictionary = {
 		"/": [6],
-		"/app": [~7,[2]],
-		"/app/medication": [~8,[2]],
-		"/app/medication/new": [~9,[2]],
-		"/app/pharmacies": [10,[2,3]],
-		"/app/pharmacies/new": [~14,[2,3]],
-		"/app/pharmacies/[pharmacyId]": [11,[2,3]],
-		"/app/pharmacies/[pharmacyId]/edit": [12,[2,3]],
-		"/app/pharmacies/[pharmacyId]/pharmacists": [13,[2,3]],
-		"/app/pharmacists": [~15,[2,4]],
-		"/app/pharmacists/new": [~16,[2,4]],
-		"/app/subscriptions": [~17,[2]],
-		"/app/subscriptions/cancel": [18,[2]],
-		"/app/subscriptions/success": [19,[2]],
-		"/auth/forgot-password": [~20,[5]],
-		"/auth/login": [~21,[5]],
-		"/auth/reset-password": [~22,[5]],
-		"/auth/signup": [~23,[5]],
-		"/auth/verify-email": [~24,[5]]
+		"/app": [~8,[2]],
+		"/app/medication": [~9,[2]],
+		"/app/medication/new": [~10,[2]],
+		"/app/pharmacies": [11,[2,3]],
+		"/app/pharmacies/new": [~15,[2,3]],
+		"/app/pharmacies/[pharmacyId]": [12,[2,3]],
+		"/app/pharmacies/[pharmacyId]/edit": [13,[2,3]],
+		"/app/pharmacies/[pharmacyId]/pharmacists": [14,[2,3]],
+		"/app/pharmacists": [~16,[2,4]],
+		"/app/pharmacists/new": [~17,[2,4]],
+		"/app/subscriptions": [~18,[2]],
+		"/app/subscriptions/cancel": [19,[2]],
+		"/app/subscriptions/success": [20,[2]],
+		"/auth/forgot-password": [~21,[5]],
+		"/auth/login": [~22,[5]],
+		"/auth/reset-password": [~23,[5]],
+		"/auth/signup": [~24,[5]],
+		"/auth/verify-email": [~25,[5]],
+		"/[...path]": [~7]
 	};
 
 export const hooks = {

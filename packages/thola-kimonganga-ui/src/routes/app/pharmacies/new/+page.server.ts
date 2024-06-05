@@ -48,7 +48,8 @@ export const actions = {
 		}
 		return {
 			message: createPharmacyResponse.message,
-			status: 200
+			status: 200,
+			form,
 		};
 	}
 } satisfies Actions;

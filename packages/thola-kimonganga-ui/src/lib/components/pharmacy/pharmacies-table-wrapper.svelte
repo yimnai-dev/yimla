@@ -4,18 +4,15 @@
 	import { createQuery } from '@tanstack/svelte-query';
 	import QueryErrorPlaceHolder from '../placeholders/QueryErrorPlaceHolder.svelte';
 	import PharmaciesTable from './pharmacies-table.svelte';
-	import { getContext } from 'svelte';
-	import { CONTEXT_KEYS } from '$lib/context-keys';
-	import type { PharmacyListResponse } from '$lib/types/thola-kimonganga.types';
 	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
-	import { ChevronRight, PlusCircleIcon } from 'lucide-svelte';
+	import { ChevronRight, LucideRabbit, PlusCircleIcon } from 'lucide-svelte';
 
-	let pharmacyListStream = getContext<Promise<PharmacyListResponse>>(
-		CONTEXT_KEYS.PHARMACY_LIST_STREAM
-	);
+	let pharmaciesQuery = createQuery({
+		...pharmacyListOptions($page.data.pharmacyListStream),
+		refetchOnMount: true
+	});
 
-	let pharmaciesQuery = createQuery(pharmacyListOptions(pharmacyListStream));
 </script>
 
 {#if $pharmaciesQuery.isFetching}
@@ -23,7 +20,7 @@
 {:else if $pharmaciesQuery.isError}
 	<QueryErrorPlaceHolder query={pharmaciesQuery} />
 {:else if $pharmaciesQuery.data && $pharmaciesQuery.data.ok}
-	{@const pharmacies = $pharmaciesQuery.data.pharmacies}
+	{@const pharmacies = $pharmaciesQuery.data.pharmacies || []}
 	<div class="flex items-center justify-between">
 		<h1 class="text-xl font-bold">Pharmacy Listing</h1>
 		{#if $page.url.pathname === '/app'}
@@ -39,7 +36,17 @@
 			</div>
 		{/if}
 	</div>
-	<PharmaciesTable
-		pharmacies={$page.url.pathname === '/app/pharmacies' ? pharmacies : pharmacies.slice(0, 5)}
-	/>
+	{#if pharmacies.length === 0}
+		<div class="flex w-full flex-col items-center justify-center space-y-4">
+			<h1 class="text-xl md:text-2xl lg:text-3xl">No Pharmacies found</h1>
+			<LucideRabbit size={150} />
+			<Button variant="outline" href="/app/pharmacies/new"
+				>Add A Pharmacy &nbsp; <PlusCircleIcon />
+			</Button>
+		</div>
+	{:else}
+		<PharmaciesTable
+			pharmacies={$page.url.pathname === '/app/pharmacies' ? pharmacies : pharmacies.slice(0, 5)}
+		/>
+	{/if}
 {/if}

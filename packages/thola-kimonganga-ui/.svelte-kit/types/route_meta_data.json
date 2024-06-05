@@ -120,5 +120,10 @@
 		"src/routes/auth/verify-email/+page.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
+	],
+	"/[...path]": [
+		"src/routes/[...path]/+page.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
 	]
 }

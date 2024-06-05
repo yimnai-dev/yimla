@@ -8,7 +8,8 @@ import {
 	type CustomerDetails,
 	type PharmacistDetails,
 	type SubscriptionListResponse,
-	type MedicationListResponse
+	type MedicationListResponse,
+	type PharmacyListResponse
 } from '$lib';
 import type { RemoveMedicationSchema, UpdateMedicationSchema } from '$lib/forms/medication.form';
 import type { QueryClient } from '@tanstack/svelte-query';
@@ -47,6 +48,7 @@ declare global {
 			medicationListStream: Promise<MedicationListResponse>;
 			deleteMedicationForm: SuperValidated<RemoveMedicationSchema>;
 			updateMedicationForm: SuperValidated<UpdateMedicationSchema>;
+			pharmacyListStream: Promise<PharmacyListResponse>
 		}
 
 		interface Error {

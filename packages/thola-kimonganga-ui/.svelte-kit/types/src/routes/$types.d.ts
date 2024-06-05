@@ -12,8 +12,8 @@ type EnsureDefined<T> = T extends null | undefined ? {} : T;
 type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
 export type Snapshot<T = any> = Kit.Snapshot<T>;
 type PageParentData = EnsureDefined<LayoutData>;
-type LayoutRouteId = RouteId | "/" | "/app" | "/app/medication" | "/app/medication/new" | "/app/pharmacies" | "/app/pharmacies/[pharmacyId]" | "/app/pharmacies/[pharmacyId]/edit" | "/app/pharmacies/[pharmacyId]/pharmacists" | "/app/pharmacies/new" | "/app/pharmacists" | "/app/pharmacists/new" | "/app/subscriptions" | "/app/subscriptions/cancel" | "/app/subscriptions/success" | "/auth/forgot-password" | "/auth/login" | "/auth/reset-password" | "/auth/signup" | "/auth/verify-email" | null
-type LayoutParams = RouteParams & { pharmacyId?: string }
+type LayoutRouteId = RouteId | "/" | "/[...path]" | "/app" | "/app/medication" | "/app/medication/new" | "/app/pharmacies" | "/app/pharmacies/[pharmacyId]" | "/app/pharmacies/[pharmacyId]/edit" | "/app/pharmacies/[pharmacyId]/pharmacists" | "/app/pharmacies/new" | "/app/pharmacists" | "/app/pharmacists/new" | "/app/subscriptions" | "/app/subscriptions/cancel" | "/app/subscriptions/success" | "/auth/forgot-password" | "/auth/login" | "/auth/reset-password" | "/auth/signup" | "/auth/verify-email" | null
+type LayoutParams = RouteParams & { path?: string; pharmacyId?: string }
 type LayoutServerParentData = EnsureDefined<{}>;
 type LayoutParentData = EnsureDefined<{}>;
 

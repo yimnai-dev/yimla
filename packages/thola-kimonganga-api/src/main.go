@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "fmt"
 	"net/http"
 	"time"
 
@@ -144,6 +143,7 @@ func organisationRouter(r chi.Router) {
 		r.Put("/reset-password", accounts.ResetAccountPassword)
 		r.Post("/verify-session", sessions.VerifySessionKey)
 		r.Route("/medication", func(r chi.Router) {
+			r.Use(AuthenticateOrganisation)
 			r.Get("/all/{organisationId}", pharmacy.GetOrganisationMedications)
 			r.Get("/medication/{drugId}", pharmacy.GetMedicationDetails)
 		})
@@ -205,25 +205,31 @@ func adminRouter(r chi.Router) {
 
 func AuthenticateOrganisation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		utils.AuthenticateAccountHolder(w, r, next, "organisation")
+		valid := utils.ValidateSessionKey(r.Header.Get("Authorization"))
+		if !valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte(`{"message": "UnAuthorized Access", "status": 401}`))
+			return
+		}
+		next.ServeHTTP(w, r)
 	})
 }
 
 func AuthenticatePharmacist(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		utils.AuthenticateAccountHolder(w, r, next, "pharmacist")
+		utils.AuthenticateAccountHolder(w, r, next)
 	})
 }
 
 func AuthenticateAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		utils.AuthenticateAccountHolder(w, r, next, "admin")
+		utils.AuthenticateAccountHolder(w, r, next)
 	})
 }
 
 func AuthenticateAccountHolder(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		utils.AuthenticateAccountHolder(w, r, next, "")
+		utils.AuthenticateAccountHolder(w, r, next)
 	})
 }
 

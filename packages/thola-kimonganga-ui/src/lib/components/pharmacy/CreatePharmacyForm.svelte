@@ -14,6 +14,8 @@
 	import Spinner from '$lib/components/spinner/Spinner.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { pharmacyListOptions } from '$lib/query/pharmacy.query';
+	import type { Pharmacy, PharmacyListResponse } from '$lib/types/thola-kimonganga.types';
 
 	type Props = {
 		data: PageData;
@@ -32,6 +34,31 @@
 		resetForm: true,
 		onSubmit: () => {
 			creatingPharmacy = true;
+			toastState.addToast({
+				type: 'info',
+				message: 'Pharmacy creation in background...',
+				duration: 5
+			});
+			$page.data.queryClient.setQueryData<PharmacyListResponse>(
+				pharmacyListOptions($page.data.pharmacyListStream).queryKey,
+				(old) => {
+					if (!old || !old.ok) return;
+					const pharma: Pharmacy = {
+						...$formData,
+						geoLocation: `POINT(${$formData.longitude} ${$formData.latitude})`,
+						organisationId: $page.data.orgInfo.organisationId,
+						pharmacyId: crypto.randomUUID(),
+						createdOn: new Date().toString(),
+						updatedOn: new Date().toString(),
+						isActive: false
+					};
+					return {
+						...old,
+						pharmacies: old.pharmacies?.length ? [...old.pharmacies, pharma] : [pharma]
+					};
+				}
+			);
+			goto(`/app/pharmacies?t=${new Date().getTime()}`);
 		},
 		onError: ({ result }) => {
 			creatingPharmacy = false;
@@ -42,6 +69,16 @@
 					title: 'Pharmacy Creation Failed',
 					duration: 3000
 				});
+				$page.data.queryClient.setQueryData<PharmacyListResponse>(
+					pharmacyListOptions($page.data.pharmacyListStream).queryKey,
+					(old) => {
+						if (!old || !old.ok) return;
+						return {
+							...old,
+							pharmacies: old.pharmacies?.slice(0, old.pharmacies.length - 1)
+						};
+					}
+				);
 			}
 		},
 		onResult: ({ result }) => {
@@ -53,8 +90,19 @@
 					title: 'Operation Successful',
 					duration: 3000
 				});
-				goto('/app/pharmacies');
+				// goto('/app/pharmacies?t=created');
+				return;
 			}
+			$page.data.queryClient.setQueryData<PharmacyListResponse>(
+				pharmacyListOptions($page.data.pharmacyListStream).queryKey,
+				(old) => {
+					if (!old || !old.ok) return;
+					return {
+						...old,
+						pharmacies: old.pharmacies?.slice(0, old.pharmacies.length - 1)
+					};
+				}
+			);
 		}
 	});
 

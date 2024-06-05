@@ -106,7 +106,21 @@ func GenerateRandomString(charset []byte, size int) string {
 	return string(b)
 }
 
-func AuthenticateAccountHolder(w http.ResponseWriter, r *http.Request, next http.Handler, role string) {
+func ValidateSessionKey(sessionKey string) bool {
+	if sessionKey == "" {
+		return false
+	}
+	query := `SELECT * FROM sessions WHERE session_key = $1 LIMIT 1`
+	var session database.Session
+	err := database.Db.Get(&session, query, sessionKey)
+	if err != nil {
+		return false
+	}
+	timeDifference := time.Now().Local().Sub(session.EndTime.Local()).Abs().Minutes()
+	return timeDifference > 0
+}
+
+func AuthenticateAccountHolder(w http.ResponseWriter, r *http.Request, next http.Handler) {
 	var session database.Session
 	sessionKey := r.Header.Get("Authorization")
 	if sessionKey == "" {
@@ -114,16 +128,16 @@ func AuthenticateAccountHolder(w http.ResponseWriter, r *http.Request, next http
 		w.Write([]byte(`{"message": "UnAuthorized Access", "status": 401}`))
 		return
 	}
-	sessionQuery := `SELECT * FROM sessions WHERE session_key = $1 AND (SELECT role FROM accounts WHERE account_id = accounts.account_id LIMIT 1) = %s LIMIT 1` + role
-	err := database.Db.QueryRow(sessionQuery, sessionKey).Scan(&session.ID, &session.SessionKey, &session.AccountId, &session.StartTime, &session.EndTime, &session.IpAddress, &session.UserAgent)
-	if err != nil && err.Error() == database.ErrNoRows {
+	sessionQuery := `SELECT * FROM sessions WHERE session_key = $1 LIMIT 1`
+	err := database.Db.Get(&session, sessionQuery, sessionKey)
+	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(`{"message": "UnAuthorized Access", "status": 401}`))
 		return
 	}
+	fmt.Printf("UserAgent: %v ", session.UserAgent)
 	timeDifference := time.Now().Local().Sub(session.EndTime.Local()).Abs().Minutes()
-	fmt.Printf("session expired: %v\n", session.EndTime)
-	if timeDifference <= time.Hour.Minutes() && session.EndTime.After(time.Now()) {
+	if timeDifference <= 0 {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(`{"message": "Current Session Expired. Login to continue", "status": 401}`))
 		return

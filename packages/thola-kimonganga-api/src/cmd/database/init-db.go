@@ -78,6 +78,7 @@ type Organisation struct {
 	Name           string    `db:"name"`
 	CreatedOn      time.Time `db:"created_on"`
 	UpdatedOn      time.Time `db:"updated_on"`
+	CustomerID     string    `db:"customer_id"`
 }
 
 type Subscription struct {
