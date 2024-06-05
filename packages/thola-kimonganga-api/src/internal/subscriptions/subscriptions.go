@@ -2,8 +2,6 @@ package subscriptions
 
 import (
 	"encoding/json"
-	// "flag"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -120,9 +118,8 @@ func GetStripeProductListWithPriceList(w http.ResponseWriter, r *http.Request) {
 
 func InitializeCheckout(w http.ResponseWriter, r *http.Request) {
 	customerID := chi.URLParam(r, "customerId")
-	fmt.Printf("customerId: %s", customerID)
-	var successURL = "http://localhost:5173/app/subscriptions/success"
-	var cancelURL = "http://localhost:5173/app/subscriptions/cancel"
+	var successURL = "https://thola-org.yimnai.dev/app/subscriptions/success"
+	var cancelURL = "https://thola-org.yimnai.dev/app/subscriptions/cancel"
 	var subscriptionDetails CreateSubscriptionParameters
 	err := json.NewDecoder(r.Body).Decode(&subscriptionDetails)
 	if err != nil {

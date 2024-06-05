@@ -142,37 +142,31 @@ func organisationRouter(r chi.Router) {
 		r.Post("/forgot-password", accounts.SendForgotPasswordEmail)
 		r.Put("/reset-password", accounts.ResetAccountPassword)
 		r.Post("/verify-session", sessions.VerifySessionKey)
-		r.Route("/medication", func(r chi.Router) {
-			r.Use(AuthenticateOrganisation)
+		r.With(AuthenticateOrganisation).Route("/medication", func(r chi.Router) {
 			r.Get("/all/{organisationId}", pharmacy.GetOrganisationMedications)
 			r.Get("/medication/{drugId}", pharmacy.GetMedicationDetails)
 		})
-		r.Route("/account", func(r chi.Router) {
-			r.Use(AuthenticateAdmin)
+		r.With(AuthenticateAdmin).Route("/account", func(r chi.Router) {
 			r.Get("/details", organisation.GetOrganisation)
 		})
-		r.Route("/account/delete", func(r chi.Router) {
-			r.Use(AuthenticateAdmin)
+		r.With(AuthenticateAdmin).Route("/account/delete", func(r chi.Router) {
 			r.Delete("/{organisationId}", admin.DeleteOrganisation)
 		})
-		r.Route("/subscriptions", func(r chi.Router) {
-			r.Use(AuthenticateOrganisation)
+		r.With(AuthenticateOrganisation).Route("/subscriptions", func(r chi.Router) {
 			r.Get("/price-list", subscriptions.GetStripePriceList)
 			r.Get("/product-price-list", subscriptions.GetStripeProductListWithPriceList)
 			r.Post("/initialize-checkout/{customerId}", subscriptions.InitializeCheckout)
 			r.Get("/{customerId}", subscriptions.GetCustomerSubscriptions)
 			r.Put("/pharmacies/update/{pharmacyId}", subscriptions.UpdatePharmacySubscriptionActiveState)
 		})
-		r.Route("/pharmacy", func(r chi.Router) {
-			r.Use(AuthenticateOrganisation)
+		r.With(AuthenticateOrganisation).Route("/pharmacy", func(r chi.Router) {
 			r.Post("/create/{organisationId}", organisation.CreatePharmacy)
 			r.Put("/update/{pharmacyId}/{organisationId}", organisation.UpdatePharmacy)
 			r.Delete("/delete/{pharmacyId}/{organisationId}", organisation.DeletePharmacy)
 			r.Get("/{pharmacyId}", organisation.GetPharmacy)
 			r.Get("/all/{organisationId}", organisation.GetOganisationPharmacies)
 		})
-		r.Route("/pharmacist", func(r chi.Router) {
-			r.Use(AuthenticateAccountHolder)
+		r.With(AuthenticateAccountHolder).Route("/pharmacist", func(r chi.Router) {
 			r.Post("/create/{pharmacyId}", organisation.CreatePharmacist)
 			r.Get("/{pharmacistId}", organisation.GetPharmacist)
 			r.Get("/pharma/all/{pharmacyId}", organisation.GetPharmacists)
@@ -191,7 +185,6 @@ func adminRouter(r chi.Router) {
 		r.Put("/reset-password", accounts.ResetAccountPassword)
 		r.Route("/organisation", func(r chi.Router) {
 			r.Use(AuthenticateAdmin)
-			// r.Use(AdminOnly)
 			r.Post("/email-verification", accounts.VerifyEmail)
 			r.Post("/account/create", admin.CreateOrganisation)
 			r.Delete("/account/delete/{organisationId}", admin.DeleteOrganisation)
