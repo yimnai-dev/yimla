@@ -14,6 +14,7 @@ do
     echo "Pre-commit checks failed for $PACKAGE"
     exit 1
   fi
+  git add .
 done
 
 # All pre-commit checks passed
