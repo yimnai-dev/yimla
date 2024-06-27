@@ -1,8 +1,7 @@
 <script lang="ts">
 	import PharmacistsTableWrapper from '$lib/components/organisation/pharmacist-table-wrapper.svelte';
-    import {Button} from '$lib/components/ui/button'
-    import {PlusCircleIcon} from 'lucide-svelte'
-
+	import { Button } from '$lib/components/ui/button';
+	import { PlusCircleIcon } from 'lucide-svelte';
 </script>
 
 <div class="flex flex-col gap-5 px-5">

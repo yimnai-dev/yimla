@@ -91,7 +91,6 @@
 	});
 </script>
 
-
 <Card.Root
 	class="mx-auto max-md:flex max-md:h-full max-md:w-full max-md:flex-col max-md:justify-center"
 >

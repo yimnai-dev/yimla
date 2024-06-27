@@ -1,0 +1,20 @@
+
+# Run linting or tests for each package
+echo "Running pre-commit checks for all packages..."
+
+# Define package list for all projects
+PACKAGES=("packages/thola-kimonganga-ui")
+
+# Loop through package list and run pre-commit checks
+for PACKAGE in "${PACKAGES[@]}"
+do
+  echo "Running pre-commit checks for $PACKAGE"
+  (cd "$PACKAGE" && pnpm run format && pnpm run lint && pnpm run deploy)
+  if [ $? -ne 0 ]; then
+    echo "Pre-commit checks failed for $PACKAGE"
+    exit 1
+  fi
+done
+
+# All pre-commit checks passed
+echo "All pre-commit checks passed."

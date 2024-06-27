@@ -5,6 +5,6 @@ export const load = async ({ locals }) => {
 	return {
 		tholaApp,
 		baseURL,
-		userRole,
+		userRole
 	};
 };

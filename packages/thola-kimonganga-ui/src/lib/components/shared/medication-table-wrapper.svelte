@@ -7,7 +7,13 @@
 	import { LucideRabbit } from 'lucide-svelte';
 	import MedicationTable from './medication-table.svelte';
 
-	let medicationListQuery = createQuery(medicationListOptions($page.data.tholaApp === 'thola-org' ? $page.data.tko.medicationListStream : $page.data.tkp.medicationListStream));
+	let medicationListQuery = createQuery(
+		medicationListOptions(
+			$page.data.tholaApp === 'thola-org'
+				? $page.data.tko.medicationListStream
+				: $page.data.tkp.medicationListStream
+		)
+	);
 
 	let medications = $derived.by(() => {
 		if (
@@ -18,7 +24,6 @@
 			return [];
 		return $medicationListQuery.data.medications;
 	});
-
 </script>
 
 {#if $medicationListQuery.isFetching}

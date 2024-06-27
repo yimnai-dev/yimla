@@ -3,7 +3,6 @@
 	import {
 		Home,
 		LineChart,
-		Settings,
 		UsersRound,
 		Hospital,
 		ShieldPlus,

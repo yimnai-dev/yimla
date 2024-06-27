@@ -32,15 +32,20 @@ const handleRequests: Handle = async ({ event, resolve }) => {
 	if (!sessionKey) {
 		redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
 	}
-	const response = await resolve(event)
+	const response = await resolve(event);
 	if (response.status === 401) {
 		redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
 	}
 	if (event.url.pathname === '/') {
-		const redirectPath = event.locals.tholaApp === 'thola-org' ? '/tko' : event.locals.tholaApp === 'thola-pharmacy' ? '/tkp' : '/tkc';
+		const redirectPath =
+			event.locals.tholaApp === 'thola-org'
+				? '/tko'
+				: event.locals.tholaApp === 'thola-pharmacy'
+					? '/tkp'
+					: '/tkc';
 		redirect(302, redirectPath);
 	}
 	return response;
-}
+};
 
 export const handle = sequence(handleApp, handleRequests);

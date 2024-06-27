@@ -2,16 +2,14 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import dayjs from 'dayjs';
 	import { getContext, onMount, untrack } from 'svelte';
 	import { CONTEXT_KEYS } from '$lib/context-keys';
 	import { superForm } from 'sveltekit-superforms';
-	import {
-		updatePharmacyActiveStatusSchema,
-	} from '$lib/forms/pharmacy.form';
+	import { updatePharmacyActiveStatusSchema } from '$lib/forms/pharmacy.form';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import type { ToastState } from '../toast/toast-state.svelte';
 	import { subscriptionListOptions } from '$lib/query/subscription.query';
@@ -22,25 +20,30 @@
 		isActive: boolean;
 	};
 
-
 	let { pharmacyId, activePharmacyCount, isActive }: Props = $props();
-	
 
-	let subscriptionListQuery = createQuery(subscriptionListOptions($page.data.tko.subscriptionListStream));
+	let subscriptionListQuery = createQuery(
+		subscriptionListOptions($page.data.tko.subscriptionListStream)
+	);
 
-	let canSubscribe = $state(false)
+	let canSubscribe = $state(false);
 
 	subscriptionListQuery.subscribe(($query) => {
-		if(!$query.data || !$query.data.ok) return;
-		const activeSubscriptions = $query.data.subscriptionList.filter((sub) => sub.status === 'active').sort((sub1, sub2) => dayjs(sub1.current_period_end).unix() - dayjs(sub2.current_period_end).unix())
-		if(!activeSubscriptions.length) return;
+		if (!$query.data || !$query.data.ok) return;
+		const activeSubscriptions = $query.data.subscriptionList
+			.filter((sub) => sub.status === 'active')
+			.sort(
+				(sub1, sub2) =>
+					dayjs(sub1.current_period_end).unix() - dayjs(sub2.current_period_end).unix()
+			);
+		if (!activeSubscriptions.length) return;
 		const currentSubscription = activeSubscriptions[0];
 		const items = currentSubscription.items.data;
-		if(!items.length) return;
-		const currentSub = items[0]
-		if(!currentSub.quantity) return;
-		canSubscribe = activePharmacyCount < currentSub.quantity
-	})
+		if (!items.length) return;
+		const currentSub = items[0];
+		if (!currentSub.quantity) return;
+		canSubscribe = activePharmacyCount < currentSub.quantity;
+	});
 
 	let updatingPharmacyActiveStatus = $state(false);
 
@@ -88,7 +91,7 @@
 
 	$effect(() => {
 		$formData.isActive = !isActive;
-		untrack(() => $formData)
+		untrack(() => $formData);
 	});
 
 	onMount(() => {

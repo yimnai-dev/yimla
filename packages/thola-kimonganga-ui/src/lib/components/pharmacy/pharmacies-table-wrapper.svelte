@@ -12,7 +12,6 @@
 		...pharmacyListOptions($page.data.pharmacyListStream),
 		refetchOnMount: true
 	});
-
 </script>
 
 {#if $pharmaciesQuery.isFetching}

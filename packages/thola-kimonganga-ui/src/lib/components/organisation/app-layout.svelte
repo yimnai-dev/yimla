@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-    import NavigationSidebar from './navigation-sidebar.svelte';
+	import NavigationSidebar from './navigation-sidebar.svelte';
 
 	let { children }: { children: Snippet } = $props();
 </script>

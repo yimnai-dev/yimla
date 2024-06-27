@@ -11,7 +11,8 @@ export type SubscriptionSuffix =
 
 export type AccountSuffix = 'details' | 'update' | 'delete';
 
-export type MedicationSuffix = `${'search' | 'create' | 'all' | 'delete' | 'update' | 'recommendations' | 'search-history'}${string}`
+export type MedicationSuffix =
+	`${'search' | 'create' | 'all' | 'delete' | 'update' | 'recommendations' | 'search-history'}${string}`;
 
 export type RequestURLSegment =
 	| 'login'
@@ -27,7 +28,7 @@ export type RequestURLSegment =
 	| `pharmacist/pharma/all/${string}`
 	| `pharmacist/org/all/${string}`
 	| `medication/update-search-history/${string}/${string}`
-	| `medication/${MedicationSuffix}`
+	| `medication/${MedicationSuffix}`;
 
 export type PostRequestOptions<T = unknown, OptionalInput = undefined> = {
 	url: RequestURLSegment;
@@ -75,7 +76,7 @@ export type LoggedUserDetails = {
 	email: string;
 	firstName: string;
 	lastName: string;
-}
+};
 
 export type GetRequestOptions = {
 	url: RequestURLSegment;
@@ -170,7 +171,6 @@ export type CustomerDetails = {
 	email: string;
 };
 
-
 export type CreateUserAccountParameters = {
 	firstName: string;
 	lastName: string;
@@ -183,9 +183,11 @@ export type CreateUserAccountParameters = {
 
 export type PharmacyListResponse = TholaApiResponse<{ pharmacies: Array<Pharmacy> }>;
 
-export type LoggedUserResponse = TholaApiResponse<{ user: LoggedUserDetails }>
+export type LoggedUserResponse = TholaApiResponse<{ user: LoggedUserDetails }>;
 
-export type MedicationSearchResponse = TholaApiResponse<{ medications: Array<SearchMedicationSchema> }>
+export type MedicationSearchResponse = TholaApiResponse<{
+	medications: Array<SearchMedicationSchema>;
+}>;
 
 export type ResetPasswordParameters = {
 	email: string;

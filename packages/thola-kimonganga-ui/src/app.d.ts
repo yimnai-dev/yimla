@@ -15,7 +15,11 @@ import {
 	type LocationData,
 	type MedicationSearchResponse
 } from '$lib';
-import type { RemoveMedicationSchema, SearchMedicationParametersSchema, UpdateMedicationSchema } from '$lib/forms/medication.form';
+import type {
+	RemoveMedicationSchema,
+	SearchMedicationParametersSchema,
+	UpdateMedicationSchema
+} from '$lib/forms/medication.form';
 import type { DeletePharmacistSchema } from '$lib/forms/pharmacist.form';
 import type { UpdatePharmacyActiveStatusSchema } from '$lib/forms/pharmacy.form';
 import type { QueryClient } from '@tanstack/svelte-query';
@@ -83,7 +87,7 @@ declare global {
 				mapBoxApiKey?: string;
 				medicationsearchHistorytream: Promise<MedicationSearchResponse>;
 				userRecommendationsStream: Promise<MedicationSearchResponse>;
-			}
+			};
 		}
 
 		interface Error {
@@ -93,4 +97,4 @@ declare global {
 	}
 }
 
-export { };
+export {};

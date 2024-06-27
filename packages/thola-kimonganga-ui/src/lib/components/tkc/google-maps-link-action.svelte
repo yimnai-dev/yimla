@@ -23,7 +23,7 @@
 		formData.set('medicationId', medicationId);
 		formData.set('userId', $page.data.tkc.userInfo.userId);
 		window.open(googleMapsUrl, '_blank');
-		return async ({ update, result }) => {
+		return async ({ update }) => {
 			await update();
 			loading = false;
 		};

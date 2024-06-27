@@ -44,7 +44,11 @@
 	let expiryDate: DateValue | undefined = $state(undefined);
 
 	let medicationListResponse = $page.data.queryClient.getQueryData<MedicationListResponse>(
-		medicationListOptions($page.data.tholaApp === 'thola-org' ? $page.data.tko.medicationListStream : $page.data.tkp.medicationListStream).queryKey
+		medicationListOptions(
+			$page.data.tholaApp === 'thola-org'
+				? $page.data.tko.medicationListStream
+				: $page.data.tkp.medicationListStream
+		).queryKey
 	);
 
 	let medication = $derived.by(() => {

@@ -35,7 +35,7 @@
 </script>
 
 <header
-	class="bg-background sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
+	class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
 >
 	<Sheet.Root>
 		<Sheet.Trigger asChild let:builder>
@@ -48,35 +48,35 @@
 			<nav class="grid gap-6 text-lg font-medium">
 				<a
 					href="/tkc"
-					class="bg-primary text-primary-foreground group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold md:text-base"
+					class="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
 				>
 					<Package2 class="h-5 w-5 transition-all group-hover:scale-110" />
 					<span class="sr-only">Thola Kimonganga</span>
 				</a>
 				<a
 					href="/tkc"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<Home class="h-5 w-5" />
 					Home
 				</a>
 				<a
 					href="/tkc/search-history"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<History class="h-5 w-5" />
 					Search History
 				</a>
 				<a
 					href="/tkc/recommendations"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
+					class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<FileClock class="h-5 w-5" />
 					Recommendations
 				</a>
 				<a
 					href="/tkc/settings"
-					class="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5 hidden"
+					class="flex hidden items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
 				>
 					<SettingsIcon class="h-5 w-5" />
 					Settings
@@ -105,11 +105,11 @@
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
 	<div class="relative ml-auto flex-1 md:grow-0">
-		<Search class="text-muted-foreground absolute left-2.5 top-2.5 h-4 w-4 hidden" />
+		<Search class="absolute left-2.5 top-2.5 hidden h-4 w-4 text-muted-foreground" />
 		<Input
 			type="search"
 			placeholder="Search..."
-			class="bg-background w-full rounded-lg pl-8 md:w-[200px] lg:w-[336px] hidden"
+			class="hidden w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
 		/>
 	</div>
 	<DropdownMenu.Root>
@@ -130,9 +130,11 @@
 			</Button>
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content align="end">
-			<DropdownMenu.Label class="capitalize">{ $page.data.tkc.userInfo.username }'s Account</DropdownMenu.Label>
+			<DropdownMenu.Label class="capitalize"
+				>{$page.data.tkc.userInfo.username}'s Account</DropdownMenu.Label
+			>
 
-			<a href="/tkc/settings" class="rounded-md border border-solid px-3 py-1 text-sm hidden">
+			<a href="/tkc/settings" class="hidden rounded-md border border-solid px-3 py-1 text-sm">
 				<DropdownMenu.Label>Settings</DropdownMenu.Label>
 			</a>
 

@@ -113,9 +113,9 @@
 											<Render of={cell.render()} />
 											<ArrowUpDown class={'ml-2 h-4 w-4'} />
 										</Button>
-									{:else if $page.data.tholaApp === 'thola-org' && cell.id !== "drugId"}
+									{:else if $page.data.tholaApp === 'thola-org' && cell.id !== 'drugId'}
 										<Render of={cell.render()} />
-										{:else if $page.data.tholaApp === 'thola-pharmacy'}
+									{:else if $page.data.tholaApp === 'thola-pharmacy'}
 										<Render of={cell.render()} />
 									{/if}
 								</Table.Head>

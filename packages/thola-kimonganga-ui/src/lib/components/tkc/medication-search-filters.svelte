@@ -25,7 +25,7 @@
 
 	let { medications = $bindable() }: Props = $props();
 
-	type SelectValue<U extends unknown> = {
+	type SelectValue<U> = {
 		label: string;
 		value: U extends number | SearchMedicationParametersSchema['dosageForm'] ? U : never;
 	};

@@ -48,7 +48,7 @@ export const update = async <TData = unknown, TInput = unknown>({
 		method: 'PUT',
 		body: isFormData ? (input as unknown as FormData) : JSON.stringify(input)
 	});
-	if(!response.ok) throw Error("Could not parse response")
+	if (!response.ok) throw Error('Could not parse response');
 	const json = await response.json<TData>();
 	return json;
 };
@@ -63,10 +63,9 @@ export const get = async <TData = unknown>({
 	const response = await fetcher(reqURL, {
 		...options
 	});
-	return  await response.json<TData>().catch(e => {
+	return await response.json<TData>().catch((e) => {
 		return e;
 	});
-	
 };
 
 export const deleteRequest = async <TData = unknown>({

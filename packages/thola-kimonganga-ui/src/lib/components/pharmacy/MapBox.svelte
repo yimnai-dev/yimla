@@ -17,19 +17,19 @@
 		formData.update(($prev) => {
 			return { ...$prev, longitude: bueaLongitude, latitude: bueaLatitude };
 		});
-			mapboxgl.accessToken = accessToken
-			const map = new mapboxgl.Map({
-				container: 'map',
-				style: 'mapbox://styles/mapbox/streets-v12',
-				zoom: 15,
-				center: [bueaLongitude, bueaLatitude]
+		mapboxgl.accessToken = accessToken;
+		const map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v12',
+			zoom: 15,
+			center: [bueaLongitude, bueaLatitude]
+		});
+		map.on('click', (e: { lngLat: { lat: number; lng: number } }) => {
+			const coordinates = e.lngLat;
+			formData.update(($prev) => {
+				return { ...$prev, longitude: coordinates.lng, latitude: coordinates.lat };
 			});
-			map.on('click', (e: { lngLat: { lat: number; lng: number } }) => {
-				const coordinates = e.lngLat;
-				formData.update(($prev) => {
-					return { ...$prev, longitude: coordinates.lng, latitude: coordinates.lat };
-				});
-			});
+		});
 	});
 </script>
 

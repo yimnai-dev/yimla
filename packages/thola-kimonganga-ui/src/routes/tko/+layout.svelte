@@ -3,7 +3,6 @@
 	import Header from '$lib/components/organisation/header.svelte';
 
 	let { children } = $props();
-
 </script>
 
 <AppLayout>

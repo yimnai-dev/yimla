@@ -51,8 +51,6 @@
 
 	let { pageIndex, hasNextPage, hasPreviousPage } = $state(pluginStates.page);
 	const { filterValue } = $state(pluginStates.filter);
-
-	
 </script>
 
 {#if $page.url.pathname === '/tko/pharmacies'}

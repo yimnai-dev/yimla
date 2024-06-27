@@ -92,8 +92,8 @@ func GetStripeProductListWithPriceListHandler(w http.ResponseWriter, r *http.Req
 
 func InitializeCheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	customerID := chi.URLParam(r, "customerId")
-	var successURL = "https://thola-org.yimnai.dev/app/subscriptions/success"
-	var cancelURL = "https://thola-org.yimnai.dev/app/subscriptions/cancel"
+	var successURL = "https://thola-org.yimnai.dev/tko/subscriptions/success"
+	var cancelURL = "https://thola-org.yimnai.dev/tko/subscriptions/cancel"
 	var subscriptionDetails CreateSubscriptionParameters
 	err := json.NewDecoder(r.Body).Decode(&subscriptionDetails)
 	if err != nil {
@@ -126,7 +126,6 @@ func InitializeCheckoutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := map[string]interface{}{
-		// "clientSecret": session.ClientSecret,
 		"message": "Checkout session initialized successfully",
 		"paymentUrl": session.URL,
 		"status":  http.StatusOK,

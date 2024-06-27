@@ -4,7 +4,15 @@ import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import type { Cookies } from '@sveltejs/kit';
 import { get, update } from './urls';
-import type { BaseURL, LocationData, MedicationListResponse, MedicationSearchResponse, PharmacistListResponse, PharmacyListResponse, SubscriptionListResponse } from './types/thola-kimonganga.types';
+import type {
+	BaseURL,
+	LocationData,
+	MedicationListResponse,
+	MedicationSearchResponse,
+	PharmacistListResponse,
+	PharmacyListResponse,
+	SubscriptionListResponse
+} from './types/thola-kimonganga.types';
 import { COOKIE_KEYS } from './cookie-keys';
 
 export function cn(...inputs: ClassValue[]) {
@@ -59,20 +67,19 @@ export const flyAndScale = (
 	};
 };
 
-
 type PharmacyListProps = {
 	cookies: Cookies;
 	orgId: string;
 	fetcher: typeof fetch;
-	baseURL: BaseURL
-}
+	baseURL: BaseURL;
+};
 
 type SubscriptionListProps = {
 	cookies: Cookies;
 	fetcher: typeof fetch;
 	baseURL: BaseURL;
-	customerId: string
-}
+	customerId: string;
+};
 
 export async function getPharmacyList({ cookies, orgId, fetcher, baseURL }: PharmacyListProps) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
@@ -86,11 +93,15 @@ export async function getPharmacyList({ cookies, orgId, fetcher, baseURL }: Phar
 				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
-
-export async function getSubscriptionList({ cookies, fetcher, baseURL, customerId }: SubscriptionListProps) {
+export async function getSubscriptionList({
+	cookies,
+	fetcher,
+	baseURL,
+	customerId
+}: SubscriptionListProps) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) throw new Error('Session key not found');
 	return await get<SubscriptionListResponse>({
@@ -102,16 +113,15 @@ export async function getSubscriptionList({ cookies, fetcher, baseURL, customerI
 				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
 type PharmacistListProps = {
 	cookies: Cookies;
 	fetcher: typeof fetch;
 	baseURL: BaseURL;
-	url: `pharmacist/pharma/all/${string}` | `pharmacist/org/all/${string}`
-}
-
+	url: `pharmacist/pharma/all/${string}` | `pharmacist/org/all/${string}`;
+};
 
 export async function getPharmacistList({ cookies, fetcher, baseURL, url }: PharmacistListProps) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
@@ -125,14 +135,17 @@ export async function getPharmacistList({ cookies, fetcher, baseURL, url }: Phar
 				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
+type MedicationListProps = Omit<SubscriptionListProps, 'customerId'> & { organisationId: string };
 
-type MedicationListProps = Omit<SubscriptionListProps, 'customerId'> & { organisationId: string; }
-
-
-export async function getOrgMedicationList({ organisationId, fetcher, baseURL, cookies }: MedicationListProps) {
+export async function getOrgMedicationList({
+	organisationId,
+	fetcher,
+	baseURL,
+	cookies
+}: MedicationListProps) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) throw new Error('Session key not found');
 	return await get<MedicationListResponse>({
@@ -144,11 +157,15 @@ export async function getOrgMedicationList({ organisationId, fetcher, baseURL, c
 				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
-
-export async function getPharmacyMedicationList({ pharmacyId, fetcher, baseURL, cookies }: Omit<MedicationListProps, 'organisationId'> & { pharmacyId: string }) {
+export async function getPharmacyMedicationList({
+	pharmacyId,
+	fetcher,
+	baseURL,
+	cookies
+}: Omit<MedicationListProps, 'organisationId'> & { pharmacyId: string }) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) throw new Error('Session key not found');
 	return await get<MedicationListResponse>({
@@ -160,17 +177,22 @@ export async function getPharmacyMedicationList({ pharmacyId, fetcher, baseURL, 
 				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
 type MedicationRecommendationProps = {
 	userId: string;
 	baseURL: BaseURL;
 	cookies: Cookies;
-	fetcher: typeof fetch
-}
+	fetcher: typeof fetch;
+};
 
-export async function getSearchHistory({ userId, baseURL, cookies, fetcher }: MedicationRecommendationProps) {
+export async function getSearchHistory({
+	userId,
+	baseURL,
+	cookies,
+	fetcher
+}: MedicationRecommendationProps) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) throw new Error('Session key not found');
 	return await get<MedicationSearchResponse>({
@@ -179,13 +201,18 @@ export async function getSearchHistory({ userId, baseURL, cookies, fetcher }: Me
 		url: `medication/search-history/${userId}`,
 		options: {
 			headers: {
-				"Authorization": sessionKey
+				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
-export async function getUserRecommendations({ userId, baseURL, cookies, fetcher }: MedicationRecommendationProps) {
+export async function getUserRecommendations({
+	userId,
+	baseURL,
+	cookies,
+	fetcher
+}: MedicationRecommendationProps) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) throw new Error('Session key not found');
 	return await get<MedicationSearchResponse>({
@@ -194,13 +221,19 @@ export async function getUserRecommendations({ userId, baseURL, cookies, fetcher
 		url: `medication/recommendations/${userId}`,
 		options: {
 			headers: {
-				"Authorization": sessionKey
+				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
-export async function updateRecommendationIndex({ userId, baseURL, medicationId, cookies, fetcher }: MedicationRecommendationProps & { medicationId: string; }) {
+export async function updateRecommendationIndex({
+	userId,
+	baseURL,
+	medicationId,
+	cookies,
+	fetcher
+}: MedicationRecommendationProps & { medicationId: string }) {
 	const sessionKey = cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) throw new Error('Session key not found');
 	return await update<MedicationSearchResponse>({
@@ -213,9 +246,11 @@ export async function updateRecommendationIndex({ userId, baseURL, medicationId,
 				Authorization: sessionKey
 			}
 		}
-	})
+	});
 }
 
 export async function getDeviceLocationInfo(key: string) {
-	return await fetch(`https://pro.ip-api.com/json/129.0.60.59?fields=country,countryCode,region,regionName,city,zip,lat,lon,timezone,currency,isp,org,as,query&key=${key}`).then(res => res.json()) as unknown as LocationData
+	return (await fetch(
+		`https://pro.ip-api.com/json/129.0.60.59?fields=country,countryCode,region,regionName,city,zip,lat,lon,timezone,currency,isp,org,as,query&key=${key}`
+	).then((res) => res.json())) as unknown as LocationData;
 }

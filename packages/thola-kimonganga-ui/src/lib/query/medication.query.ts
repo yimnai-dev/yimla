@@ -1,4 +1,7 @@
-import type { MedicationListResponse, MedicationSearchResponse } from '$lib/types/thola-kimonganga.types';
+import type {
+	MedicationListResponse,
+	MedicationSearchResponse
+} from '$lib/types/thola-kimonganga.types';
 import { queryOptions } from '@tanstack/svelte-query';
 
 export function medicationListOptions(stream: Promise<MedicationListResponse>) {
@@ -9,17 +12,16 @@ export function medicationListOptions(stream: Promise<MedicationListResponse>) {
 	});
 }
 
-
 export function userSearchHistoryOptions(stream: Promise<MedicationSearchResponse>) {
 	return queryOptions({
 		queryKey: ['user-search-history', stream],
 		queryFn: async () => await stream
-	})
+	});
 }
 
 export function userRecommendationsOptions(stream: Promise<MedicationSearchResponse>) {
 	return queryOptions({
 		queryKey: ['medication-recommendations', stream],
 		queryFn: async () => await stream
-	})
+	});
 }

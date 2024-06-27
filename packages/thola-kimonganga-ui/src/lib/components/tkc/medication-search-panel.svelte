@@ -3,7 +3,7 @@
 	import MedicationSearchFilters from './medication-search-filters.svelte';
 	import SearchMedicationList from './search-medication-list.svelte';
 
-	let medications: Array<SearchMedicationSchema> = $state([])
+	let medications: Array<SearchMedicationSchema> = $state([]);
 </script>
 
 <div class="container mx-auto">

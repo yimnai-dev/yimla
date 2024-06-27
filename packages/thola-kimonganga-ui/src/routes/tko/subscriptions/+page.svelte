@@ -20,14 +20,16 @@
 
 	let showPriceTable = $state(false);
 
-	let subscriptionListQuery = createQuery(subscriptionListOptions($page.data.tko.subscriptionListStream));
+	let subscriptionListQuery = createQuery(
+		subscriptionListOptions($page.data.tko.subscriptionListStream)
+	);
 
 	setContext(CONTEXT_KEYS.CHECKOUT_FORM, data.initializeCheckoutForm);
 
 	onMount(async () => {
-			if(data.publishableKey) {
-				stripe = await loadStripe(data.publishableKey);
-			}
+		if (data.publishableKey) {
+			stripe = await loadStripe(data.publishableKey);
+		}
 	});
 </script>
 

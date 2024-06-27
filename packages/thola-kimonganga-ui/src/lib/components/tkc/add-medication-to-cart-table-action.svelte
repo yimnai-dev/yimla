@@ -31,7 +31,7 @@
 				drugId: medication.drugId,
 				quantity: 1,
 				unitPrice: medication.price,
-                name: medication.name
+				name: medication.name
 			})}>Add &nbsp; <ShoppingCart /></Button
 	>
 {/if}

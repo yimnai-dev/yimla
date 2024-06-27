@@ -20,7 +20,7 @@
 		firstName: string;
 	};
 
-	let { pharmacistId, pharmacyId, firstName }: Props = $props();
+	let { pharmacistId, firstName }: Props = $props();
 
 	let deletingPharmacist = $state(false);
 

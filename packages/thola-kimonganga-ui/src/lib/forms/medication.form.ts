@@ -64,14 +64,19 @@ export const removeMedicationSchema = z.object({
 });
 
 export const cartItem = z.object({
-	drugId: z.string({ required_error: 'Drug ID is required', invalid_type_error: 'Invalid drug ID' }).uuid(),
-	quantity: z.coerce.number({ required_error: 'Quantity is required', invalid_type_error: 'Invalid quantity' }).min(1),
-	unitPrice: z.coerce.number({ required_error: 'Price is required', invalid_type_error: 'Invalid price' }).min(1),
-	name: z.string({ required_error: 'Name is required', invalid_type_error: 'Invalid name' }),
-})
+	drugId: z
+		.string({ required_error: 'Drug ID is required', invalid_type_error: 'Invalid drug ID' })
+		.uuid(),
+	quantity: z.coerce
+		.number({ required_error: 'Quantity is required', invalid_type_error: 'Invalid quantity' })
+		.min(1),
+	unitPrice: z.coerce
+		.number({ required_error: 'Price is required', invalid_type_error: 'Invalid price' })
+		.min(1),
+	name: z.string({ required_error: 'Name is required', invalid_type_error: 'Invalid name' })
+});
 
 export const cartSchema = z.array(cartItem);
-
 
 export const searchMedicationSchema = z.object({
 	drugId: z.string(),
@@ -92,7 +97,7 @@ export const searchMedicationSchema = z.object({
 	city: z.string(),
 	address: z.string().optional(),
 	googleMapsUrl: z.string()
-})
+});
 
 export const searchMedicationParametersSchema = z.object({
 	searchRadius: z.coerce.number().default(100000).optional(),
@@ -101,7 +106,7 @@ export const searchMedicationParametersSchema = z.object({
 	latitude: z.coerce.number(),
 	longitude: z.coerce.number(),
 	userId: z.string()
-})
+});
 
 export const medicationSearchCacheSchema = z.record(z.string(), z.array(searchMedicationSchema));
 
@@ -115,7 +120,7 @@ export type SearchMedicationSchema = z.infer<typeof searchMedicationSchema>;
 
 export type MedicationSearchCacheSchema = z.infer<typeof medicationSearchCacheSchema>;
 
-export type  SearchMedicationParametersSchema = z.infer<typeof searchMedicationParametersSchema>;
+export type SearchMedicationParametersSchema = z.infer<typeof searchMedicationParametersSchema>;
 
 export type CartItem = z.infer<typeof cartItem>;
 

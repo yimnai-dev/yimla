@@ -14,7 +14,7 @@ export const load = async ({ locals, cookies, fetch, platform }) => {
 		redirect(302, '/app');
 	}
 	return {
-	 publishableKey: platform?.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY,
+		publishableKey: platform?.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY,
 		streamed: {
 			stripePriceListStream: get<StripePriceListResponse>({
 				url: 'subscriptions/product-price-list',

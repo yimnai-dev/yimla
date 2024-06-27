@@ -211,7 +211,11 @@
 		<Form.FieldErrors />
 	</Form.FormField>
 	{#if data.mapBoxApiKey}
-		<MapBox bind:latitude={$formData.latitude} bind:longitude={$formData.longitude} accessToken={data.mapBoxApiKey} />
+		<MapBox
+			bind:latitude={$formData.latitude}
+			bind:longitude={$formData.longitude}
+			accessToken={data.mapBoxApiKey}
+		/>
 	{/if}
 	<div class="container flex w-full items-center justify-center py-2">
 		<Form.Button type="submit" class="md:w-[200px]">

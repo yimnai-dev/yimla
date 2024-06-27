@@ -38,7 +38,12 @@
 		</div>
 	{:else}
 		<div class="container mx-auto">
-			<SearchMedicationList title={tableTitle} filterPlaceholder={tablePlaceholder} {medications} fromSearch={true} />
+			<SearchMedicationList
+				title={tableTitle}
+				filterPlaceholder={tablePlaceholder}
+				{medications}
+				fromSearch={true}
+			/>
 		</div>
 	{/if}
 {/if}

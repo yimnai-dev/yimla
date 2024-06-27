@@ -13,7 +13,7 @@
 	import { organisationPharmacistListOptions } from '$lib/query/pharmacist.query';
 
 	let { pharmacists }: { pharmacists: Array<PharmacistDetails> } = $props();
-    let writablePharmacists = writable(pharmacists)
+	let writablePharmacists = writable(pharmacists);
 	const table = createTable(writablePharmacists, {
 		page: addPagination({ initialPageSize: 10 }),
 		sort: addSortBy(),
@@ -67,11 +67,13 @@
 	const { filterValue } = $state(pluginStates.filter);
 
 	$effect(() => {
-		const orgPharmacistsResponse = $page.data.queryClient.getQueryData(organisationPharmacistListOptions($page.data.tko.organisationPharmacistListResponse).queryKey)
-		if(orgPharmacistsResponse && orgPharmacistsResponse.ok) {
-			$writablePharmacists = orgPharmacistsResponse.pharmacists
+		const orgPharmacistsResponse = $page.data.queryClient.getQueryData(
+			organisationPharmacistListOptions($page.data.tko.organisationPharmacistListResponse).queryKey
+		);
+		if (orgPharmacistsResponse && orgPharmacistsResponse.ok) {
+			$writablePharmacists = orgPharmacistsResponse.pharmacists;
 		}
-	})
+	});
 </script>
 
 {#if $page.url.pathname === '/tko/pharmacists'}

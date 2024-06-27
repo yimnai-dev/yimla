@@ -1,10 +1,10 @@
-import type { DeletePharmacistResponse } from "$lib";
-import { COOKIE_KEYS } from "$lib/cookie-keys";
-import { deletePharmacistSchema } from "$lib/forms/pharmacist.form";
-import { deleteRequest } from "$lib/urls";
-import { error, type Actions } from "@sveltejs/kit";
-import { superValidate, fail } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import type { DeletePharmacistResponse } from '$lib';
+import { COOKIE_KEYS } from '$lib/cookie-keys';
+import { deletePharmacistSchema } from '$lib/forms/pharmacist.form';
+import { deleteRequest } from '$lib/urls';
+import { error, type Actions } from '@sveltejs/kit';
+import { superValidate, fail } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 
 export const actions = {
 	deletePharmacist: async ({ request, locals, fetch, cookies }) => {

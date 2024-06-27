@@ -22,7 +22,6 @@
 		isActive: boolean;
 	};
 
-
 	let { pharmacyId, activePharmacyCount, isActive }: Props = $props();
 
 	let subscriptionListQuery = createQuery({
@@ -96,7 +95,7 @@
 
 	$effect(() => {
 		$formData.isActive = !isActive;
-		untrack(() => $formData)
+		untrack(() => $formData);
 	});
 
 	onMount(() => {

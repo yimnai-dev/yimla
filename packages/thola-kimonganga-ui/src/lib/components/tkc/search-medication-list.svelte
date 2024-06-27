@@ -81,13 +81,12 @@
 			cell: ({ value }) => {
 				const medication = medications.find((p) => p.drugId === value) as SearchMedicationSchema;
 				// if(medication) {
-					return createRender(GoogleMapsLinkAction, {
-						googleMapsUrl: medication?.googleMapsUrl,
-						fromSearch,
-						medicationId: Boolean(title) && medication ? medication.drugId : undefined
-					});
+				return createRender(GoogleMapsLinkAction, {
+					googleMapsUrl: medication?.googleMapsUrl,
+					fromSearch,
+					medicationId: Boolean(title) && medication ? medication.drugId : undefined
+				});
 				// }
-
 			}
 		})
 		// table.column({

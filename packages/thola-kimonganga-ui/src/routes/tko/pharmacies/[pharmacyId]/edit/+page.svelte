@@ -7,7 +7,7 @@
 	import * as Sheet from '$lib/components/ui/sheet';
 	import { pharmacyListOptions } from '$lib/query/pharmacy.query';
 	import { LucideRabbit } from 'lucide-svelte';
-    import * as Form from '$lib/components/ui/form';
+	import * as Form from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms';
 	import type { PageData } from './$types';
 	import { zodClient } from 'sveltekit-superforms/adapters';
@@ -21,15 +21,15 @@
 	import { subscriptionListOptions } from '$lib/query/subscription.query';
 	import dayjs from 'dayjs';
 
-    type Props = {
-        data: PageData
-    }
+	type Props = {
+		data: PageData;
+	};
 
 	let { data }: Props = $props();
 
 	let pharmacyListResponse = $state(
 		$page.data.queryClient.getQueryData<PharmacyListResponse>(
-			pharmacyListOptions(data.pharmacyListStream).queryKey
+			pharmacyListOptions($page.data.tko.pharmacyListStream).queryKey
 		)
 	);
 
@@ -40,9 +40,9 @@
 
 	const from = $navigating?.from?.url?.pathname;
 
-	let toastState = getContext<ToastState>(CONTEXT_KEYS.TOAST)
+	let toastState = getContext<ToastState>(CONTEXT_KEYS.TOAST);
 
-	let updatingPharmacy = $state(false)
+	let updatingPharmacy = $state(false);
 
 	function goBack() {
 		if (!from) {
@@ -53,63 +53,70 @@
 	}
 
 	function revokePharmacyListChange() {
-		$page.data.queryClient.setQueryData<PharmacyListResponse>(pharmacyListOptions(data.pharmacyListStream).queryKey, (old) => {
-			if(!old || !old.ok || !pharmacy) return;
-			return {
-				...old,
-				pharmacies: old.pharmacies.map(p => {
-					if(p.pharmacyId === $page.params.pharmacyId) {
-						return {
-							...p,
-							isActive: pharmacy.isActive,
-							name: pharmacy.name
+		$page.data.queryClient.setQueryData(
+			pharmacyListOptions($page.data.tko.pharmacyListStream).queryKey,
+			(old) => {
+				if (!old?.ok || !pharmacy) return old;
+				return {
+					...old,
+					pharmacies: old.pharmacies.map((p) => {
+						if (p.pharmacyId === $page.params.pharmacyId) {
+							return {
+								...p,
+								isActive: pharmacy.isActive,
+								name: pharmacy.name
+							};
 						}
-					}
-				})
+						return p;
+					})
+				};
 			}
-		})
+		);
 	}
 
-    const form = superForm(data.updatePharmacyForm, {
-        id: `update_pharmacy_form_${$page.params.pharmacyId}`,
+	const form = superForm(data.updatePharmacyForm, {
+		id: `update_pharmacy_form_${$page.params.pharmacyId}`,
 		validators: zodClient(updatePharmacySchema),
 		onSubmit: ({ formData }) => {
 			updatingPharmacy = true;
 			toastState.addToast({
 				type: 'info',
 				message: 'Pharmacy Update in progress...'
-			})
-			$page.data.queryClient.setQueryData<PharmacyListResponse>(pharmacyListOptions(data.pharmacyListStream).queryKey, (old) => {
-				if(!old || !old.ok) return;
-				let pharmacy = old.pharmacies.find((p) => p.pharmacyId === $page.params.pharmacyId);
-				if(!pharmacy) return;
-				const formEntries = Object.fromEntries(formData.entries()) as UpdatePharmacySchema;
-				pharmacy = {
-					...pharmacy,
-					isActive: formEntries.isActive || pharmacy.isActive,
-					name: formEntries.name || pharmacy.name
+			});
+			$page.data.queryClient.setQueryData<PharmacyListResponse>(
+				pharmacyListOptions($page.data.tko.pharmacyListStream).queryKey,
+				(old) => {
+					if (!old || !old.ok) return;
+					let pharmacy = old.pharmacies.find((p) => p.pharmacyId === $page.params.pharmacyId);
+					if (!pharmacy) return;
+					const formEntries = Object.fromEntries(formData.entries()) as UpdatePharmacySchema;
+					pharmacy = {
+						...pharmacy,
+						isActive: formEntries.isActive || pharmacy.isActive,
+						name: formEntries.name || pharmacy.name
+					};
+					const pharmacyList = old.pharmacies.map((p) => {
+						if (p.pharmacyId === $page.params.pharmacyId) {
+							return pharmacy;
+						}
+						return p;
+					});
+					return {
+						...old,
+						pharmacies: pharmacyList
+					};
 				}
-				const pharmacyList = old.pharmacies.map((p) => {
-					if (p.pharmacyId === $page.params.pharmacyId) {
-						return pharmacy
-					}
-					return p
-				})
-				return {
-					...old,
-					pharmacies: pharmacyList
-				}
-			})
-			goBack()
+			);
+			goBack();
 		},
 		onError: ({ result }) => {
 			updatingPharmacy = false;
 			toastState.addToast({
 				type: 'error',
-				message: result.error.message,
-			})
-			revokePharmacyListChange()
-			goBack()
+				message: result.error.message
+			});
+			revokePharmacyListChange();
+			goBack();
 		},
 		onResult: ({ result }) => {
 			updatingPharmacy = false;
@@ -121,43 +128,50 @@
 						message: errors[key][0]
 					});
 				}
-				revokePharmacyListChange()
-				goBack()
+				revokePharmacyListChange();
+				goBack();
 				return;
 			}
 			toastState.addToast({
 				type: 'success',
 				message: 'Pharmacy updated successfully'
-			})
+			});
 		}
-    })
+	});
 
-	let {form: formData, enhance, isTainted, tainted} = form;
+	let { form: formData, enhance } = form;
 
-	let subscriptionListQuery = createQuery(subscriptionListOptions(data.subscriptionListStream))
+	let subscriptionListQuery = createQuery(
+		subscriptionListOptions($page.data.tko.subscriptionListStream)
+	);
 
-	let seatsExhausted = $state(false)
+	let seatsExhausted = $state(false);
 
 	subscriptionListQuery.subscribe(($query) => {
-		if(!pharmacyListResponse || !pharmacyListResponse.ok) return;
-		if(!$query.data || !$query.data.ok) return;
-		const activeSubscriptions = $query.data.subscriptionList.filter((sub) => sub.status === 'active').sort((sub1, sub2) => dayjs(sub1.current_period_end).unix() - dayjs(sub2.current_period_end).unix())
-		if(!activeSubscriptions.length) return;
+		if (!pharmacyListResponse || !pharmacyListResponse.ok) return;
+		if (!$query.data || !$query.data.ok) return;
+		const activeSubscriptions = $query.data.subscriptionList
+			.filter((sub) => sub.status === 'active')
+			.sort(
+				(sub1, sub2) =>
+					dayjs(sub1.current_period_end).unix() - dayjs(sub2.current_period_end).unix()
+			);
+		if (!activeSubscriptions.length) return;
 		const currentSubscription = activeSubscriptions[0];
 		const items = currentSubscription.items.data;
-		if(!items.length) return;
-		const currentSub = items[0]
-		if(!currentSub.quantity) return;
-		const activePharmacySize = pharmacyListResponse.pharmacies.map(p => p.isActive).length
-		seatsExhausted = activePharmacySize > currentSub.quantity
-	})
+		if (!items.length) return;
+		const currentSub = items[0];
+		if (!currentSub.quantity) return;
+		const activePharmacySize = pharmacyListResponse.pharmacies.map((p) => p.isActive).length;
+		seatsExhausted = activePharmacySize > currentSub.quantity;
+	});
 
 	onMount(() => {
-		if(pharmacy) {
-			$formData.name = pharmacy.name
-			$formData.isActive = pharmacy.isActive
+		if (pharmacy) {
+			$formData.name = pharmacy.name;
+			$formData.isActive = pharmacy.isActive;
 		}
-	})
+	});
 </script>
 
 <Sheet.Root open onOpenChange={goBack}>
@@ -182,7 +196,7 @@
 				<Form.FormField {form} name="name" class="grid gap-2">
 					<Form.Control let:attrs>
 						<Form.Label>Name</Form.Label>
-						<Input {...attrs}  bind:value={$formData.name} />
+						<Input {...attrs} bind:value={$formData.name} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.FormField>
@@ -203,12 +217,8 @@
 								<Select.Value placeholder="Set active status" />
 							</Select.Trigger>
 							<Select.Content>
-								<Select.Item value={true}>
-									Add To Subscription
-								</Select.Item>
-								<Select.Item value={false}>
-									Remove From Subscription
-								</Select.Item>
+								<Select.Item value={true}>Add To Subscription</Select.Item>
+								<Select.Item value={false}>Remove From Subscription</Select.Item>
 							</Select.Content>
 						</Select.Root>
 						<Input hidden name={attrs.name} class="hidden" bind:value={$formData.isActive} />
@@ -216,11 +226,17 @@
 					<Form.Description />
 					<Form.FieldErrors />
 				</Form.Field>
-				<Form.Button disabled={$formData?.name?.toLowerCase() === pharmacy?.name?.toLowerCase() && $formData?.isActive === pharmacy?.isActive} type="submit" variant="outline" class="w-full mt-3 bg-primary">
+				<Form.Button
+					disabled={$formData?.name?.toLowerCase() === pharmacy?.name?.toLowerCase() &&
+						$formData?.isActive === pharmacy?.isActive}
+					type="submit"
+					variant="outline"
+					class="mt-3 w-full bg-primary"
+				>
 					{#if updatingPharmacy}
 						<Spinner />
 						Updating...
-						{:else}
+					{:else}
 						Save Changes
 					{/if}
 				</Form.Button>

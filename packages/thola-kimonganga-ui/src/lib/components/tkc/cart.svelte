@@ -40,7 +40,7 @@
 
 {#if cart.length}
 	<div
-		class="align-center absolute bottom-2 left-12 z-50 flex justify-center shadow-lg transition-all ease-out hover:-translate-y-3 hidden"
+		class="align-center absolute bottom-2 left-12 z-50 flex hidden justify-center shadow-lg transition-all ease-out hover:-translate-y-3"
 		use:portal
 	>
 		<Button variant="outline" onclick={() => (open = true)}>

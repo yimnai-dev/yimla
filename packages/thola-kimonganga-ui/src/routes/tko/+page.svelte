@@ -18,6 +18,6 @@
 	<Separator />
 	<PharmacistTableWrapper />
 	<Separator />
-	<MedicationTableWrapper/>
+	<MedicationTableWrapper />
 	<Separator />
 </div>

@@ -51,7 +51,6 @@
 			}
 		},
 		onResult: ({ result }) => {
-			console.log('resultatFinale: ', result);
 			initializing = false;
 			if (result.type === 'failure') {
 				const errors = result.data?.form.errors;
