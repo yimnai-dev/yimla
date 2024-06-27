@@ -63,8 +63,60 @@ export const removeMedicationSchema = z.object({
 	drugId: z.string({ required_error: 'Drug ID is required' }).uuid()
 });
 
+export const cartItem = z.object({
+	drugId: z.string({ required_error: 'Drug ID is required', invalid_type_error: 'Invalid drug ID' }).uuid(),
+	quantity: z.coerce.number({ required_error: 'Quantity is required', invalid_type_error: 'Invalid quantity' }).min(1),
+	unitPrice: z.coerce.number({ required_error: 'Price is required', invalid_type_error: 'Invalid price' }).min(1),
+	name: z.string({ required_error: 'Name is required', invalid_type_error: 'Invalid name' }),
+})
+
+export const cartSchema = z.array(cartItem);
+
+
+export const searchMedicationSchema = z.object({
+	drugId: z.string(),
+	name: z.string(),
+	description: z.string().optional(),
+	manufacturer: z.string().optional(),
+	expiryDate: z.string(),
+	category: z.string().optional(),
+	strength: z.string().optional(),
+	dosageForm: z.string().optional(),
+	instructions: z.string().optional(),
+	storageConditions: z.string().optional(),
+	stockId: z.string(),
+	quantity: z.coerce.number(),
+	price: z.coerce.number(),
+	pharmacyId: z.string(),
+	pharmacyName: z.string(),
+	city: z.string(),
+	address: z.string().optional(),
+	googleMapsUrl: z.string()
+})
+
+export const searchMedicationParametersSchema = z.object({
+	searchRadius: z.coerce.number().default(100000).optional(),
+	dosageForm: drugDosageForm.optional(),
+	searchTerm: z.string().min(1).trim(),
+	latitude: z.coerce.number(),
+	longitude: z.coerce.number(),
+	userId: z.string()
+})
+
+export const medicationSearchCacheSchema = z.record(z.string(), z.array(searchMedicationSchema));
+
 export type CreateMedicationSchema = z.infer<typeof createMedicationSchema>;
 
 export type RemoveMedicationSchema = z.infer<typeof removeMedicationSchema>;
 
 export type UpdateMedicationSchema = z.infer<typeof updateMedicationSchema>;
+
+export type SearchMedicationSchema = z.infer<typeof searchMedicationSchema>;
+
+export type MedicationSearchCacheSchema = z.infer<typeof medicationSearchCacheSchema>;
+
+export type  SearchMedicationParametersSchema = z.infer<typeof searchMedicationParametersSchema>;
+
+export type CartItem = z.infer<typeof cartItem>;
+
+export type CartSchema = z.infer<typeof cartSchema>;

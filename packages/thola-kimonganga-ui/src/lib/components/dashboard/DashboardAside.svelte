@@ -53,9 +53,9 @@
 			<LineChart />
 		</NavLink>
 	</nav>
-	<nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+	<!-- <nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
 		<NavLink href="/app/settings" label="Settings">
 			<Settings />
 		</NavLink>
-	</nav>
+	</nav> -->
 </aside>

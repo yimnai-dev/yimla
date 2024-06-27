@@ -121,6 +121,112 @@
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/tkc": [
+		"src/routes/tkc/+page.server.ts",
+		"src/routes/tkc/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/tkc/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkc/recommendations": [
+		"src/routes/tkc/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkc/search-history": [
+		"src/routes/tkc/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko": [
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/medication": [
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/pharmacies": [
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/pharmacies/new": [
+		"src/routes/tko/pharmacies/new/+page.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/pharmacies/[pharmacyId]/edit": [
+		"src/routes/tko/pharmacies/[pharmacyId]/edit/+page.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/pharmacists": [
+		"src/routes/tko/pharmacists/+page.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/pharmacists/new": [
+		"src/routes/tko/pharmacists/new/+page.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/subscriptions": [
+		"src/routes/tko/subscriptions/+page.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/subscriptions/cancel": [
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tko/subscriptions/success": [
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkp": [
+		"src/routes/tkp/+page.server.ts",
+		"src/routes/tkp/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/tkp/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkp/medication": [
+		"src/routes/tkp/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkp/medication/new": [
+		"src/routes/tkp/medication/new/+page.server.ts",
+		"src/routes/tkp/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkp/search": [
+		"src/routes/tkp/search/+page.server.ts",
+		"src/routes/tkp/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/[...path]": [
 		"src/routes/[...path]/+page.server.ts",
 		"src/routes/+layout.ts",

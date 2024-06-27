@@ -1,3 +1,4 @@
+import type { SearchMedicationSchema } from '$lib/forms/medication.form';
 import { THOLA_KIMONGANGA_URL } from '$lib/urls';
 import type Stripe from 'stripe';
 
@@ -10,6 +11,8 @@ export type SubscriptionSuffix =
 
 export type AccountSuffix = 'details' | 'update' | 'delete';
 
+export type MedicationSuffix = `${'search' | 'create' | 'all' | 'delete' | 'update' | 'recommendations' | 'search-history'}${string}`
+
 export type RequestURLSegment =
 	| 'login'
 	| 'create'
@@ -21,9 +24,10 @@ export type RequestURLSegment =
 	| `account/${AccountSuffix}`
 	| `pharmacist/${string}`
 	| `subscriptions/${SubscriptionSuffix}`
-	| `medication/create/${string}`
-	| `medication/all/${string}`
-	| `medication/${'delete' | 'update'}/${string}`;
+	| `pharmacist/pharma/all/${string}`
+	| `pharmacist/org/all/${string}`
+	| `medication/update-search-history/${string}/${string}`
+	| `medication/${MedicationSuffix}`
 
 export type PostRequestOptions<T = unknown, OptionalInput = undefined> = {
 	url: RequestURLSegment;
@@ -32,6 +36,23 @@ export type PostRequestOptions<T = unknown, OptionalInput = undefined> = {
 	baseURL: BaseURL;
 	options?: Omit<RequestInit, 'body'>;
 	isFormData?: boolean;
+};
+
+export type LocationData = {
+	status: string;
+	country: string;
+	countryCode: string;
+	region: string;
+	regionName: string;
+	city: string;
+	zip: string;
+	lat: number;
+	lon: number;
+	timezone: string;
+	isp: string;
+	org: string;
+	as: string;
+	query: string;
 };
 
 export type Pharmacy = {
@@ -47,6 +68,14 @@ export type Pharmacy = {
 	city: string;
 	address: string;
 };
+
+export type LoggedUserDetails = {
+	userId: string;
+	username: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+}
 
 export type GetRequestOptions = {
 	url: RequestURLSegment;
@@ -141,6 +170,7 @@ export type CustomerDetails = {
 	email: string;
 };
 
+
 export type CreateUserAccountParameters = {
 	firstName: string;
 	lastName: string;
@@ -152,6 +182,10 @@ export type CreateUserAccountParameters = {
 };
 
 export type PharmacyListResponse = TholaApiResponse<{ pharmacies: Array<Pharmacy> }>;
+
+export type LoggedUserResponse = TholaApiResponse<{ user: LoggedUserDetails }>
+
+export type MedicationSearchResponse = TholaApiResponse<{ medications: Array<SearchMedicationSchema> }>
 
 export type ResetPasswordParameters = {
 	email: string;

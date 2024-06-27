@@ -48,6 +48,7 @@ export const update = async <TData = unknown, TInput = unknown>({
 		method: 'PUT',
 		body: isFormData ? (input as unknown as FormData) : JSON.stringify(input)
 	});
+	if(!response.ok) throw Error("Could not parse response")
 	const json = await response.json<TData>();
 	return json;
 };

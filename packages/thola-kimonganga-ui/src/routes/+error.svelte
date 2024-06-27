@@ -11,6 +11,16 @@
 		return 150;
 	});
 
+	const backURL = $derived.by(() => {
+		if($page.data.tholaApp === 'thola-client') {
+			return '/tkc'
+		}
+		if($page.data.tholaApp === 'thola-pharmacy') {
+			return '/tkp'
+		}
+		return '/tko'
+	})
+
 	onMount(() => {
 		innerWidth = window.innerWidth;
 	});
@@ -28,7 +38,7 @@
 	</p>
 
 	<div class="flex items-center justify-center space-x-3">
-		<Button variant="outline" href="/app">Go Back &nbsp; <Undo2 /></Button>
+		<Button variant="outline" href={backURL}>Go Back &nbsp; <Undo2 /></Button>
 		<Button variant="outline" onclick={() => window.location.reload()}>Reload &nbsp; <RotateCw /></Button>
 	</div>
 </div>

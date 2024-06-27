@@ -7,7 +7,12 @@ import type { LoginParameters, LoginResponse } from '$lib';
 import { COOKIE_KEYS } from '$lib/cookie-keys';
 import { post } from '$lib/urls';
 
-export const load = async () => {
+export const load = async ({cookies, url}) => {
+	if(url.searchParams.has('redirectTo')) {
+		cookies.delete(COOKIE_KEYS.SESSION_KEY, {
+			path: '/'
+		})
+	}
 	const loginForm = await superValidate(zod(loginSchema));
 	return {
 		loginForm
@@ -40,9 +45,10 @@ export const actions = {
 			});
 		}
 		cookies.set(COOKIE_KEYS.SESSION_KEY, loginUser.sessionKey, {
-			path: '/'
+			path: '/',
 		});
-		redirect(301, url.searchParams.get('redirectTo') || '/app');
+		const alternateRedirectURL = locals.tholaApp === 'thola-pharmacy' ? '/tkp' : locals.tholaApp === 'thola-org' ? '/tko' : '/tkc';
+		redirect(301, url.searchParams.get('redirectTo') || alternateRedirectURL);
 	},
 	logout: async ({ cookies }) => {
 		cookies.delete(COOKIE_KEYS.SESSION_KEY, {

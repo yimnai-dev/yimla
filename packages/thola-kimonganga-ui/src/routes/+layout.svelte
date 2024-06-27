@@ -8,6 +8,7 @@
 	import { onNavigate } from '$app/navigation';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import type { LayoutData } from './$types';
+	import { Toaster } from "$lib/components/ui/sonner";
 
 	type Props = {
 		children: import('svelte').Snippet;
@@ -34,6 +35,7 @@
 
 <QueryClientProvider client={data.queryClient}>
 	<ModeWatcher />
+	<Toaster />
 	<ToastContainer />
 	{@render children()}
 </QueryClientProvider>

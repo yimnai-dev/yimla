@@ -8,7 +8,6 @@ const handleApp: Handle = async ({ event, resolve }) => {
 		event.locals.tholaApp = 'thola-org';
 		event.locals.baseURL = 'http://localhost:8080/api/v1/org';
 		event.locals.userRole = 'organisation';
-		
 		return await resolve(event);
 	}
 	const [subdomain] = event.url.host.split('.');
@@ -25,51 +24,23 @@ const handleApp: Handle = async ({ event, resolve }) => {
 	return await resolve(event);
 };
 
-const handleAppHome: Handle = async ({ event, resolve }) => {
-	if (event.url.pathname === '/') {
-		redirect(302, '/app');
-	}
-	return await resolve(event);
-};
-
-const handleUnAuthorizedRequests: Handle = async ({ event, resolve }) => {
-	const sessionKey = event.cookies.get(COOKIE_KEYS.SESSION_KEY);
-	if (!event.url.pathname.startsWith('/app')) {
+const handleRequests: Handle = async ({ event, resolve }) => {
+	if (event.url.pathname.startsWith('/auth')) {
 		return await resolve(event);
 	}
+	const sessionKey = event.cookies.get(COOKIE_KEYS.SESSION_KEY);
 	if (!sessionKey) {
 		redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
 	}
-	const response = await resolve(event);
+	const response = await resolve(event)
 	if (response.status === 401) {
-		event.cookies.delete(COOKIE_KEYS.SESSION_KEY, {
-			path: '/',
-		})
 		redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
 	}
+	if (event.url.pathname === '/') {
+		const redirectPath = event.locals.tholaApp === 'thola-org' ? '/tko' : event.locals.tholaApp === 'thola-pharmacy' ? '/tkp' : '/tkc';
+		redirect(302, redirectPath);
+	}
 	return response;
-};
+}
 
-// const setAuthorizationHeaderForProtectedRoutesHandler: Handle = async ({ event, resolve }) => {
-// 	const sessionKey = event.cookies.get(COOKIE_KEYS.SESSION_KEY);
-// 	if (event.url.pathname.startsWith('/app')) {
-// 		if (!sessionKey) {
-// 			redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
-// 		}
-// 		const verifySessionResponse = await post<VerifySessionResponse, VerifySessionParameters>({
-// 			url: 'verify-session',
-// 			input: {
-// 				sessionKey
-// 			},
-// 			fetcher: event.fetch,
-// 			baseURL: event.locals.baseURL
-// 		})
-// 		if(!verifySessionResponse.ok) {
-// 			redirect(302, '/auth/login?redirectTo=' + event.url.pathname);
-// 		}
-// 		return await resolve(event)
-// 	}
-// 	return await resolve(event);
-// }
-
-export const handle = sequence(handleApp, handleAppHome, handleUnAuthorizedRequests);
+export const handle = sequence(handleApp, handleRequests);

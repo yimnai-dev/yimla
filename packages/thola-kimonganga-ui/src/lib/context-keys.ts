@@ -5,5 +5,6 @@ export const CONTEXT_KEYS = {
 	DELETE_PHARMACIST_FORM: 'deletePharmacistForm',
 	SESSION_KEY: 'sessionKey',
 	CHECKOUT_FORM: 'checkoutForm',
-	UPDATE_PHARMACY_SUBSCRIPTION_FORM: 'updatePharmacySubscriptionForm'
+	UPDATE_PHARMACY_SUBSCRIPTION_FORM: 'updatePharmacySubscriptionForm',
+	CART: 'cart'
 };

@@ -55,7 +55,7 @@
 	
 </script>
 
-{#if $page.url.pathname === '/app/pharmacies'}
+{#if $page.url.pathname === '/tko/pharmacies'}
 	<div class="flex items-center">
 		<Input
 			class="max-w-sm"
@@ -106,7 +106,7 @@
 		</Table.Body>
 	</Table.Root>
 	<div class="flex items-center justify-center space-x-4 py-2">
-		{#if $page.url.pathname === '/app/pharmacies'}
+		{#if $page.url.pathname === '/tko/pharmacies'}
 			<Button
 				variant="outline"
 				size="sm"
@@ -120,7 +120,7 @@
 				onclick={() => ($pageIndex = $pageIndex + 1)}>Next</Button
 			>
 		{:else}
-			<Button variant="outline" size="sm" href="/app/pharmacies"
+			<Button variant="outline" size="sm" href="/tko/pharmacies"
 				>View More
 				<ChevronRight class="ml-2 h-4 w-4" />
 			</Button>

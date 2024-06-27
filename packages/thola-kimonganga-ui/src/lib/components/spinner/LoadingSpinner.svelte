@@ -14,7 +14,7 @@
 	});
 </script>
 
-<div class="flex w-full items-center justify-center rounded-md border-2 px-2 py-5 blur-sm">
+<div class="flex w-full md:h-auto h-screen items-center justify-center rounded-md border-2 px-2 md:py-5 py-10 blur-sm">
 	<div role="status">
 		<svg
 			aria-hidden="true"

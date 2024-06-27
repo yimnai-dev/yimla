@@ -29,6 +29,7 @@ declare module '$env/static/private' {
 	export const VITE_MAPBOX_API_KEY: string;
 	export const VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
 	export const VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
+	export const VITE_IP_IPA_KEY: string;
 	export const SHELL: string;
 	export const LSCOLORS: string;
 	export const npm_command: string;
@@ -43,6 +44,7 @@ declare module '$env/static/private' {
 	export const npm_package_dependencies_lucide_svelte: string;
 	export const NODE: string;
 	export const npm_package_devDependencies_tslib: string;
+	export const npm_package_dependencies__mapbox_search_js_web: string;
 	export const npm_package_devDependencies_autoprefixer: string;
 	export const LC_ADDRESS: string;
 	export const npm_package_devDependencies_tailwindcss: string;
@@ -61,8 +63,8 @@ declare module '$env/static/private' {
 	export const PWD: string;
 	export const npm_package_devDependencies_svelte_headless_table: string;
 	export const npm_package_devDependencies_vite: string;
-	export const LOGNAME: string;
 	export const XDG_SESSION_DESKTOP: string;
+	export const LOGNAME: string;
 	export const QT_QPA_PLATFORMTHEME: string;
 	export const XDG_SESSION_TYPE: string;
 	export const npm_package_devDependencies__typescript_eslint_parser: string;
@@ -78,8 +80,8 @@ declare module '$env/static/private' {
 	export const GDM_LANG: string;
 	export const HOME: string;
 	export const USERNAME: string;
-	export const LC_PAPER: string;
 	export const LANG: string;
+	export const LC_PAPER: string;
 	export const npm_package_devDependencies_typescript: string;
 	export const LS_COLORS: string;
 	export const XDG_CURRENT_DESKTOP: string;
@@ -105,8 +107,8 @@ declare module '$env/static/private' {
 	export const npm_package_devDependencies__sveltejs_vite_plugin_svelte: string;
 	export const npm_package_devDependencies_svelte_check: string;
 	export const XDG_SESSION_CLASS: string;
-	export const TERM: string;
 	export const LC_IDENTIFICATION: string;
+	export const TERM: string;
 	export const npm_package_name: string;
 	export const ZSH: string;
 	export const npm_package_type: string;
@@ -151,6 +153,7 @@ declare module '$env/static/private' {
 	export const npm_package_scripts_check: string;
 	export const PATH: string;
 	export const npm_package_devDependencies__types_eslint: string;
+	export const npm_package_dependencies_svelte_sonner: string;
 	export const npm_config_node_gyp: string;
 	export const GDMSESSION: string;
 	export const npm_package_devDependencies__sveltejs_kit: string;
@@ -159,8 +162,8 @@ declare module '$env/static/private' {
 	export const DBUS_SESSION_BUS_ADDRESS: string;
 	export const npm_package_devDependencies__playwright_test: string;
 	export const npm_package_dependencies__tanstack_svelte_query: string;
-	export const NVM_BIN: string;
 	export const MAIL: string;
+	export const NVM_BIN: string;
 	export const npm_config_registry: string;
 	export const npm_package_devDependencies_postcss: string;
 	export const npm_node_execpath: string;
@@ -202,6 +205,7 @@ declare module '$env/dynamic/private' {
 		VITE_MAPBOX_API_KEY: string;
 		VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
 		VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
+		VITE_IP_IPA_KEY: string;
 		SHELL: string;
 		LSCOLORS: string;
 		npm_command: string;
@@ -216,6 +220,7 @@ declare module '$env/dynamic/private' {
 		npm_package_dependencies_lucide_svelte: string;
 		NODE: string;
 		npm_package_devDependencies_tslib: string;
+		npm_package_dependencies__mapbox_search_js_web: string;
 		npm_package_devDependencies_autoprefixer: string;
 		LC_ADDRESS: string;
 		npm_package_devDependencies_tailwindcss: string;
@@ -234,8 +239,8 @@ declare module '$env/dynamic/private' {
 		PWD: string;
 		npm_package_devDependencies_svelte_headless_table: string;
 		npm_package_devDependencies_vite: string;
-		LOGNAME: string;
 		XDG_SESSION_DESKTOP: string;
+		LOGNAME: string;
 		QT_QPA_PLATFORMTHEME: string;
 		XDG_SESSION_TYPE: string;
 		npm_package_devDependencies__typescript_eslint_parser: string;
@@ -251,8 +256,8 @@ declare module '$env/dynamic/private' {
 		GDM_LANG: string;
 		HOME: string;
 		USERNAME: string;
-		LC_PAPER: string;
 		LANG: string;
+		LC_PAPER: string;
 		npm_package_devDependencies_typescript: string;
 		LS_COLORS: string;
 		XDG_CURRENT_DESKTOP: string;
@@ -278,8 +283,8 @@ declare module '$env/dynamic/private' {
 		npm_package_devDependencies__sveltejs_vite_plugin_svelte: string;
 		npm_package_devDependencies_svelte_check: string;
 		XDG_SESSION_CLASS: string;
-		TERM: string;
 		LC_IDENTIFICATION: string;
+		TERM: string;
 		npm_package_name: string;
 		ZSH: string;
 		npm_package_type: string;
@@ -324,6 +329,7 @@ declare module '$env/dynamic/private' {
 		npm_package_scripts_check: string;
 		PATH: string;
 		npm_package_devDependencies__types_eslint: string;
+		npm_package_dependencies_svelte_sonner: string;
 		npm_config_node_gyp: string;
 		GDMSESSION: string;
 		npm_package_devDependencies__sveltejs_kit: string;
@@ -332,8 +338,8 @@ declare module '$env/dynamic/private' {
 		DBUS_SESSION_BUS_ADDRESS: string;
 		npm_package_devDependencies__playwright_test: string;
 		npm_package_dependencies__tanstack_svelte_query: string;
-		NVM_BIN: string;
 		MAIL: string;
+		NVM_BIN: string;
 		npm_config_registry: string;
 		npm_package_devDependencies_postcss: string;
 		npm_node_execpath: string;

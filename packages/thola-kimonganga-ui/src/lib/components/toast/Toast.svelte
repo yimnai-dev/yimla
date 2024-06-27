@@ -26,7 +26,8 @@
 
 {#if toastActive}
 	<div
-		transition:fly={{ duration: 300, delay: 100, x: 100, y: 0 }}
+		in:fly={{ duration: 300, x: 100 }}
+		out:fly={{ x: -100, duration: 300 }}
 		class="z-50 min-w-[100px] rounded-sm px-2 py-4 shadow-md"
 		class:bg-red-500={toast.type === 'error'}
 		class:bg-green-500={toast.type === 'success'}
