@@ -26,10 +26,12 @@
  * ```
  */
 declare module '$env/static/private' {
-	export const VITE_MAPBOX_API_KEY: string;
-	export const VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
-	export const VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
+	export const MAPBOX_API_KEY: string;
+	export const STRIPE_PUBLISHABLE_TEST_KEY: string;
+	export const STRIPE_PRICING_TABLE_TEST_ID: string;
 	export const VITE_IP_IPA_KEY: string;
+	export const APP_NAME: string;
+	export const NODE_ENV: string;
 	export const SHELL: string;
 	export const LSCOLORS: string;
 	export const npm_command: string;
@@ -170,7 +172,7 @@ declare module '$env/static/private' {
 	export const npm_config_engine_strict: string;
 	export const LC_NUMERIC: string;
 	export const OLDPWD: string;
-	export const NODE_ENV: string;
+	export const VITE_USER_NODE_ENV: string;
 }
 
 /**
@@ -202,10 +204,12 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
-		VITE_MAPBOX_API_KEY: string;
-		VITE_STRIPE_PUBLISHABLE_TEST_KEY: string;
-		VITE_STRIPE_PRICING_TABLE_TEST_ID: string;
+		MAPBOX_API_KEY: string;
+		STRIPE_PUBLISHABLE_TEST_KEY: string;
+		STRIPE_PRICING_TABLE_TEST_ID: string;
 		VITE_IP_IPA_KEY: string;
+		APP_NAME: string;
+		NODE_ENV: string;
 		SHELL: string;
 		LSCOLORS: string;
 		npm_command: string;
@@ -346,7 +350,7 @@ declare module '$env/dynamic/private' {
 		npm_config_engine_strict: string;
 		LC_NUMERIC: string;
 		OLDPWD: string;
-		NODE_ENV: string;
+		VITE_USER_NODE_ENV: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}
