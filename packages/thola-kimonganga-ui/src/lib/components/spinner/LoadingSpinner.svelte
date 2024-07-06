@@ -3,19 +3,35 @@
 
 	type Props = {
 		size?: 'sm' | 'md' | 'lg';
+		blur?: boolean;
+		isPageLoader?: boolean;
 	};
 
-	let { size = 'md' }: Props = $props();
+	let { size = 'md', blur = true, isPageLoader = false }: Props = $props();
 
-	let dimension = $derived.by(() => {
+	const dimension = $derived.by(() => {
 		if (size === 'md') return 'w-16 h-16';
 		if (size === 'lg') return 'w-24 h-24';
 		return 'w-10 h-10';
 	});
+
+	const blurClass = $derived.by(() => {
+		if (!blur) return '';
+		return 'blur-sm';
+	});
+
+	const pageLoaderClass = $derived.by(() => {
+		if (!isPageLoader) return 'md:h-auto border-2 px-2 py-10 md:py-5';
+		return 'h-screen';
+	});
 </script>
 
 <div
-	class="flex h-screen w-full items-center justify-center rounded-md border-2 px-2 py-10 blur-sm md:h-auto md:py-5"
+	class={cn(
+		'flex w-full flex-col items-center justify-center space-y-3 rounded-md',
+		blurClass,
+		pageLoaderClass
+	)}
 >
 	<div role="status">
 		<svg
@@ -39,4 +55,7 @@
 		</svg>
 		<span class="sr-only">Loading...</span>
 	</div>
+	{#if isPageLoader}
+		<span class="italic">Please wait while we load your data...</span>
+	{/if}
 </div>

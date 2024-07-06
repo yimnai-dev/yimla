@@ -6,6 +6,17 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
+export const load = async ({ parent }) => {
+	const { tkp } = await parent();
+	return {
+		meta: {
+			title: `Thola Kimonganga | ${tkp.pharmacistInfo.pharmacyName} . Search Medications`,
+			description: `Thola Kimonganga | ${tkp.pharmacistInfo.pharmacyName} . Search Medications`,
+			url: `/tkp/search`
+		}
+	};
+};
+
 export const actions = {
 	search: async ({ request, cookies, fetch, locals }) => {
 		const form = await superValidate(request, zod(searchMedicationParametersSchema));

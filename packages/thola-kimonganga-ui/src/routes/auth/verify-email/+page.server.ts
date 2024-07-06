@@ -13,7 +13,12 @@ export const load = async ({ locals }) => {
 		redirect(302, '/auth/login');
 	}
 	return {
-		verifyEmailForm
+		verifyEmailForm,
+		meta: {
+			title: 'Thola Kimonganga | Verify Your Email',
+			description: 'Thola Kimonganga | Verify Your Email',
+			url: '/auth/verify-email'
+		}
 	};
 };
 

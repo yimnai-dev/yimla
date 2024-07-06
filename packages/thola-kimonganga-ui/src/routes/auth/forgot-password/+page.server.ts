@@ -9,7 +9,12 @@ import { post } from '$lib/urls';
 export const load = async () => {
 	const forgotPasswordForm = await superValidate(zod(forgotPasswordSchema));
 	return {
-		forgotPasswordForm
+		forgotPasswordForm,
+		meta: {
+			title: 'Thola Kimonganga | Forgot Password',
+			description: 'Thola Kimonganga | Forgot Password',
+			url: '/auth/forgot-password'
+		}
 	};
 };
 

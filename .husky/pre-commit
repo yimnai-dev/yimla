@@ -9,7 +9,7 @@ PACKAGES=("packages/thola-kimonganga-ui")
 for PACKAGE in "${PACKAGES[@]}"
 do
   echo "Running pre-commit checks for $PACKAGE"
-  (cd "$PACKAGE" && pnpm run format && pnpm run lint && pnpm run deploy)
+  (cd "$PACKAGE" && pnpm run format && pnpm run lint)
   if [ $? -ne 0 ]; then
     echo "Pre-commit checks failed for $PACKAGE"
     exit 1

@@ -27,7 +27,12 @@ export const load = async ({ locals, cookies, fetch, platform }) => {
 				}
 			})
 		},
-		initializeCheckoutForm: await superValidate(zod(initializeCheckoutSchema))
+		initializeCheckoutForm: await superValidate(zod(initializeCheckoutSchema)),
+		meta: {
+			title: 'Thola Kimonganga | Subscription',
+			description: 'Thola Kimonganga | Subscription',
+			url: '/tko/subscriptions'
+		}
 	};
 };
 

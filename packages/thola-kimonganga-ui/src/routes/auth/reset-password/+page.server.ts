@@ -18,7 +18,12 @@ export const load = async ({ cookies }) => {
 	const resetPasswordForm = await superValidate(zod(resetPasswordSchema));
 	return {
 		resetPasswordForm,
-		forgotPasswordEmail
+		forgotPasswordEmail,
+		meta: {
+			title: 'Thola Kimonganga | Reset Password',
+			description: 'Thola Kimonganga | Reset Your Password',
+			url: '/auth/reset-password'
+		}
 	};
 };
 

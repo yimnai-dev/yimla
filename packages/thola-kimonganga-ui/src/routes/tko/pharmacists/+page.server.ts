@@ -6,6 +6,16 @@ import { error, type Actions } from '@sveltejs/kit';
 import { superValidate, fail } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
+export const load = async () => {
+	return {
+		meta: {
+			title: 'Thola Kimonganga | Organisation Pharmacists',
+			description: 'Thola Kimonganga | Organisation Pharmacists',
+			url: '/tko/pharmacists'
+		}
+	};
+};
+
 export const actions = {
 	deletePharmacist: async ({ request, locals, fetch, cookies }) => {
 		const form = await superValidate(request, zod(deletePharmacistSchema));
