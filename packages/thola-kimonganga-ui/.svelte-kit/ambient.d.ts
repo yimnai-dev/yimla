@@ -26,20 +26,12 @@
  * ```
  */
 declare module '$env/static/private' {
-	export const MAPBOX_API_KEY: string;
-	export const STRIPE_PUBLISHABLE_TEST_KEY: string;
-	export const STRIPE_PRICING_TABLE_TEST_ID: string;
-	export const VITE_IP_IPA_KEY: string;
-	export const APP_NAME: string;
-	export const NODE_ENV: string;
 	export const SHELL: string;
 	export const LSCOLORS: string;
 	export const npm_command: string;
 	export const SESSION_MANAGER: string;
 	export const npm_package_dependencies_mode_watcher: string;
-	export const npm_config_userconfig: string;
 	export const COLORTERM: string;
-	export const npm_config_cache: string;
 	export const LESS: string;
 	export const NVM_INC: string;
 	export const XDG_MENU_PREFIX: string;
@@ -58,12 +50,9 @@ declare module '$env/static/private' {
 	export const npm_package_private: string;
 	export const npm_package_devDependencies__stripe_stripe_js: string;
 	export const MEMORY_PRESSURE_WRITE: string;
-	export const COLOR: string;
-	export const npm_config_local_prefix: string;
 	export const XMODIFIERS: string;
 	export const DESKTOP_SESSION: string;
 	export const LC_MONETARY: string;
-	export const npm_config_globalconfig: string;
 	export const EDITOR: string;
 	export const npm_package_scripts_test_unit: string;
 	export const npm_package_scripts_cf_typegen: string;
@@ -76,7 +65,6 @@ declare module '$env/static/private' {
 	export const XDG_SESSION_TYPE: string;
 	export const npm_package_devDependencies__typescript_eslint_parser: string;
 	export const PNPM_HOME: string;
-	export const npm_config_init_module: string;
 	export const SYSTEMD_EXEC_PID: string;
 	export const npm_package_scripts_build: string;
 	export const npm_package_dependencies_mapbox_gl: string;
@@ -84,7 +72,6 @@ declare module '$env/static/private' {
 	export const npm_package_devDependencies_stripe: string;
 	export const npm_package_devDependencies_prettier: string;
 	export const npm_package_devDependencies_eslint_config_prettier: string;
-	export const DEBUG_COLORS: string;
 	export const MOTD_SHOWN: string;
 	export const GDM_LANG: string;
 	export const HOME: string;
@@ -94,14 +81,12 @@ declare module '$env/static/private' {
 	export const npm_package_devDependencies_typescript: string;
 	export const LS_COLORS: string;
 	export const XDG_CURRENT_DESKTOP: string;
-	export const PLAYWRIGHT_TEST_BASE_URL: string;
 	export const npm_package_version: string;
 	export const MEMORY_PRESSURE_WATCH: string;
 	export const VTE_VERSION: string;
 	export const npm_package_devDependencies__typescript_eslint_eslint_plugin: string;
 	export const WAYLAND_DISPLAY: string;
 	export const npm_package_dependencies__tanstack_react_query_devtools: string;
-	export const FORCE_COLOR: string;
 	export const npm_package_scripts_test_integration: string;
 	export const npm_package_devDependencies_svelte_stripe: string;
 	export const GNOME_TERMINAL_SCREEN: string;
@@ -116,14 +101,12 @@ declare module '$env/static/private' {
 	export const NVM_DIR: string;
 	export const GNOME_SETUP_DISPLAY: string;
 	export const npm_package_devDependencies__sveltejs_vite_plugin_svelte: string;
-	export const npm_config_npm_version: string;
 	export const npm_package_devDependencies_svelte_check: string;
 	export const XDG_SESSION_CLASS: string;
 	export const TERM: string;
 	export const LC_IDENTIFICATION: string;
 	export const npm_package_name: string;
 	export const ZSH: string;
-	export const npm_config_prefix: string;
 	export const npm_package_type: string;
 	export const USER: string;
 	export const npm_config_frozen_lockfile: string;
@@ -156,7 +139,6 @@ declare module '$env/static/private' {
 	export const DEBUGINFOD_URLS: string;
 	export const npm_package_devDependencies__sveltejs_adapter_cloudflare: string;
 	export const npm_package_dependencies_bits_ui: string;
-	export const npm_package_json: string;
 	export const LC_TIME: string;
 	export const npm_package_scripts_dev: string;
 	export const npm_package_devDependencies__tailwindcss_typography: string;
@@ -165,8 +147,6 @@ declare module '$env/static/private' {
 	export const XDG_DATA_DIRS: string;
 	export const npm_package_dependencies_tailwind_merge: string;
 	export const npm_package_scripts_check: string;
-	export const npm_config_noproxy: string;
-	export const BROWSER: string;
 	export const PATH: string;
 	export const npm_package_devDependencies__types_eslint: string;
 	export const npm_package_dependencies_svelte_sonner: string;
@@ -178,7 +158,6 @@ declare module '$env/static/private' {
 	export const DBUS_SESSION_BUS_ADDRESS: string;
 	export const npm_package_devDependencies__playwright_test: string;
 	export const npm_package_dependencies__tanstack_svelte_query: string;
-	export const npm_config_global_prefix: string;
 	export const NVM_BIN: string;
 	export const MAIL: string;
 	export const npm_config_registry: string;
@@ -187,7 +166,13 @@ declare module '$env/static/private' {
 	export const npm_config_engine_strict: string;
 	export const LC_NUMERIC: string;
 	export const OLDPWD: string;
-	export const VITE_USER_NODE_ENV: string;
+	export const TEST: string;
+	export const VITEST: string;
+	export const NODE_ENV: string;
+	export const PROD: string;
+	export const DEV: string;
+	export const BASE_URL: string;
+	export const MODE: string;
 }
 
 /**
@@ -219,20 +204,12 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
-		MAPBOX_API_KEY: string;
-		STRIPE_PUBLISHABLE_TEST_KEY: string;
-		STRIPE_PRICING_TABLE_TEST_ID: string;
-		VITE_IP_IPA_KEY: string;
-		APP_NAME: string;
-		NODE_ENV: string;
 		SHELL: string;
 		LSCOLORS: string;
 		npm_command: string;
 		SESSION_MANAGER: string;
 		npm_package_dependencies_mode_watcher: string;
-		npm_config_userconfig: string;
 		COLORTERM: string;
-		npm_config_cache: string;
 		LESS: string;
 		NVM_INC: string;
 		XDG_MENU_PREFIX: string;
@@ -251,12 +228,9 @@ declare module '$env/dynamic/private' {
 		npm_package_private: string;
 		npm_package_devDependencies__stripe_stripe_js: string;
 		MEMORY_PRESSURE_WRITE: string;
-		COLOR: string;
-		npm_config_local_prefix: string;
 		XMODIFIERS: string;
 		DESKTOP_SESSION: string;
 		LC_MONETARY: string;
-		npm_config_globalconfig: string;
 		EDITOR: string;
 		npm_package_scripts_test_unit: string;
 		npm_package_scripts_cf_typegen: string;
@@ -269,7 +243,6 @@ declare module '$env/dynamic/private' {
 		XDG_SESSION_TYPE: string;
 		npm_package_devDependencies__typescript_eslint_parser: string;
 		PNPM_HOME: string;
-		npm_config_init_module: string;
 		SYSTEMD_EXEC_PID: string;
 		npm_package_scripts_build: string;
 		npm_package_dependencies_mapbox_gl: string;
@@ -277,7 +250,6 @@ declare module '$env/dynamic/private' {
 		npm_package_devDependencies_stripe: string;
 		npm_package_devDependencies_prettier: string;
 		npm_package_devDependencies_eslint_config_prettier: string;
-		DEBUG_COLORS: string;
 		MOTD_SHOWN: string;
 		GDM_LANG: string;
 		HOME: string;
@@ -287,14 +259,12 @@ declare module '$env/dynamic/private' {
 		npm_package_devDependencies_typescript: string;
 		LS_COLORS: string;
 		XDG_CURRENT_DESKTOP: string;
-		PLAYWRIGHT_TEST_BASE_URL: string;
 		npm_package_version: string;
 		MEMORY_PRESSURE_WATCH: string;
 		VTE_VERSION: string;
 		npm_package_devDependencies__typescript_eslint_eslint_plugin: string;
 		WAYLAND_DISPLAY: string;
 		npm_package_dependencies__tanstack_react_query_devtools: string;
-		FORCE_COLOR: string;
 		npm_package_scripts_test_integration: string;
 		npm_package_devDependencies_svelte_stripe: string;
 		GNOME_TERMINAL_SCREEN: string;
@@ -309,14 +279,12 @@ declare module '$env/dynamic/private' {
 		NVM_DIR: string;
 		GNOME_SETUP_DISPLAY: string;
 		npm_package_devDependencies__sveltejs_vite_plugin_svelte: string;
-		npm_config_npm_version: string;
 		npm_package_devDependencies_svelte_check: string;
 		XDG_SESSION_CLASS: string;
 		TERM: string;
 		LC_IDENTIFICATION: string;
 		npm_package_name: string;
 		ZSH: string;
-		npm_config_prefix: string;
 		npm_package_type: string;
 		USER: string;
 		npm_config_frozen_lockfile: string;
@@ -349,7 +317,6 @@ declare module '$env/dynamic/private' {
 		DEBUGINFOD_URLS: string;
 		npm_package_devDependencies__sveltejs_adapter_cloudflare: string;
 		npm_package_dependencies_bits_ui: string;
-		npm_package_json: string;
 		LC_TIME: string;
 		npm_package_scripts_dev: string;
 		npm_package_devDependencies__tailwindcss_typography: string;
@@ -358,8 +325,6 @@ declare module '$env/dynamic/private' {
 		XDG_DATA_DIRS: string;
 		npm_package_dependencies_tailwind_merge: string;
 		npm_package_scripts_check: string;
-		npm_config_noproxy: string;
-		BROWSER: string;
 		PATH: string;
 		npm_package_devDependencies__types_eslint: string;
 		npm_package_dependencies_svelte_sonner: string;
@@ -371,7 +336,6 @@ declare module '$env/dynamic/private' {
 		DBUS_SESSION_BUS_ADDRESS: string;
 		npm_package_devDependencies__playwright_test: string;
 		npm_package_dependencies__tanstack_svelte_query: string;
-		npm_config_global_prefix: string;
 		NVM_BIN: string;
 		MAIL: string;
 		npm_config_registry: string;
@@ -380,7 +344,13 @@ declare module '$env/dynamic/private' {
 		npm_config_engine_strict: string;
 		LC_NUMERIC: string;
 		OLDPWD: string;
-		VITE_USER_NODE_ENV: string;
+		TEST: string;
+		VITEST: string;
+		NODE_ENV: string;
+		PROD: string;
+		DEV: string;
+		BASE_URL: string;
+		MODE: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}
