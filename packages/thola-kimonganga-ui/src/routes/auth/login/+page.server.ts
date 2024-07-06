@@ -15,7 +15,12 @@ export const load = async ({ cookies, url }) => {
 	}
 	const loginForm = await superValidate(zod(loginSchema));
 	return {
-		loginForm
+		loginForm,
+		meta: {
+			title: 'Thola Kimonganga | Login',
+			description: 'Thola Kimonganga | Login',
+			url: '/auth/login'
+		}
 	};
 };
 

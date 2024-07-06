@@ -8,21 +8,29 @@ import { ROLES } from '$lib/roles';
 import { post } from '$lib/urls';
 
 export const load = async ({ locals, cookies }) => {
-	const signupEmail = cookies.get(COOKIE_KEYS.SIGNUP_EMAIL);
-	if (!signupEmail) {
-		redirect(302, '/auth/verify-email');
-	}
-	verifyEmailSchema.parseAsync({ email: signupEmail }).catch(() => {
-		redirect(302, '/auth/verify-email');
-	});
 	if (locals.tholaApp !== 'thola-client') {
 		redirect(302, '/');
 	}
+	const signupEmail = cookies.get(COOKIE_KEYS.SIGNUP_EMAIL);
+
+	if (!signupEmail) {
+		redirect(302, '/auth/verify-email');
+	}
+
+	verifyEmailSchema.parseAsync({ email: signupEmail }).catch(() => {
+		redirect(302, '/auth/verify-email');
+	});
+
 	const signupForm = await superValidate(zod(signupSchema));
 
 	return {
 		signupForm,
-		signupEmail
+		signupEmail,
+		meta: {
+			title: 'Thola Kimonganga | Signup',
+			description: 'Thola Kimonganga | Signup',
+			url: '/auth/signup'
+		}
 	};
 };
 

@@ -11,6 +11,17 @@ import { error, fail, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
+export const load = async ({ parent }) => {
+	const { tkp } = await parent();
+	return {
+		meta: {
+			title: `Thola Kimonganga | ${tkp.pharmacistInfo.pharmacyName} . Pharmacy`,
+			description: `Thola Kimonganga | ${tkp.pharmacistInfo.pharmacyName} . Pharmacy`,
+			url: `/tkp`
+		}
+	};
+};
+
 export const actions = {
 	updatePharmacySubscription: async ({ request, locals, cookies, fetch }) => {
 		const form = await superValidate(request, zod(updatePharmacyActiveStatusSchema));

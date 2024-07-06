@@ -6,10 +6,16 @@ import { error, redirect, type Actions } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-export const load = async () => {
+export const load = async ({ parent }) => {
+	const { tkp } = await parent();
 	const createMedicationForm = await superValidate(zod(createMedicationSchema));
 	return {
-		createMedicationForm
+		createMedicationForm,
+		meta: {
+			title: `Thola Kimonganga | ${tkp.pharmacistInfo.pharmacyName} . Create New Medication`,
+			description: `Thola Kimonganga | ${tkp.pharmacistInfo.pharmacyName} . Create New Medication`,
+			url: `/tkp/medication/new`
+		}
 	};
 };
 

@@ -44,16 +44,19 @@
 		"src/routes/+layout.server.ts"
 	],
 	"/tkc/recommendations": [
+		"src/routes/tkc/recommendations/+page.server.ts",
 		"src/routes/tkc/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
 	"/tkc/search-history": [
+		"src/routes/tkc/search-history/+page.server.ts",
 		"src/routes/tkc/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
 	"/tko": [
+		"src/routes/tko/+page.server.ts",
 		"src/routes/tko/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts",
@@ -62,11 +65,13 @@
 		"src/routes/+layout.server.ts"
 	],
 	"/tko/medication": [
+		"src/routes/tko/medication/+page.server.ts",
 		"src/routes/tko/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
 	"/tko/pharmacies": [
+		"src/routes/tko/pharmacies/+page.server.ts",
 		"src/routes/tko/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts",
@@ -105,11 +110,13 @@
 		"src/routes/+layout.server.ts"
 	],
 	"/tko/subscriptions/cancel": [
+		"src/routes/tko/subscriptions/cancel/+page.server.ts",
 		"src/routes/tko/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
 	"/tko/subscriptions/success": [
+		"src/routes/tko/subscriptions/success/+page.server.ts",
 		"src/routes/tko/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
@@ -124,6 +131,7 @@
 		"src/routes/+layout.server.ts"
 	],
 	"/tkp/medication": [
+		"src/routes/tkp/medication/+page.server.ts",
 		"src/routes/tkp/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
