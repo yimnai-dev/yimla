@@ -13,7 +13,8 @@ import {
 	type PharmacistListResponse,
 	type LoggedUserDetails,
 	type LocationData,
-	type MedicationSearchResponse
+	type MedicationSearchResponse,
+	type MetaData
 } from '$lib';
 import type {
 	RemoveMedicationSchema,
@@ -60,6 +61,7 @@ declare global {
 			deleteMedicationForm: SuperValidated<RemoveMedicationSchema>;
 			updateMedicationForm: SuperValidated<UpdateMedicationSchema>;
 			pharmacyListStream: Promise<PharmacyListResponse>;
+			meta: MetaData;
 			tko: {
 				organisationPharmacistListResponse: Promise<PharmacistListResponse>;
 				deletePharmacistForm: SuperValidated<DeletePharmacistSchema>;

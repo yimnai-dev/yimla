@@ -2,6 +2,13 @@ import type { SearchMedicationSchema } from '$lib/forms/medication.form';
 import { THOLA_KIMONGANGA_URL } from '$lib/urls';
 import type Stripe from 'stripe';
 
+export type MetaData = {
+	title: string;
+	description: string;
+	url: string;
+	[key: string]: unknown;
+};
+
 export type SubscriptionSuffix =
 	| 'price-list'
 	| 'product-price-list'

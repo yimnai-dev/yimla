@@ -11,7 +11,14 @@ export const load = async ({ locals }) => {
 		redirect(302, '/tko');
 	}
 	const createPharmacistForm = await superValidate(zod(createPharmacistSchema));
-	return { createPharmacistForm };
+	return {
+		createPharmacistForm,
+		meta: {
+			title: 'Thola Kimonganga | Create A New Pharmacist',
+			description: 'Thola Kimonganga | Create A New Pharmacist',
+			url: '/tko/pharmacists/new'
+		}
+	};
 };
 
 export const actions = {

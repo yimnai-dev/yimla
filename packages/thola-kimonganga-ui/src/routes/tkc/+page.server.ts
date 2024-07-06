@@ -7,6 +7,16 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
+export const load = async () => {
+	return {
+		meta: {
+			title: 'Thola Kimonganga | Home',
+			description: 'Thola Kimonganga | Home',
+			url: '/tkc'
+		}
+	};
+};
+
 export const actions = {
 	search: async ({ request, cookies, fetch, locals }) => {
 		const form = await superValidate(request, zod(searchMedicationParametersSchema));

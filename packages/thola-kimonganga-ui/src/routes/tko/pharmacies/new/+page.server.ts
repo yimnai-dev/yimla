@@ -8,7 +8,15 @@ import { COOKIE_KEYS } from '$lib/cookie-keys';
 
 export const load = async ({ platform }) => {
 	const createPharmacyForm = await superValidate(zod(createPharmacySchema));
-	return { createPharmacyForm, mapBoxApiKey: platform?.env.VITE_MAPBOX_API_KEY };
+	return {
+		createPharmacyForm,
+		mapBoxApiKey: platform?.env.VITE_MAPBOX_API_KEY,
+		meta: {
+			title: 'Thola Kimonganga | Create New Pharmacy',
+			description: 'Thola Kimonganga | Create New Pharmacy',
+			url: '/tko/pharmacies/new'
+		}
+	};
 };
 
 export const actions = {
