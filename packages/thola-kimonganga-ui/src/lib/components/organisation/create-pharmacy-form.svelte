@@ -2,7 +2,7 @@
 	import { COUNTRY_STATES_MAP } from '$lib/constants';
 	import * as Form from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms';
-	import type { PageData } from '../../../routes/app/pharmacies/new/$types';
+	import type { PageData } from '../../../routes/tko/pharmacies/new/$types';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { createPharmacySchema } from '$lib/forms/pharmacy.form';
 	import { Input } from '$lib/components/ui/input';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms';
-	import type { PageData } from '../../../routes/app/pharmacists/new/$types';
+	import type { PageData } from '../../../routes/tko/pharmacists/new/$types';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { Input } from '$lib/components/ui/input';
 	import * as Select from '$lib/components/ui/select';
