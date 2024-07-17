@@ -107,7 +107,7 @@
 	</ul>
 	<form
 		method="POST"
-		action="/app/subscriptions?/initializeSubscription"
+		action="/tko/subscriptions?/initializeSubscription"
 		use:enhance
 		class="flex flex-col items-start space-y-2 py-3"
 	>
