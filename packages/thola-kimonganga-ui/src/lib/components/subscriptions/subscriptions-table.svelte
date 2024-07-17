@@ -107,7 +107,7 @@
 		</Table.Body>
 	</Table.Root>
 	<div class="flex items-center justify-center space-x-4 py-2">
-		{#if $page.url.pathname === '/app/pharmacists'}
+		{#if $page.url.pathname === '/tko/pharmacists'}
 			<Button
 				variant="outline"
 				size="sm"
