@@ -166,13 +166,7 @@ declare module '$env/static/private' {
 	export const npm_config_engine_strict: string;
 	export const LC_NUMERIC: string;
 	export const OLDPWD: string;
-	export const TEST: string;
-	export const VITEST: string;
 	export const NODE_ENV: string;
-	export const PROD: string;
-	export const DEV: string;
-	export const BASE_URL: string;
-	export const MODE: string;
 }
 
 /**
@@ -344,13 +338,7 @@ declare module '$env/dynamic/private' {
 		npm_config_engine_strict: string;
 		LC_NUMERIC: string;
 		OLDPWD: string;
-		TEST: string;
-		VITEST: string;
 		NODE_ENV: string;
-		PROD: string;
-		DEV: string;
-		BASE_URL: string;
-		MODE: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}
