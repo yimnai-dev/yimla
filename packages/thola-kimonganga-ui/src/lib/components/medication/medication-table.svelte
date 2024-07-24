@@ -43,7 +43,7 @@
 			}
 		}),
 		table.column({ accessor: 'name', header: 'Name' }),
-		table.column({ accessor: 'description', header: 'Description' }),
+		table.column({ accessor: 'description', header: 'Description', cell: ({value}) => value.substring(0, 140) + (value.length > 140 ? '...' : '') }),
 		table.column({ accessor: 'dosageForm', header: 'Form' }),
 		table.column({ accessor: 'quantity', header: 'Quantity' }),
 		table.column({
