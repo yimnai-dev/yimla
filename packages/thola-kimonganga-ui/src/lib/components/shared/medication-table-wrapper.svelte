@@ -15,13 +15,6 @@
 		)
 	);
 
-	medicationListQuery.subscribe($q => {
-		console.table({
-			data: $q.data,
-			error: $q.error
-		})
-	})
-
 	let medications = $derived.by(() => {
 		if (
 			!$medicationListQuery.data ||
