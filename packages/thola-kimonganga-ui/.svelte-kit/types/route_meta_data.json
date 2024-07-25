@@ -34,6 +34,11 @@
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/auth/[...path]": [
+		"src/routes/auth/[...path]/+page.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/tkc": [
 		"src/routes/tkc/+page.server.ts",
 		"src/routes/tkc/+layout.server.ts",
@@ -51,6 +56,12 @@
 	],
 	"/tkc/search-history": [
 		"src/routes/tkc/search-history/+page.server.ts",
+		"src/routes/tkc/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkc/[...path]": [
+		"src/routes/tkc/[...path]/+page.server.ts",
 		"src/routes/tkc/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
@@ -121,6 +132,12 @@
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/tko/[...path]": [
+		"src/routes/tko/[...path]/+page.server.ts",
+		"src/routes/tko/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/tkp": [
 		"src/routes/tkp/+page.server.ts",
 		"src/routes/tkp/+layout.server.ts",
@@ -144,6 +161,12 @@
 	],
 	"/tkp/search": [
 		"src/routes/tkp/search/+page.server.ts",
+		"src/routes/tkp/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/tkp/[...path]": [
+		"src/routes/tkp/[...path]/+page.server.ts",
 		"src/routes/tkp/+layout.server.ts",
 		"src/routes/+layout.ts",
 		"src/routes/+layout.server.ts"

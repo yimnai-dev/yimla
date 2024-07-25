@@ -9,6 +9,7 @@
 	import PharmacyTable from './pharmacy-table.svelte';
 
 	let pharmaciesQuery = createQuery(pharmacyListOptions($page.data.tko.pharmacyListStream));
+	
 </script>
 
 {#if $pharmaciesQuery.isFetching}
@@ -16,7 +17,7 @@
 {:else if $pharmaciesQuery.isError}
 	<QueryErrorPlaceHolder query={pharmaciesQuery} />
 {:else if $pharmaciesQuery.data && $pharmaciesQuery.data.ok}
-	{@const pharmacies = $pharmaciesQuery.data.pharmacies || []}
+	{@const pharmacies = $pharmaciesQuery.data.pharmacies}
 	<div
 		class="flex items-center justify-between py-3 max-sm:flex-col max-sm:items-start max-sm:space-y-3"
 	>

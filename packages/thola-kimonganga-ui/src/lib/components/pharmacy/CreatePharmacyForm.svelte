@@ -58,7 +58,7 @@
 					};
 				}
 			);
-			goto(`/app/pharmacies?t=${new Date().getTime()}`);
+			goto(`/tko/pharmacies?t=${new Date().getTime()}`);
 		},
 		onError: ({ result }) => {
 			creatingPharmacy = false;
@@ -90,7 +90,7 @@
 					title: 'Operation Successful',
 					duration: 3000
 				});
-				// goto('/app/pharmacies?t=created');
+				// goto('/tko/pharmacies?t=created');
 				return;
 			}
 			$page.data.queryClient.setQueryData<PharmacyListResponse>(

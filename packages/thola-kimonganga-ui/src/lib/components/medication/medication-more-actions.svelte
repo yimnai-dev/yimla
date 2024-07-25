@@ -89,7 +89,7 @@
 			<DropdownMenu.Item class="cursor-pointer py-4" onclick={() => (sidebarOpen = true)}
 				>Edit Medication</DropdownMenu.Item
 			>
-			<form method="POST" use:enhance action="/app/?/deleteMedication">
+			<form method="POST" use:enhance action="/tkp/?/deleteMedication">
 				<input type="hidden" name="drugId" bind:value={$formData.drugId} />
 				<DropdownMenu.Item class="cursor-pointer">
 					<Button type="submit" variant="ghost">Delete Medication</Button>

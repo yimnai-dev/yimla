@@ -198,7 +198,7 @@
 			<form
 				class="grid gap-4 py-4"
 				method="POST"
-				action="/app/?/updateMedication"
+				action="/tkp/?/updateMedication"
 				use:enhance
 				enctype="multipart/form-data"
 			>
