@@ -22,4 +22,5 @@ vite.config.ts.timestamp-*
 
 # wrangler files
 .wrangler
+wranger.toml
 .dev.vars
