@@ -98,9 +98,6 @@
 
 	let { form: formData, enhance } = form;
 
-	formData.subscribe(($f) => {
-		console.log($f.image);
-	});
 
 	$effect(() => {
 		if (expiryDate) {
