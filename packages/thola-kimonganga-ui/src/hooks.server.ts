@@ -5,9 +5,9 @@ import { sequence } from '@sveltejs/kit/hooks';
 
 const handleApp: Handle = async ({ event, resolve }) => {
 	if (dev) {
-		event.locals.tholaApp = 'thola-org';
-		event.locals.baseURL = 'http://localhost:8080/api/v1/org';
-		event.locals.userRole = 'organisation';
+		event.locals.tholaApp = 'thola-pharmacy';
+		event.locals.baseURL = 'http://localhost:8080/api/v1/pharmacy';
+		event.locals.userRole = 'pharmacist';
 		return await resolve(event);
 	}
 	const [subdomain] = event.url.host.split('.');
