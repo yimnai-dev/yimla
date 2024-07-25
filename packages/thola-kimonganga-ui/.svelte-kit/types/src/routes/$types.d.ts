@@ -12,7 +12,7 @@ type EnsureDefined<T> = T extends null | undefined ? {} : T;
 type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
 export type Snapshot<T = any> = Kit.Snapshot<T>;
 type PageParentData = EnsureDefined<LayoutData>;
-type LayoutRouteId = RouteId | "/" | "/[...path]" | "/auth/forgot-password" | "/auth/login" | "/auth/reset-password" | "/auth/signup" | "/auth/verify-email" | "/tkc" | "/tkc/recommendations" | "/tkc/search-history" | "/tko" | "/tko/medication" | "/tko/pharmacies" | "/tko/pharmacies/[pharmacyId]/edit" | "/tko/pharmacies/new" | "/tko/pharmacists" | "/tko/pharmacists/new" | "/tko/subscriptions" | "/tko/subscriptions/cancel" | "/tko/subscriptions/success" | "/tkp" | "/tkp/medication" | "/tkp/medication/new" | "/tkp/search" | null
+type LayoutRouteId = RouteId | "/" | "/[...path]" | "/auth/[...path]" | "/auth/forgot-password" | "/auth/login" | "/auth/reset-password" | "/auth/signup" | "/auth/verify-email" | "/tkc" | "/tkc/[...path]" | "/tkc/recommendations" | "/tkc/search-history" | "/tko" | "/tko/[...path]" | "/tko/medication" | "/tko/pharmacies" | "/tko/pharmacies/[pharmacyId]/edit" | "/tko/pharmacies/new" | "/tko/pharmacists" | "/tko/pharmacists/new" | "/tko/subscriptions" | "/tko/subscriptions/cancel" | "/tko/subscriptions/success" | "/tkp" | "/tkp/[...path]" | "/tkp/medication" | "/tkp/medication/new" | "/tkp/search" | null
 type LayoutParams = RouteParams & { path?: string; pharmacyId?: string }
 type LayoutServerParentData = EnsureDefined<{}>;
 type LayoutParentData = EnsureDefined<{}>;

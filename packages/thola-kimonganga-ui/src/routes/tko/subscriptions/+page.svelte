@@ -33,7 +33,7 @@
 	});
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="container mx-auto flex flex-col gap-5">
 	{#if showPriceTable}
 		<div class="mx-auto mt-5 flex min-h-screen w-full">
 			{#if $priceListQuery.isFetching}
@@ -50,13 +50,16 @@
 					{@const priceList = $priceListQuery.data.priceList}
 					{@const productList = $priceListQuery.data.productList}
 					<PricingTable {stripe} {priceList} {productList} />
+					<Button variant="outline" onclick={() => (showPriceTable = false)}>Close</Button>
 				{/if}
 			{/if}
 		</div>
 	{:else if $subscriptionListQuery.isFetching}
 		<LoadingSpinner size="lg" />
 	{:else if $subscriptionListQuery.isError}
-		<div class="container flex flex-col items-center justify-center border-2 border-dashed p-10">
+		<div
+			class="container flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-10"
+		>
 			<h1>Oops, something went wrong</h1>
 			<LucideRabbit size={150} />
 			<p>Please try again later</p>

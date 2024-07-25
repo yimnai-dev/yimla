@@ -61,7 +61,7 @@
 					title: 'Operation Successful',
 					duration: 3000
 				});
-				goto('/app/pharmacists');
+				goto('/tkp/pharmacists');
 				return;
 			}
 		}

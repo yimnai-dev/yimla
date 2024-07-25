@@ -54,11 +54,14 @@
 					};
 					return {
 						...old,
-						pharmacies: old.pharmacies?.length ? [...old.pharmacies, pharma] : [pharma]
+						pharmacies: [
+							...old.pharmacies,
+							pharma
+						]
 					};
 				}
 			);
-			goto(`/tko/pharmacies?t=${new Date().getTime()}`);
+			goto(`/tko`);
 		},
 		onError: ({ result }) => {
 			creatingPharmacy = false;

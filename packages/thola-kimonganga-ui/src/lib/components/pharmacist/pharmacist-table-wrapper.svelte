@@ -32,11 +32,11 @@
 		<h1 class="text-xl font-bold">Pharmacists Listing</h1>
 		{#if $page.url.pathname === '/app'}
 			<div class="flex items-center justify-center gap-2">
-				<Button variant="outline" href="/app/pharmacists/new">
+				<Button variant="outline" href="/tko/pharmacists/new">
 					Create New Pharmacist
 					<PlusCircleIcon class="ml-2 h-4 w-4" />
 				</Button>
-				<Button variant="outline" size="sm" href="/app/pharmacists"
+				<Button variant="outline" size="sm" href="/tko/pharmacists"
 					>View More
 					<ChevronRight class="ml-2 h-4 w-4" />
 				</Button>
@@ -47,13 +47,13 @@
 		<div class="flex w-full flex-col items-center justify-center space-y-4">
 			<h1 class="text-xl md:text-2xl lg:text-3xl">No Pharmacists found</h1>
 			<LucideRabbit size={150} />
-			<Button variant="outline" href="/app/pharmacists/new"
+			<Button variant="outline" href="/tko/pharmacists/new"
 				>Add A Pharmacist &nbsp; <PlusCircleIcon />
 			</Button>
 		</div>
 	{:else}
 		<PharmacistsTable
-			pharmacists={$page.url.pathname === '/app/pharmacists'
+			pharmacists={$page.url.pathname === '/tko/pharmacists'
 				? pharmacists
 				: pharmacists?.slice(0, 5)}
 		/>
