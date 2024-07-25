@@ -15,7 +15,7 @@
 			<p class="md:text-2x text-xl lg:text-3xl">
 				Your subscription to Thola Kimonganga was not successful. Please try again later
 			</p>
-			<Button variant="outline" href="/app/subscriptions">Go back to Subscriptions</Button>
+			<Button variant="outline" href="/tko/subscriptions">Go back to Subscriptions</Button>
 		{/if}
 	</div>
 </div>

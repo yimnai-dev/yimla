@@ -114,7 +114,7 @@
 		<DropdownMenu.Item
 			class="cursor-pointer"
 			onclick={() => {
-				goto(`/app/pharmacies/${pharmacyId}/pharmacists`);
+				goto(`/tko/pharmacies/${pharmacyId}/pharmacists`);
 			}}
 		>
 			View Pharmacy Details
@@ -122,7 +122,7 @@
 		<DropdownMenu.Item
 			class="cursor-pointer"
 			onclick={() => {
-				// goto(`/app/pharmacies/${pharmacyId}/edit`);
+				// goto(`/tko/pharmacies/${pharmacyId}/edit`);
 				// delete pharmacist logic
 			}}
 		>

@@ -65,7 +65,7 @@
 	const { filterValue } = $state(pluginStates.filter);
 </script>
 
-{#if $page.url.pathname === '/app/pharmacists'}
+{#if $page.url.pathname === '/tko/pharmacists'}
 	<div class="flex items-center">
 		<Input
 			class="max-w-sm"
@@ -116,7 +116,7 @@
 		</Table.Body>
 	</Table.Root>
 	<div class="flex items-center justify-center space-x-4 py-2">
-		{#if $page.url.pathname === '/app/pharmacists'}
+		{#if $page.url.pathname === '/tko/pharmacists'}
 			<Button
 				variant="outline"
 				size="sm"
@@ -130,7 +130,7 @@
 				onclick={() => ($pageIndex = $pageIndex + 1)}>Next</Button
 			>
 		{:else}
-			<Button variant="outline" size="sm" href="/app/pharmacists"
+			<Button variant="outline" size="sm" href="/tko/pharmacists"
 				>View More
 				<ChevronRight class="ml-2 h-4 w-4" />
 			</Button>

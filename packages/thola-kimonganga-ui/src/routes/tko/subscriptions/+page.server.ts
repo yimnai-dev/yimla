@@ -11,7 +11,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals, cookies, fetch, platform }) => {
 	if (locals.tholaApp !== 'thola-org') {
-		redirect(302, '/app');
+		const path = locals.tholaApp === 'thola-pharmacy' ? '/tkp' : '/tkc';
+		redirect(302, path);
 	}
 	return {
 		publishableKey: platform?.env.VITE_STRIPE_PUBLISHABLE_TEST_KEY,

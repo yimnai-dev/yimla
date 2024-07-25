@@ -119,7 +119,7 @@
 		<DropdownMenu.Item
 			class="cursor-pointer"
 			onclick={() => {
-				goto(`/app/pharmacies/${pharmacyId}/pharmacists`);
+				goto(`/tko/pharmacies/${pharmacyId}/pharmacists`);
 			}}
 		>
 			View pharmacists
@@ -127,7 +127,7 @@
 		<DropdownMenu.Item
 			class="cursor-pointer"
 			onclick={() => {
-				goto(`/app/pharmacies/${pharmacyId}/edit`);
+				goto(`/tko/pharmacies/${pharmacyId}/edit`);
 			}}
 		>
 			Edit Pharmacy Details
@@ -135,7 +135,7 @@
 		<DropdownMenu.Item
 			class="cursor-pointer"
 			onclick={() => {
-				goto(`/app/pharmacies/${pharmacyId}`);
+				goto(`/tko/pharmacies/${pharmacyId}`);
 			}}
 		>
 			View pharmacy details
