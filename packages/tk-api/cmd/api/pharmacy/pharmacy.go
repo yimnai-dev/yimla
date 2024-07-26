@@ -190,6 +190,14 @@ func DeleteMedicationHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonRes)
 		return
 	}
+	deleteSearchHistoryQuery := `DELETE FROM search_history WHERE search_record_id = $1`
+	_, err = database.Db.Exec(deleteSearchHistoryQuery, drugId)
+	if err != nil {
+		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(jsonRes)
+		return
+	}
 	deleteDrugQuery := `DELETE FROM drugs WHERE drug_id = $1`
 	_, err = database.Db.Exec(deleteDrugQuery, drugId)
 	if err != nil {
