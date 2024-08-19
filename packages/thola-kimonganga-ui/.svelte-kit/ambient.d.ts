@@ -26,6 +26,10 @@
  * ```
  */
 declare module '$env/static/private' {
+	export const PRIVATE_MAPBOX_API_KEY: string;
+	export const PRIVATE_STRIPE_PUBLISHABLE_TEST_KEY: string;
+	export const PRIVATE_STRIPE_PRICING_TABLE_TEST_ID: string;
+	export const PRIVATE_IP_IPA_KEY: string;
 	export const SHELL: string;
 	export const LSCOLORS: string;
 	export const npm_command: string;
@@ -198,6 +202,10 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
+		PRIVATE_MAPBOX_API_KEY: string;
+		PRIVATE_STRIPE_PUBLISHABLE_TEST_KEY: string;
+		PRIVATE_STRIPE_PRICING_TABLE_TEST_ID: string;
+		PRIVATE_IP_IPA_KEY: string;
 		SHELL: string;
 		LSCOLORS: string;
 		npm_command: string;

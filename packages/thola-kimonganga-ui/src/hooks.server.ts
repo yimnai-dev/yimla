@@ -2,6 +2,24 @@ import { dev } from '$app/environment';
 import { COOKIE_KEYS } from '$lib/cookie-keys';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { PRIVATE_MAPBOX_API_KEY, PRIVATE_STRIPE_PUBLISHABLE_TEST_KEY, PRIVATE_STRIPE_PRICING_TABLE_TEST_ID, PRIVATE_IP_IPA_KEY } from '$env/static/private';
+
+
+const handleEnv: Handle = async ({ event, resolve }) => {
+	if (dev && event.platform) {
+		event.platform = {
+			...event.platform,
+			env: {
+				...event.platform?.env,
+				VITE_MAPBOX_API_KEY: PRIVATE_MAPBOX_API_KEY,
+				VITE_STRIPE_PUBLISHABLE_TEST_KEY: PRIVATE_STRIPE_PUBLISHABLE_TEST_KEY,
+				VITE_STRIPE_PRICING_TABLE_TEST_ID: PRIVATE_STRIPE_PRICING_TABLE_TEST_ID,
+				VITE_IP_IPA_KEY: PRIVATE_IP_IPA_KEY
+			}
+		}
+	}
+	return await resolve(event);
+}
 
 const handleApp: Handle = async ({ event, resolve }) => {
 	if (dev) {
@@ -48,4 +66,4 @@ const handleRequests: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-export const handle = sequence(handleApp, handleRequests);
+export const handle = sequence(handleEnv, handleApp, handleRequests);
