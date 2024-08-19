@@ -98,7 +98,7 @@
 	});
 </script>
 
-{#if $page.data.tholaApp === 'thola-pharmacy' && $page.url.pathname === `${urlPrefix}/medication`}
+{#if $page.data.tholaApp === 'thola-pharmacy' && $page.url.pathname.includes('medication')}
 	<div
 		class="container mx-auto mt-5 flex items-center justify-center rounded-md border-2 border-dashed py-6"
 	>

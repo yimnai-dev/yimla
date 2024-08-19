@@ -1,17 +1,19 @@
 package pharmacy
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"mime/multipart"
 	"net/http"
 	"time"
 
+	"tk-api/internal/database"
+	"tk-api/internal/utils"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	storage_go "github.com/supabase-community/storage-go"
-	"tk-api/internal/database"
-	"tk-api/internal/utils"
 )
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5 // 2 mb
@@ -154,9 +156,9 @@ func UpdateMedicationHandler(w http.ResponseWriter, r *http.Request) {
 	if formData == "" {
 		w.WriteHeader(http.StatusNotModified)
 		w.Write([]byte(`{"message": "Nothing to update", "status": 200, "ok": true}`))
-		return;
+		return
 	}
-	
+
 	updateStockQuery := `UPDATE drug_stocks SET price = COALESCE($1, price), quantity = COALESCE($2, quantity) WHERE drug_id = $3`
 	_, err = database.Db.Exec(updateStockQuery, medicationDetails.Price, medicationDetails.Quantity, drugID)
 	if err != nil {
@@ -167,7 +169,7 @@ func UpdateMedicationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	updateDrugQuery := `UPDATE drugs SET expiry_date = COALESCE($1, expiry_date), instructions = COALESCE($2, instructions), storage_conditions = COALESCE($3, storage_conditions), description = COALESCE($4, description) WHERE drug_id = $5`
 	_, err = database.Db.Exec(updateDrugQuery, utils.CoalesceEmptyStrToNil(medicationDetails.ExpiryDate), utils.CoalesceEmptyStrToNil(medicationDetails.Instructions), utils.CoalesceEmptyStrToNil(medicationDetails.StorageConditions), utils.CoalesceEmptyStrToNil(medicationDetails.Description), drugID)
-	
+
 	if err != nil {
 		jsonRes := utils.EncodedApiError(err.Error(), http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -178,7 +180,6 @@ func UpdateMedicationHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"message": "Medication updated successfully", "status": 200, "ok": true}`))
 }
-
 
 func DeleteMedicationHandler(w http.ResponseWriter, r *http.Request) {
 	drugId := chi.URLParam(r, "drugId")
@@ -230,8 +231,8 @@ type MedicationDetails struct {
 	DosageForm        database.DrugDosageForm `db:"dosage_form" json:"dosageForm"`
 	Instructions      string                  `db:"instructions" json:"instructions"`
 	StorageConditions string                  `db:"storage_conditions" json:"storageConditions"`
-	StockID           string                  `db:"stock_id" json:"stockId"`
-	Quantity          int                     `db:"quantity" json:"quantity"`
+	StockID           sql.NullString          `db:"stock_id" json:"stockId"`
+	Quantity          int64                   `db:"quantity" json:"quantity"`
 	Price             float64                 `db:"price" json:"price"`
 }
 
