@@ -15,7 +15,7 @@ const handleEnv: Handle = async ({ event, resolve }) => {
 				VITE_STRIPE_PUBLISHABLE_TEST_KEY: PRIVATE_STRIPE_PUBLISHABLE_TEST_KEY,
 				VITE_STRIPE_PRICING_TABLE_TEST_ID: PRIVATE_STRIPE_PRICING_TABLE_TEST_ID,
 				VITE_IP_IPA_KEY: PRIVATE_IP_IPA_KEY
-			}
+			} 
 		}
 	}
 	return await resolve(event);
